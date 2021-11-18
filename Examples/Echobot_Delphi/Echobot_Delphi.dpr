@@ -1,18 +1,3 @@
-# fastTelega
-
-Delphi library for Telegram Bot API.
-
-This library is still under development and does not implement full functionality but you can already use it to create simple bots. 
-
-And so far only the mechanism is available long polling.
-
-Documentation is located [here](Doc).
-
-## Example 
-
-Example echo bot which sends everything it receives:
-
-```pas
 program Echobot_Delphi;
 
 {$APPTYPE CONSOLE}
@@ -67,5 +52,3 @@ begin
   end;
 
 end.
-```
-All other examples  are located [here](Examples).
