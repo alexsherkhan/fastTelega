@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{7D1D1F17-ACAD-43C7-B647-128E9C8B9CAE}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="MCPStdioTester.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\TelegramMCP\TelegramMCPServer.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="MCPStdioTester">
+        <MSBuild Projects="MCPStdioTester.dproj"/>
+    </Target>
+    <Target Name="MCPStdioTester:Clean">
+        <MSBuild Projects="MCPStdioTester.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MCPStdioTester:Make">
+        <MSBuild Projects="MCPStdioTester.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TelegramMCPServer">
+        <MSBuild Projects="..\TelegramMCP\TelegramMCPServer.dproj"/>
+    </Target>
+    <Target Name="TelegramMCPServer:Clean">
+        <MSBuild Projects="..\TelegramMCP\TelegramMCPServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TelegramMCPServer:Make">
+        <MSBuild Projects="..\TelegramMCP\TelegramMCPServer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="MCPStdioTester;TelegramMCPServer"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="MCPStdioTester:Clean;TelegramMCPServer:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="MCPStdioTester:Make;TelegramMCPServer:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

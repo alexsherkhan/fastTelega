@@ -102,7 +102,7 @@ type
     /// Unique identifier for the target chat.
     /// </param>
     /// <param name="fromChatId">
-    /// Unique identifier for the chat where the original message was sent — User or GroupChat id.
+    /// Unique identifier for the chat where the original message was sent ï¿½ User or GroupChat id.
     /// </param>
     /// <param name="messageId">
     /// Unique message identifier.
@@ -125,13 +125,13 @@ type
     /// Optional. Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id.
     /// </param>
     /// <param name="limit">
-    /// Optional. Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100.
+    /// Optional. Limits the number of updates to be retrieved. Values between 1ï¿½100 are accepted. Defaults to 100.
     /// </param>
     /// <param name="timeout">
     /// Optional. Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling.
     /// </param>
     /// <param name="allowed_updates">
-    /// Optional. List the types of updates you want your bot to receive. For example, specify [“message”, “edited_channel_post”, “callback_query”] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all updates regardless of type (default). If not specified, the previous setting will be used.
+    /// Optional. List the types of updates you want your bot to receive. For example, specify [ï¿½messageï¿½, ï¿½edited_channel_postï¿½, ï¿½callback_queryï¿½] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all updates regardless of type (default). If not specified, the previous setting will be used.
     /// </param>
     /// <returns>
     /// An Array of Update objects
@@ -200,7 +200,7 @@ type
     /// Track name
     /// </param>
     /// <param name="thumb">
-    /// Thumbnail of the file sent. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 90. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+    /// Thumbnail of the file sent. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnailï¿½s width and height should not exceed 90. Ignored if the file is not uploaded using multipart/form-data. Thumbnails canï¿½t be reused and can be only uploaded as a new file, so you can pass ï¿½attach://<file_attach_name>ï¿½ if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
     /// </param>
     /// <param name="replyToMessageId">
     /// Optional. If the message is a reply, ID of the original message.
@@ -234,10 +234,10 @@ type
     /// <param name="thumb">
     /// Thumbnail of the file sent.
     /// The thumbnail should be in JPEG format and
-    /// less than 200 kB in size. A thumbnail‘s width and height should not
+    /// less than 200 kB in size. A thumbnailï¿½s width and height should not
     /// exceed 90. Ignored if the file is not uploaded using multipart/form-data.
-    /// Thumbnails can’t be reused and can be only uploaded as a new file, so
-    /// you can pass “attach://file_attach_name” if the thumbnail was uploaded
+    /// Thumbnails canï¿½t be reused and can be only uploaded as a new file, so
+    /// you can pass ï¿½attach://file_attach_nameï¿½ if the thumbnail was uploaded
     /// using multipart/form-data under file_attach_name.
     /// </param>
     /// <param name="caption">
@@ -394,7 +394,7 @@ type
     /// On success, True is returned.
     /// </returns>
     function answerPreCheckoutQuery(const preCheckoutQueryId: String;
-      ok: Boolean; consterrorMessage: String = ''): Boolean;
+      ok: Boolean; const errorMessage: String = ''): Boolean;
     /// <summary>
     /// Use this method to send .webp stickers.
     /// </summary>
@@ -543,7 +543,7 @@ type
     /// </param>
     procedure deleteMessage(chatId: Integer; messageId: Integer);
     /// <summary>
-    /// Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts.     *     * If you'd like to make sure that the Webhook request comes from Telegram, we recommend using a secret path in the URL, e.g. www.example.com/<token>. Since nobody else knows your bot‘s token, you can be pretty sure it’s us.     * You will not be able to receive updates using getUpdates for as long as an outgoing webhook is set up.     * We currently do not support self-signed certificates.     * Ports currently supported for Webhooks: 443, 80, 88, 8443.     *
+    /// Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts.     *     * If you'd like to make sure that the Webhook request comes from Telegram, we recommend using a secret path in the URL, e.g. www.example.com/<token>. Since nobody else knows your botï¿½s token, you can be pretty sure itï¿½s us.     * You will not be able to receive updates using getUpdates for as long as an outgoing webhook is set up.     * We currently do not support self-signed certificates.     * Ports currently supported for Webhooks: 443, 80, 88, 8443.     *
     /// </summary>
     /// <param name="url">
     /// Optional. HTTPS url to send updates to. Use an empty string to remove webhook integration.
@@ -615,6 +615,207 @@ type
     function setMyCommands(const commands: TList): Boolean;
     function getMyCommands(): TArray<TftBotCommand>;
 
+    // --- Multimedia moderna ---
+
+    /// <summary>
+    /// Use this method to send video files.
+    /// </summary>
+    function sendVideo(chatId: Integer; video: TftInputFile = nil;
+      duration: Integer = 0; width: Integer = 0; height: Integer = 0;
+      thumb: TftInputFile = nil; const caption: String = '';
+      const parseMode: String = ''; supportsStreaming: Boolean = false;
+      replyToMessageId: Integer = 0; replyMarkup: TftReplyBase = nil;
+      disableNotification: Boolean = false): TftMessage;
+
+    /// <summary>
+    /// Use this method to send animation files (GIF or H.264/MPEG-4 AVC without sound).
+    /// </summary>
+    function sendAnimation(chatId: Integer; animation: TftInputFile = nil;
+      duration: Integer = 0; width: Integer = 0; height: Integer = 0;
+      thumb: TftInputFile = nil; const caption: String = '';
+      const parseMode: String = ''; replyToMessageId: Integer = 0;
+      replyMarkup: TftReplyBase = nil;
+      disableNotification: Boolean = false): TftMessage;
+
+    /// <summary>
+    /// Use this method to send audio files as voice messages (.ogg with OPUS).
+    /// </summary>
+    function sendVoice(chatId: Integer; voice: TftInputFile = nil;
+      const caption: String = ''; const parseMode: String = '';
+      duration: Integer = 0; replyToMessageId: Integer = 0;
+      replyMarkup: TftReplyBase = nil;
+      disableNotification: Boolean = false): TftMessage;
+
+    /// <summary>
+    /// Use this method to send video messages (rounded square, up to 1 min).
+    /// </summary>
+    function sendVideoNote(chatId: Integer; videoNote: TftInputFile = nil;
+      duration: Integer = 0; length: Integer = 0; thumb: TftInputFile = nil;
+      replyToMessageId: Integer = 0; replyMarkup: TftReplyBase = nil;
+      disableNotification: Boolean = false): TftMessage;
+
+    /// <summary>
+    /// Use this method to send point on the map.
+    /// </summary>
+    function sendLocation(chatId: Integer; latitude: Double; longitude: Double;
+      horizontalAccuracy: Double = 0; livePeriod: Integer = 0;
+      heading: Integer = 0; proximityAlertRadius: Integer = 0;
+      replyToMessageId: Integer = 0; replyMarkup: TftReplyBase = nil;
+      disableNotification: Boolean = false): TftMessage;
+
+    /// <summary>
+    /// Use this method to send phone contacts.
+    /// </summary>
+    function sendContact(chatId: Integer; const phoneNumber: String;
+      const firstName: String; const lastName: String = '';
+      const vcard: String = ''; replyToMessageId: Integer = 0;
+      replyMarkup: TftReplyBase = nil;
+      disableNotification: Boolean = false): TftMessage;
+
+    /// <summary>
+    /// Use this method to send an animated emoji that will display a random value.
+    /// </summary>
+    function sendDice(chatId: Integer; const emoji: String = 'ðŸŽ²';
+      replyToMessageId: Integer = 0; replyMarkup: TftReplyBase = nil;
+      disableNotification: Boolean = false): TftMessage;
+
+    /// <summary>
+    /// Use this method when you need to tell the user that something is happening on the bot's side.
+    /// Action: typing, upload_photo, record_video, upload_video, record_voice,
+    ///         upload_voice, upload_document, choose_sticker, find_location,
+    ///         record_video_note, upload_video_note
+    /// </summary>
+    function sendChatAction(chatId: Integer;
+      const action: String): Boolean;
+
+    /// <summary>
+    /// Use this method to copy messages of any kind.
+    /// Returns the MessageId of the sent message on success.
+    /// </summary>
+    function copyMessage(chatId: Integer; fromChatId: Integer;
+      messageId: Integer; const caption: String = '';
+      const parseMode: String = ''; replyToMessageId: Integer = 0;
+      replyMarkup: TftReplyBase = nil;
+      disableNotification: Boolean = false): Integer;
+
+    /// <summary>
+    /// Use this method to get a list of profile pictures for a user.
+    /// </summary>
+    function getUserProfilePhotos(userId: Integer; offset: Integer = 0;
+      limit: Integer = 100): TftUserProfilePhotos;
+
+    /// <summary>
+    /// Use this method to get basic info about a file and prepare it for downloading.
+    /// </summary>
+    function getFile(const fileId: String): TftDocument;
+
+    /// <summary>
+    /// Use this method to send answers to an inline query.
+    /// results must be a JSON-serialized array of InlineQueryResult objects.
+    /// </summary>
+    function answerInlineQuery(const inlineQueryId: String;
+      const results: String; cacheTime: Integer = 300;
+      isPersonal: Boolean = false; const nextOffset: String = '';
+      const switchPmText: String = '';
+      const switchPmParameter: String = ''): Boolean;
+
+    // --- Chat administration ---
+
+    /// <summary>
+    /// Use this method to get up-to-date information about the chat.
+    /// </summary>
+    function getChat(chatId: Integer): TftChat; overload;
+    function getChat(const chatId: String): TftChat; overload;
+
+    /// <summary>
+    /// Use this method to get the number of members in a chat.
+    /// </summary>
+    function getChatMemberCount(chatId: Integer): Integer;
+
+    /// <summary>
+    /// Use this method to get information about a member of a chat.
+    /// </summary>
+    function getChatMember(chatId: Integer; userId: Integer): TftChatMember;
+
+    /// <summary>
+    /// Use this method to ban a user in a group, a supergroup or a channel.
+    /// </summary>
+    function banChatMember(chatId: Integer; userId: Integer;
+      untilDate: Integer = 0; revokeMessages: Boolean = false): Boolean;
+
+    /// <summary>
+    /// Use this method to unban a previously banned user in a supergroup or channel.
+    /// </summary>
+    function unbanChatMember(chatId: Integer; userId: Integer;
+      onlyIfBanned: Boolean = false): Boolean;
+
+    /// <summary>
+    /// Use this method to restrict a user in a supergroup.
+    /// </summary>
+    function restrictChatMember(chatId: Integer; userId: Integer;
+      permissions: TftChatPermissions; untilDate: Integer = 0): Boolean;
+
+    /// <summary>
+    /// Use this method to promote or demote a user in a supergroup or a channel.
+    /// </summary>
+    function promoteChatMember(chatId: Integer; userId: Integer;
+      isAnonymous: Boolean = false; canManageChat: Boolean = false;
+      canPostMessages: Boolean = false; canEditMessages: Boolean = false;
+      canDeleteMessages: Boolean = false; canManageVideoChats: Boolean = false;
+      canRestrictMembers: Boolean = false; canPromoteMembers: Boolean = false;
+      canChangeInfo: Boolean = false; canInviteUsers: Boolean = false;
+      canPinMessages: Boolean = false): Boolean;
+
+    /// <summary>
+    /// Use this method to set default chat permissions for all members.
+    /// </summary>
+    function setChatPermissions(chatId: Integer;
+      permissions: TftChatPermissions): Boolean;
+
+    /// <summary>
+    /// Use this method to generate a new primary invite link for a chat.
+    /// </summary>
+    function exportChatInviteLink(chatId: Integer): String;
+
+    /// <summary>
+    /// Use this method to change the title of a chat.
+    /// </summary>
+    function setChatTitle(chatId: Integer; const title: String): Boolean;
+
+    /// <summary>
+    /// Use this method to change the description of a group, supergroup or channel.
+    /// </summary>
+    function setChatDescription(chatId: Integer;
+      const description: String): Boolean;
+
+    /// <summary>
+    /// Use this method to add a message to the list of pinned messages in a chat.
+    /// </summary>
+    function pinChatMessage(chatId: Integer; messageId: Integer;
+      disableNotification: Boolean = false): Boolean;
+
+    /// <summary>
+    /// Use this method to remove a message from the list of pinned messages in a chat.
+    /// </summary>
+    function unpinChatMessage(chatId: Integer; messageId: Integer = 0): Boolean;
+
+    /// <summary>
+    /// Use this method to clear the list of pinned messages in a chat.
+    /// </summary>
+    function unpinAllChatMessages(chatId: Integer): Boolean;
+
+    /// <summary>
+    /// Use this method for your bot to leave a group, supergroup or channel.
+    /// </summary>
+    function leaveChat(chatId: Integer): Boolean;
+
+    /// <summary>
+    /// Use this method to send answers to callback queries sent from inline keyboards.
+    /// </summary>
+    function answerCallbackQuery(const callbackQueryId: String;
+      const text: String = ''; showAlert: Boolean = false;
+      const url: String = ''; cacheTime: Integer = 0): Boolean;
+
   end;
 
 const
@@ -626,15 +827,53 @@ uses Math;
 { TftAPI }
 
 function TftAPI.answerPreCheckoutQuery(const preCheckoutQueryId: String;
-  ok: Boolean; consterrorMessage: String): Boolean;
+  ok: Boolean; const errorMessage: String): Boolean;
+var
+  args: TStringList;
 begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('pre_checkout_query_id', preCheckoutQueryId);
+  args.AddPair('ok', LowerCase(BoolToStr(ok, True)));
 
+  if (not ok) and (errorMessage <> '') then
+    args.AddPair('error_message', errorMessage);
+
+  Result := sendRequest('answerPreCheckoutQuery', args, 'POST')
+    .GetValue('result') <> nil;
 end;
 
 function TftAPI.answerShippingQuery(shippingQueryId: String; ok: Boolean;
   shippingOptions: TList<TftShippingOption>; errorMessage: String): Boolean;
+var
+  args: TStringList;
+  optionsJson: String;
+  i: Integer;
 begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('shipping_query_id', shippingQueryId);
+  args.AddPair('ok', LowerCase(BoolToStr(ok, True)));
 
+  if ok and (shippingOptions <> nil) and (shippingOptions.Count > 0) then
+  begin
+    optionsJson := '[';
+    for i := 0 to shippingOptions.Count - 1 do
+    begin
+      optionsJson := optionsJson +
+        FftTypeParser.parseShippingOption(shippingOptions[i]);
+      if i < shippingOptions.Count - 1 then
+        optionsJson := optionsJson + ',';
+    end;
+    optionsJson := optionsJson + ']';
+    args.AddPair('shipping_options', optionsJson);
+  end;
+
+  if (not ok) and (errorMessage <> '') then
+    args.AddPair('error_message', errorMessage);
+
+  Result := sendRequest('answerShippingQuery', args, 'POST')
+    .GetValue('result') <> nil;
 end;
 
 constructor TftAPI.Create(AToken: String; const AhttpClient: TftHTTPClient;
@@ -671,21 +910,78 @@ end;
 
 function TftAPI.editMessageCaption(chatId, messageId: Integer; caption: String;
   const inlineMessageId: String; replyMarkup: TftReplyBase): TftMessage;
+var
+  args: TStringList;
 begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  if chatId <> 0 then
+    args.AddPair('chat_id', IntToStr(chatId));
+  if messageId <> 0 then
+    args.AddPair('message_id', IntToStr(messageId));
+  if inlineMessageId <> '' then
+    args.AddPair('inline_message_id', inlineMessageId);
+  if caption <> '' then
+    args.AddPair('caption', caption);
+  if replyMarkup <> nil then
+    args.AddPair('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
 
+  Result := FftTypeParser.parseJsonAndGetMessage
+    (sendRequest('editMessageCaption', args, 'POST'));
 end;
 
 function TftAPI.editMessageMedia(media: TftInputFile;
   chatId, messageId: Integer; caption: String; const inlineMessageId: String;
   replyMarkup: TftReplyBase): TftMessage;
+var
+  args: TMultipartFormData;
+  mediaJson: String;
 begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  args := TMultipartFormData.Create;
 
+  if chatId <> 0 then
+    args.AddField('chat_id', IntToStr(chatId));
+  if messageId <> 0 then
+    args.AddField('message_id', IntToStr(messageId));
+  if inlineMessageId <> '' then
+    args.AddField('inline_message_id', inlineMessageId);
+
+  if media <> nil then
+  begin
+    args.AddFile('media_file', media.filePath);
+    mediaJson := '{"type":"document","media":"attach://media_file"';
+    if caption <> '' then
+      mediaJson := mediaJson + ',"caption":"' + caption + '"';
+    mediaJson := mediaJson + '}';
+    args.AddField('media', mediaJson);
+  end;
+
+  if replyMarkup <> nil then
+    args.AddField('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+
+  Result := FftTypeParser.parseJsonAndGetMessage
+    (sendRequest('editMessageMedia', args, 'POST'));
 end;
 
 function TftAPI.editMessageReplyMarkup(chatId, messageId: Integer;
   const inlineMessageId: String; replyMarkup: TftReplyBase): TftMessage;
+var
+  args: TStringList;
 begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  if chatId <> 0 then
+    args.AddPair('chat_id', IntToStr(chatId));
+  if messageId <> 0 then
+    args.AddPair('message_id', IntToStr(messageId));
+  if inlineMessageId <> '' then
+    args.AddPair('inline_message_id', inlineMessageId);
+  if replyMarkup <> nil then
+    args.AddPair('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
 
+  Result := FftTypeParser.parseJsonAndGetMessage
+    (sendRequest('editMessageReplyMarkup', args, 'POST'));
 end;
 
 function TftAPI.editMessageText(const text: String; chatId, messageId: Integer;
@@ -747,8 +1043,14 @@ begin
 end;
 
 function TftAPI.getStickerSet(const name: String): TftStickerSet;
+var
+  args: TStringList;
 begin
-
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('name', name);
+  Result := FftTypeParser.parseJsonAndGetStickerSet(sendRequest('getStickerSet',
+    args));
 end;
 
 function parseFunJSONArrayTftUpdate(JSONArray: TJSONArray;
@@ -787,8 +1089,33 @@ end;
 function TftAPI.sendAudio(chatId: Integer; audio: TftInputFile;
   const caption: string; replyToMessageId: Integer; replyMarkup: TftReplyBase;
   const parseMode: String; disableNotification: Boolean): TftMessage;
+var
+  args: TMultipartFormData;
 begin
+  FHttpClient.ContentType := 'multipart/form-data';
 
+  args := TMultipartFormData.Create;
+  args.AddField('chat_id', IntToStr(chatId));
+  if audio <> nil then
+    args.AddFile('audio', audio.filePath);
+
+  if caption <> '' then
+    args.AddField('caption', caption);
+
+  if replyToMessageId >= 0 then
+    args.AddField('reply_to_message_id', IntToStr(replyToMessageId));
+
+  if replyMarkup <> nil then
+    args.AddField('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+
+  if parseMode <> '' then
+    args.AddField('parse_mode', parseMode);
+
+  if disableNotification then
+    args.AddField('disable_notification', BoolToStr(disableNotification, True));
+
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendAudio',
+    args, 'POST'));
 end;
 
 function TftAPI.sendDocument(chatId: Integer; document, thumb: TftInputFile;
@@ -832,8 +1159,53 @@ function TftAPI.sendInvoice(chatId: Integer; const title, description, payload,
   sendPhoneNumberToProvider, sendEmailToProvider, isFlexible: Boolean;
   replyToMessageId: Integer; replyMarkup: TftReplyBase;
   disableNotification: Boolean): TftMessage;
+var
+  args: TStringList;
 begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('title', title);
+  args.AddPair('description', description);
+  args.AddPair('payload', payload);
+  args.AddPair('provider_token', providerToken);
+  args.AddPair('start_parameter', startParameter);
+  args.AddPair('currency', currency);
+  args.AddPair('prices', prices);
 
+  if providerData <> '' then
+    args.AddPair('provider_data', providerData);
+  if photoUrl <> '' then
+    args.AddPair('photo_url', photoUrl);
+  if photoSize > 0 then
+    args.AddPair('photo_size', IntToStr(photoSize));
+  if photoWidth > 0 then
+    args.AddPair('photo_width', IntToStr(photoWidth));
+  if photoHeight > 0 then
+    args.AddPair('photo_height', IntToStr(photoHeight));
+  if needName then
+    args.AddPair('need_name', 'true');
+  if needPhoneNumber then
+    args.AddPair('need_phone_number', 'true');
+  if needEmail then
+    args.AddPair('need_email', 'true');
+  if needShippingAddress then
+    args.AddPair('need_shipping_address', 'true');
+  if sendPhoneNumberToProvider then
+    args.AddPair('send_phone_number_to_provider', 'true');
+  if sendEmailToProvider then
+    args.AddPair('send_email_to_provider', 'true');
+  if isFlexible then
+    args.AddPair('is_flexible', 'true');
+  if replyToMessageId > 0 then
+    args.AddPair('reply_to_message_id', IntToStr(replyToMessageId));
+  if replyMarkup <> nil then
+    args.AddPair('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+  if disableNotification then
+    args.AddPair('disable_notification', 'true');
+
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendInvoice',
+    args, 'POST'));
 end;
 
 function TftAPI.sendMessage(chatId: String; const text: String;
@@ -853,7 +1225,7 @@ begin
       BoolToStr(disableWebPagePreview, True));
   if (disableNotification) then
     args.AddPair('disable_notification', BoolToStr(disableNotification, True));
-  if (replyToMessageId >= 0) then
+  if (replyToMessageId > 0) then
     args.AddPair('reply_to_message_id', IntToStr(replyToMessageId));
 
   if (replyMarkup <> nil) then
@@ -894,7 +1266,7 @@ begin
   if (disableNotification) then
     args.AddField('disable_notification', BoolToStr(disableNotification, True));
 
-  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendDocument',
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendPhoto',
     args, 'POST'));
 
 end;
@@ -955,8 +1327,27 @@ end;
 function TftAPI.sendSticker(chatId: Integer; sticker: TftInputFile;
   replyToMessageId: Integer; replyMarkup: TftReplyBase;
   disableNotification: Boolean): TftMessage;
+var
+  args: TMultipartFormData;
 begin
+  FHttpClient.ContentType := 'multipart/form-data';
 
+  args := TMultipartFormData.Create;
+  args.AddField('chat_id', IntToStr(chatId));
+  if sticker <> nil then
+    args.AddFile('sticker', sticker.filePath);
+
+  if replyToMessageId >= 0 then
+    args.AddField('reply_to_message_id', IntToStr(replyToMessageId));
+
+  if replyMarkup <> nil then
+    args.AddField('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+
+  if disableNotification then
+    args.AddField('disable_notification', BoolToStr(disableNotification, True));
+
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendSticker',
+    args, 'POST'));
 end;
 
 function TftAPI.setMyCommands(const commands: TList): Boolean;
@@ -1030,6 +1421,560 @@ begin
   AURL := AURL + filePath;
 
   Result := FHttpClient.makeRequest(AURL, args, 'GET');
+end;
+
+// --- Multimedia moderna ---
+
+function TftAPI.sendVideo(chatId: Integer; video: TftInputFile;
+  duration, width, height: Integer; thumb: TftInputFile; const caption: String;
+  const parseMode: String; supportsStreaming: Boolean;
+  replyToMessageId: Integer; replyMarkup: TftReplyBase;
+  disableNotification: Boolean): TftMessage;
+var
+  args: TMultipartFormData;
+begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  args := TMultipartFormData.Create;
+  args.AddField('chat_id', IntToStr(chatId));
+  if video <> nil then
+    args.AddFile('video', video.filePath);
+  if duration > 0 then
+    args.AddField('duration', IntToStr(duration));
+  if width > 0 then
+    args.AddField('width', IntToStr(width));
+  if height > 0 then
+    args.AddField('height', IntToStr(height));
+  if thumb <> nil then
+    args.AddFile('thumb', thumb.filePath);
+  if caption <> '' then
+    args.AddField('caption', caption);
+  if parseMode <> '' then
+    args.AddField('parse_mode', parseMode);
+  if supportsStreaming then
+    args.AddField('supports_streaming', 'true');
+  if replyToMessageId >= 0 then
+    args.AddField('reply_to_message_id', IntToStr(replyToMessageId));
+  if replyMarkup <> nil then
+    args.AddField('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+  if disableNotification then
+    args.AddField('disable_notification', 'true');
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendVideo',
+    args, 'POST'));
+end;
+
+function TftAPI.sendAnimation(chatId: Integer; animation: TftInputFile;
+  duration, width, height: Integer; thumb: TftInputFile; const caption: String;
+  const parseMode: String; replyToMessageId: Integer;
+  replyMarkup: TftReplyBase; disableNotification: Boolean): TftMessage;
+var
+  args: TMultipartFormData;
+begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  args := TMultipartFormData.Create;
+  args.AddField('chat_id', IntToStr(chatId));
+  if animation <> nil then
+    args.AddFile('animation', animation.filePath);
+  if duration > 0 then
+    args.AddField('duration', IntToStr(duration));
+  if width > 0 then
+    args.AddField('width', IntToStr(width));
+  if height > 0 then
+    args.AddField('height', IntToStr(height));
+  if thumb <> nil then
+    args.AddFile('thumb', thumb.filePath);
+  if caption <> '' then
+    args.AddField('caption', caption);
+  if parseMode <> '' then
+    args.AddField('parse_mode', parseMode);
+  if replyToMessageId >= 0 then
+    args.AddField('reply_to_message_id', IntToStr(replyToMessageId));
+  if replyMarkup <> nil then
+    args.AddField('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+  if disableNotification then
+    args.AddField('disable_notification', 'true');
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendAnimation',
+    args, 'POST'));
+end;
+
+function TftAPI.sendVoice(chatId: Integer; voice: TftInputFile;
+  const caption: String; const parseMode: String; duration: Integer;
+  replyToMessageId: Integer; replyMarkup: TftReplyBase;
+  disableNotification: Boolean): TftMessage;
+var
+  args: TMultipartFormData;
+begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  args := TMultipartFormData.Create;
+  args.AddField('chat_id', IntToStr(chatId));
+  if voice <> nil then
+    args.AddFile('voice', voice.filePath);
+  if caption <> '' then
+    args.AddField('caption', caption);
+  if parseMode <> '' then
+    args.AddField('parse_mode', parseMode);
+  if duration > 0 then
+    args.AddField('duration', IntToStr(duration));
+  if replyToMessageId >= 0 then
+    args.AddField('reply_to_message_id', IntToStr(replyToMessageId));
+  if replyMarkup <> nil then
+    args.AddField('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+  if disableNotification then
+    args.AddField('disable_notification', 'true');
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendVoice',
+    args, 'POST'));
+end;
+
+function TftAPI.sendVideoNote(chatId: Integer; videoNote: TftInputFile;
+  duration, length: Integer; thumb: TftInputFile; replyToMessageId: Integer;
+  replyMarkup: TftReplyBase; disableNotification: Boolean): TftMessage;
+var
+  args: TMultipartFormData;
+begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  args := TMultipartFormData.Create;
+  args.AddField('chat_id', IntToStr(chatId));
+  if videoNote <> nil then
+    args.AddFile('video_note', videoNote.filePath);
+  if duration > 0 then
+    args.AddField('duration', IntToStr(duration));
+  if length > 0 then
+    args.AddField('length', IntToStr(length));
+  if thumb <> nil then
+    args.AddFile('thumb', thumb.filePath);
+  if replyToMessageId >= 0 then
+    args.AddField('reply_to_message_id', IntToStr(replyToMessageId));
+  if replyMarkup <> nil then
+    args.AddField('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+  if disableNotification then
+    args.AddField('disable_notification', 'true');
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendVideoNote',
+    args, 'POST'));
+end;
+
+function TftAPI.sendLocation(chatId: Integer; latitude, longitude: Double;
+  horizontalAccuracy: Double; livePeriod, heading,
+  proximityAlertRadius, replyToMessageId: Integer; replyMarkup: TftReplyBase;
+  disableNotification: Boolean): TftMessage;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('latitude', FloatToStr(latitude));
+  args.AddPair('longitude', FloatToStr(longitude));
+  if horizontalAccuracy > 0 then
+    args.AddPair('horizontal_accuracy', FloatToStr(horizontalAccuracy));
+  if livePeriod > 0 then
+    args.AddPair('live_period', IntToStr(livePeriod));
+  if heading > 0 then
+    args.AddPair('heading', IntToStr(heading));
+  if proximityAlertRadius > 0 then
+    args.AddPair('proximity_alert_radius', IntToStr(proximityAlertRadius));
+  if replyToMessageId > 0 then
+    args.AddPair('reply_to_message_id', IntToStr(replyToMessageId));
+  if replyMarkup <> nil then
+    args.AddPair('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+  if disableNotification then
+    args.AddPair('disable_notification', 'true');
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendLocation',
+    args, 'POST'));
+end;
+
+function TftAPI.sendContact(chatId: Integer; const phoneNumber, firstName,
+  lastName, vcard: String; replyToMessageId: Integer;
+  replyMarkup: TftReplyBase; disableNotification: Boolean): TftMessage;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('phone_number', phoneNumber);
+  args.AddPair('first_name', firstName);
+  if lastName <> '' then
+    args.AddPair('last_name', lastName);
+  if vcard <> '' then
+    args.AddPair('vcard', vcard);
+  if replyToMessageId > 0 then
+    args.AddPair('reply_to_message_id', IntToStr(replyToMessageId));
+  if replyMarkup <> nil then
+    args.AddPair('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+  if disableNotification then
+    args.AddPair('disable_notification', 'true');
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendContact',
+    args, 'POST'));
+end;
+
+function TftAPI.sendDice(chatId: Integer; const emoji: String;
+  replyToMessageId: Integer; replyMarkup: TftReplyBase;
+  disableNotification: Boolean): TftMessage;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  if emoji <> '' then
+    args.AddPair('emoji', emoji);
+  if replyToMessageId > 0 then
+    args.AddPair('reply_to_message_id', IntToStr(replyToMessageId));
+  if replyMarkup <> nil then
+    args.AddPair('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+  if disableNotification then
+    args.AddPair('disable_notification', 'true');
+  Result := FftTypeParser.parseJsonAndGetMessage(sendRequest('sendDice',
+    args, 'POST'));
+end;
+
+function TftAPI.sendChatAction(chatId: Integer; const action: String): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('action', action);
+  Result := sendRequest('sendChatAction', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.copyMessage(chatId, fromChatId, messageId: Integer;
+  const caption, parseMode: String; replyToMessageId: Integer;
+  replyMarkup: TftReplyBase; disableNotification: Boolean): Integer;
+var
+  args: TStringList;
+  jResult: TJSONValue;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('from_chat_id', IntToStr(fromChatId));
+  args.AddPair('message_id', IntToStr(messageId));
+  if caption <> '' then
+    args.AddPair('caption', caption);
+  if parseMode <> '' then
+    args.AddPair('parse_mode', parseMode);
+  if replyToMessageId > 0 then
+    args.AddPair('reply_to_message_id', IntToStr(replyToMessageId));
+  if replyMarkup <> nil then
+    args.AddPair('reply_markup', FftTypeParser.parseReplyBase(replyMarkup));
+  if disableNotification then
+    args.AddPair('disable_notification', 'true');
+  jResult := sendRequest('copyMessage', args, 'POST').GetValue('result');
+  if (jResult <> nil) and (jResult is TJSONObject) then
+    Result := TJSONObject(jResult).GetValue('message_id').AsType<Integer>
+  else
+    Result := 0;
+end;
+
+function TftAPI.getUserProfilePhotos(userId, offset, limit: Integer)
+  : TftUserProfilePhotos;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('user_id', IntToStr(userId));
+  if offset > 0 then
+    args.AddPair('offset', IntToStr(offset));
+  limit := Max(1, Min(100, limit));
+  args.AddPair('limit', IntToStr(limit));
+  Result := FftTypeParser.parseJsonAndGetUserProfilePhotos
+    (sendRequest('getUserProfilePhotos', args));
+end;
+
+function TftAPI.getFile(const fileId: String): TftDocument;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('file_id', fileId);
+  Result := FftTypeParser.parseJsonAndGetDocument(sendRequest('getFile', args));
+end;
+
+function TftAPI.answerInlineQuery(const inlineQueryId, results: String;
+  cacheTime: Integer; isPersonal: Boolean; const nextOffset, switchPmText,
+  switchPmParameter: String): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('inline_query_id', inlineQueryId);
+  args.AddPair('results', results);
+  if cacheTime <> 300 then
+    args.AddPair('cache_time', IntToStr(cacheTime));
+  if isPersonal then
+    args.AddPair('is_personal', 'true');
+  if nextOffset <> '' then
+    args.AddPair('next_offset', nextOffset);
+  if switchPmText <> '' then
+    args.AddPair('switch_pm_text', switchPmText);
+  if switchPmParameter <> '' then
+    args.AddPair('switch_pm_parameter', switchPmParameter);
+  Result := sendRequest('answerInlineQuery', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+// --- Chat administration ---
+
+function TftAPI.getChat(chatId: Integer): TftChat;
+begin
+  Result := getChat(IntToStr(chatId));
+end;
+
+function TftAPI.getChat(const chatId: String): TftChat;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', chatId);
+  Result := FftTypeParser.parseJsonAndGetChat(sendRequest('getChat', args));
+end;
+
+function TftAPI.getChatMemberCount(chatId: Integer): Integer;
+var
+  args: TStringList;
+  jResult: TJSONValue;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  jResult := sendRequest('getChatMemberCount', args).GetValue('result');
+  if jResult <> nil then
+    Result := jResult.AsType<Integer>
+  else
+    Result := 0;
+end;
+
+function TftAPI.getChatMember(chatId: Integer; userId: Integer): TftChatMember;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('user_id', IntToStr(userId));
+  Result := FftTypeParser.parseJsonAndGetChatMember
+    (sendRequest('getChatMember', args));
+end;
+
+function TftAPI.banChatMember(chatId: Integer; userId: Integer;
+  untilDate: Integer; revokeMessages: Boolean): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('user_id', IntToStr(userId));
+  if untilDate > 0 then
+    args.AddPair('until_date', IntToStr(untilDate));
+  if revokeMessages then
+    args.AddPair('revoke_messages', 'true');
+  Result := sendRequest('banChatMember', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.unbanChatMember(chatId: Integer; userId: Integer;
+  onlyIfBanned: Boolean): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('user_id', IntToStr(userId));
+  if onlyIfBanned then
+    args.AddPair('only_if_banned', 'true');
+  Result := sendRequest('unbanChatMember', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.restrictChatMember(chatId: Integer; userId: Integer;
+  permissions: TftChatPermissions; untilDate: Integer): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('user_id', IntToStr(userId));
+  if permissions <> nil then
+    args.AddPair('permissions',
+      FftTypeParser.parseChatPermissions(permissions));
+  if untilDate > 0 then
+    args.AddPair('until_date', IntToStr(untilDate));
+  Result := sendRequest('restrictChatMember', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.promoteChatMember(chatId: Integer; userId: Integer;
+  isAnonymous: Boolean; canManageChat: Boolean; canPostMessages: Boolean;
+  canEditMessages: Boolean; canDeleteMessages: Boolean;
+  canManageVideoChats: Boolean; canRestrictMembers: Boolean;
+  canPromoteMembers: Boolean; canChangeInfo: Boolean; canInviteUsers: Boolean;
+  canPinMessages: Boolean): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('user_id', IntToStr(userId));
+  if isAnonymous then
+    args.AddPair('is_anonymous', 'true');
+  if canManageChat then
+    args.AddPair('can_manage_chat', 'true');
+  if canPostMessages then
+    args.AddPair('can_post_messages', 'true');
+  if canEditMessages then
+    args.AddPair('can_edit_messages', 'true');
+  if canDeleteMessages then
+    args.AddPair('can_delete_messages', 'true');
+  if canManageVideoChats then
+    args.AddPair('can_manage_video_chats', 'true');
+  if canRestrictMembers then
+    args.AddPair('can_restrict_members', 'true');
+  if canPromoteMembers then
+    args.AddPair('can_promote_members', 'true');
+  if canChangeInfo then
+    args.AddPair('can_change_info', 'true');
+  if canInviteUsers then
+    args.AddPair('can_invite_users', 'true');
+  if canPinMessages then
+    args.AddPair('can_pin_messages', 'true');
+  Result := sendRequest('promoteChatMember', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.setChatPermissions(chatId: Integer;
+  permissions: TftChatPermissions): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  if permissions <> nil then
+    args.AddPair('permissions',
+      FftTypeParser.parseChatPermissions(permissions));
+  Result := sendRequest('setChatPermissions', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.exportChatInviteLink(chatId: Integer): String;
+var
+  args: TStringList;
+  jResult: TJSONValue;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  jResult := sendRequest('exportChatInviteLink', args, 'POST')
+    .GetValue('result');
+  if jResult <> nil then
+    Result := jResult.Value
+  else
+    Result := '';
+end;
+
+function TftAPI.setChatTitle(chatId: Integer; const title: String): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('title', title);
+  Result := sendRequest('setChatTitle', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.setChatDescription(chatId: Integer;
+  const description: String): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('description', description);
+  Result := sendRequest('setChatDescription', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.pinChatMessage(chatId: Integer; messageId: Integer;
+  disableNotification: Boolean): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  args.AddPair('message_id', IntToStr(messageId));
+  if disableNotification then
+    args.AddPair('disable_notification', 'true');
+  Result := sendRequest('pinChatMessage', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.unpinChatMessage(chatId: Integer; messageId: Integer): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  if messageId > 0 then
+    args.AddPair('message_id', IntToStr(messageId));
+  Result := sendRequest('unpinChatMessage', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.unpinAllChatMessages(chatId: Integer): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  Result := sendRequest('unpinAllChatMessages', args, 'POST')
+    .GetValue('result') <> nil;
+end;
+
+function TftAPI.leaveChat(chatId: Integer): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('chat_id', IntToStr(chatId));
+  Result := sendRequest('leaveChat', args, 'POST').GetValue('result') <> nil;
+end;
+
+function TftAPI.answerCallbackQuery(const callbackQueryId: String;
+  const text: String; showAlert: Boolean; const url: String;
+  cacheTime: Integer): Boolean;
+var
+  args: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  args := TStringList.Create;
+  args.AddPair('callback_query_id', callbackQueryId);
+  if text <> '' then
+    args.AddPair('text', text);
+  if showAlert then
+    args.AddPair('show_alert', 'true');
+  if url <> '' then
+    args.AddPair('url', url);
+  if cacheTime > 0 then
+    args.AddPair('cache_time', IntToStr(cacheTime));
+  Result := sendRequest('answerCallbackQuery', args, 'POST')
+    .GetValue('result') <> nil;
 end;
 
 end.

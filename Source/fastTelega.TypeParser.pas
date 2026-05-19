@@ -18,8 +18,7 @@ type
 
   TftTypeParser = class
   private
-    procedure appendToJson(var JSON: String; const varName: String;
-      const value: Variant);
+    procedure appendToJson(var JSON: String; const varName: String; const value: Variant);
     procedure removeLastComma(var input: String);
   public
     constructor Create;
@@ -28,8 +27,7 @@ type
     function parseStrings(const obj: TStrings): String;
     function parseList(const obj: TList): String;
 
-    function parseJsonAndGetList(ParseFunc: TJsonToFtTypeFunc;
-      JSONObject: TJSONObject): TList;
+    function parseJsonAndGetList(ParseFunc: TJsonToFtTypeFunc; JSONObject: TJSONObject): TList;
 
     function parseChat(const obj: TftChat): String;
     function parseUser(const obj: TftUser): String;
@@ -60,46 +58,26 @@ type
     function parseResponseParameters(const obj: TftResponseParameters): String;
     function parseInlineQuery(const obj: TftInlineQuery): String;
     function parseInlineQueryResult(const obj: TftInlineQueryResult): String;
-    function parseInlineQueryResultArticle
-      (const obj: TftInlineQueryResultArticle): String;
-    function parseInlineQueryResultAudio(const obj
-      : TftInlineQueryResultAudio): String;
-    function parseInlineQueryResultCachedAudio
-      (const obj: TftInlineQueryResultCachedAudio): String;
-    function parseInlineQueryResultCachedDocument
-      (const obj: TftInlineQueryResultCachedDocument): String;
-    function parseInlineQueryResultCachedGif
-      (const obj: TftInlineQueryResultCachedGif): String;
-    function parseInlineQueryResultCachedMpeg4Gif
-      (const obj: TftInlineQueryResultCachedMpeg4Gif): String;
-    function parseInlineQueryResultCachedPhoto
-      (const obj: TftInlineQueryResultCachedPhoto): String;
-    function parseInlineQueryResultCachedSticker
-      (const obj: TftInlineQueryResultCachedSticker): String;
-    function parseInlineQueryResultCachedVideo
-      (const obj: TftInlineQueryResultCachedVideo): String;
-    function parseInlineQueryResultCachedVoice
-      (const obj: TftInlineQueryResultCachedVoice): String;
-    function parseInlineQueryResultContact
-      (const obj: TftInlineQueryResultContact): String;
-    function parseInlineQueryResultDocument
-      (const obj: TftInlineQueryResultDocument): String;
-    function parseInlineQueryResultGame(const obj
-      : TftInlineQueryResultGame): String;
-    function parseInlineQueryResultGif(const obj
-      : TftInlineQueryResultGif): String;
-    function parseInlineQueryResultLocation
-      (const obj: TftInlineQueryResultLocation): String;
-    function parseInlineQueryResultMpeg4Gif
-      (const obj: TftInlineQueryResultMpeg4Gif): String;
-    function parseInlineQueryResultPhoto(const obj
-      : TftInlineQueryResultPhoto): String;
-    function parseInlineQueryResultVenue(const obj
-      : TftInlineQueryResultVenue): String;
-    function parseInlineQueryResultVideo(const obj
-      : TftInlineQueryResultVideo): String;
-    function parseInlineQueryResultVoice(const obj
-      : TftInlineQueryResultVoice): String;
+    function parseInlineQueryResultArticle(const obj: TftInlineQueryResultArticle): String;
+    function parseInlineQueryResultAudio(const obj: TftInlineQueryResultAudio): String;
+    function parseInlineQueryResultCachedAudio(const obj: TftInlineQueryResultCachedAudio): String;
+    function parseInlineQueryResultCachedDocument(const obj: TftInlineQueryResultCachedDocument): String;
+    function parseInlineQueryResultCachedGif(const obj: TftInlineQueryResultCachedGif): String;
+    function parseInlineQueryResultCachedMpeg4Gif(const obj: TftInlineQueryResultCachedMpeg4Gif): String;
+    function parseInlineQueryResultCachedPhoto(const obj: TftInlineQueryResultCachedPhoto): String;
+    function parseInlineQueryResultCachedSticker(const obj: TftInlineQueryResultCachedSticker): String;
+    function parseInlineQueryResultCachedVideo(const obj: TftInlineQueryResultCachedVideo): String;
+    function parseInlineQueryResultCachedVoice(const obj: TftInlineQueryResultCachedVoice): String;
+    function parseInlineQueryResultContact(const obj: TftInlineQueryResultContact): String;
+    function parseInlineQueryResultDocument(const obj: TftInlineQueryResultDocument): String;
+    function parseInlineQueryResultGame(const obj: TftInlineQueryResultGame): String;
+    function parseInlineQueryResultGif(const obj: TftInlineQueryResultGif): String;
+    function parseInlineQueryResultLocation(const obj: TftInlineQueryResultLocation): String;
+    function parseInlineQueryResultMpeg4Gif(const obj: TftInlineQueryResultMpeg4Gif): String;
+    function parseInlineQueryResultPhoto(const obj: TftInlineQueryResultPhoto): String;
+    function parseInlineQueryResultVenue(const obj: TftInlineQueryResultVenue): String;
+    function parseInlineQueryResultVideo(const obj: TftInlineQueryResultVideo): String;
+    function parseInlineQueryResultVoice(const obj: TftInlineQueryResultVoice): String;
     function parseChosenInlineResult(const obj: TftChosenInlineResult): String;
     function parseCallbackQuery(const obj: TftCallbackQuery): String;
     function parseShippingQuery(const obj: TftShippingQuery): String;
@@ -113,154 +91,98 @@ type
     function parseShippingOption(const obj: TftShippingOption): String;
     function parseReplyBase(const obj: TftReplyBase): String;
     function parseForceReply(const obj: TftForceReply): String;
-    function parseInlineKeyboardButton(const obj
-      : TftInlineKeyboardButton): String;
+    function parseInlineKeyboardButton(const obj: TftInlineKeyboardButton): String;
     function parseKeyboardButton(const obj: TftKeyboardButton): String;
-    function parseReplyKeyboardRemove(const obj
-      : TftReplyKeyboardRemove): String;
-    function parseReplyKeyboardMarkup(const obj
-      : TftReplyKeyboardMarkup): String;
-    function parseInlineKeyboardMarkup(const obj
-      : TftInlineKeyboardMarkup): String;
-    function parseJsonAndGetWebhookInfo(const data: TJSONObject)
-      : TftWebhookInfo;
+    function parseReplyKeyboardRemove(const obj: TftReplyKeyboardRemove): String;
+    function parseReplyKeyboardMarkup(const obj: TftReplyKeyboardMarkup): String;
+    function parseInlineKeyboardMarkup(const obj: TftInlineKeyboardMarkup): String;
+    function parseJsonAndGetWebhookInfo(const data: TJSONObject): TftWebhookInfo;
     function parseWebhookInfo(const obj: TftWebhookInfo): String;
-    function parseInputMessageContent(const obj
-      : TftInputMessageContent): String;
-    function parseInputTextMessageContent
-      (const obj: TftInputTextMessageContent): String;
-    function parseInputLocationMessageContent
-      (const obj: TftInputLocationMessageContent): String;
-    function parseInputVenueMessageContent
-      (const obj: TftInputVenueMessageContent): String;
-    function parseInputContactMessageContent
-      (const obj: TftInputContactMessageContent): String;
+    function parseInputMessageContent(const obj: TftInputMessageContent): String;
+    function parseInputTextMessageContent(const obj: TftInputTextMessageContent): String;
+    function parseInputLocationMessageContent(const obj: TftInputLocationMessageContent): String;
+    function parseInputVenueMessageContent(const obj: TftInputVenueMessageContent): String;
+    function parseInputContactMessageContent(const obj: TftInputContactMessageContent): String;
 
     /// parseJson functions
     function parseJsonAndGetChat(const data: TJSONObject): TftChat;
     function parseJsonAndGetUser(const data: TJSONObject): TftUser;
-    function parseJsonAndGetMessageEntity(const data: TJSONObject)
-      : TftMessageEntity;
+    function parseJsonAndGetMessageEntity(const data: TJSONObject): TftMessageEntity;
     function parseJsonAndGetMessage(const data: TJSONObject): TftMessage;
     function parseJsonAndPhotoSize(const data: TJSONObject): TftPhotoSize;
     function parseJsonAndGetAudio(const data: TJSONObject): TftAudio;
     function parseJsonAndGetDocument(const data: TJSONObject): TftDocument;
     function parseJsonAndGetSticker(const data: TJSONObject): TftSticker;
     function parseJsonAndGetStickerSet(const data: TJSONObject): TftStickerSet;
-    function parseJsonAndGetMaskPosition(const data: TJSONObject)
-      : TftMaskPosition;
+    function parseJsonAndGetMaskPosition(const data: TJSONObject): TftMaskPosition;
     function parseJsonAndGetPoll(const data: TJSONObject): TftPoll;
     function parseJsonAndGetPollOption(const data: TJSONObject): TftPollOption;
-    function parseJsonAndGetChatPermissions(const data: TJSONObject)
-      : TftChatPermissions;
+    function parseJsonAndGetChatPermissions(const data: TJSONObject): TftChatPermissions;
     function parseJsonAndGetVideo(const data: TJSONObject): TftVideo;
     function parseJsonAndGetVoice(const data: TJSONObject): TftVoice;
     function parseJsonAndGetVideoNote(const data: TJSONObject): TftVideoNote;
     function parseJsonAndGetGame(const data: TJSONObject): TftGame;
-    function parseJsonAndGetGameHighScore(const data: TJSONObject)
-      : TftGameHighScore;
+    function parseJsonAndGetGameHighScore(const data: TJSONObject): TftGameHighScore;
     function parseJsonAndGetAnimation(const data: TJSONObject): TftAnimation;
     function parseJsonAndGetContact(const data: TJSONObject): TftContact;
     function parseJsonAndGetLocation(const data: TJSONObject): TftLocation;
     function parseJsonAndGetUpdate(const data: TJSONObject): TftUpdate;
-    function parseJsonAndGetUserProfilePhotos(const data: TJSONObject)
-      : TftUserProfilePhotos;
+    function parseJsonAndGetUserProfilePhotos(const data: TJSONObject): TftUserProfilePhotos;
     function parseJsonAndGetInputMedia(const data: TJSONObject): TftInputMedia;
-    function parseJsonAndGetReplyKeyboardMarkup(const data: TJSONObject)
-      : TftReplyKeyboardMarkup;
-    function parseJsonAndGetKeyboardButton(const data: TJSONObject)
-      : TftKeyboardButton;
-    function parseJsonAndGetReplyKeyboardRemove(const data: TJSONObject)
-      : TftReplyKeyboardRemove;
+    function parseJsonAndGetReplyKeyboardMarkup(const data: TJSONObject): TftReplyKeyboardMarkup;
+    function parseJsonAndGetKeyboardButton(const data: TJSONObject): TftKeyboardButton;
+    function parseJsonAndGetReplyKeyboardRemove(const data: TJSONObject): TftReplyKeyboardRemove;
     function parseJsonAndGetForceReply(const data: TJSONObject): TftForceReply;
     function parseJsonAndGetChatMember(const data: TJSONObject): TftChatMember;
     function parseJsonAndGetChatPhoto(const data: TJSONObject): TftChatPhoto;
-    function parseJsonAndGetResponseParameters(const data: TJSONObject)
-      : TftResponseParameters;
+    function parseJsonAndGetResponseParameters(const data: TJSONObject): TftResponseParameters;
     function parseJsonAndGetReplyBase(const data: TJSONObject): TftReplyBase;
-    function parseJsonAndGetInlineQuery(const data: TJSONObject)
-      : TftInlineQuery;
-    function parseJsonAndGetInlineQueryResult(const data: TJSONObject)
-      : TftInlineQueryResult;
-    function parseJsonAndGetInlineQueryResultCachedAudio
-      (const data: TJSONObject): TftInlineQueryResultCachedAudio;
-    function parseJsonAndGetInlineQueryResultCachedDocument
-      (const data: TJSONObject): TftInlineQueryResultCachedDocument;
-    function parseJsonAndGetInlineQueryResultCachedGif(const data: TJSONObject)
-      : TftInlineQueryResultCachedGif;
-    function parseJsonAndGetInlineQueryResultCachedMpeg4Gif
-      (const data: TJSONObject): TftInlineQueryResultCachedMpeg4Gif;
-    function parseJsonAndGetInlineQueryResultCachedPhoto
-      (const data: TJSONObject): TftInlineQueryResultCachedPhoto;
-    function parseJsonAndGetInlineQueryResultCachedSticker
-      (const data: TJSONObject): TftInlineQueryResultCachedSticker;
-    function parseJsonAndGetInlineQueryResultCachedVideo
-      (const data: TJSONObject): TftInlineQueryResultCachedVideo;
-    function parseJsonAndGetInlineQueryResultCachedVoice
-      (const data: TJSONObject): TftInlineQueryResultCachedVoice;
-    function parseJsonAndGetInlineQueryResultAudio(const data: TJSONObject)
-      : TftInlineQueryResultAudio;
-    function parseJsonAndGetInlineQueryResultContact(const data: TJSONObject)
-      : TftInlineQueryResultContact;
-    function parseJsonAndGetInlineQueryResultGame(const data: TJSONObject)
-      : TftInlineQueryResultGame;
-    function parseJsonAndGetInlineQueryResultDocument(const data: TJSONObject)
-      : TftInlineQueryResultDocument;
-    function parseJsonAndGetInlineQueryResultLocation(const data: TJSONObject)
-      : TftInlineQueryResultLocation;
-    function parseJsonAndGetInlineQueryResultVenue(const data: TJSONObject)
-      : TftInlineQueryResultVenue;
-    function parseJsonAndGetInlineQueryResultVoice(const data: TJSONObject)
-      : TftInlineQueryResultVoice;
-    function parseJsonAndGetInlineQueryResultPhoto(const data: TJSONObject)
-      : TftInlineQueryResultPhoto;
-    function parseJsonAndGetInlineQueryResultGif(const data: TJSONObject)
-      : TftInlineQueryResultGif;
-    function parseJsonAndGetInlineQueryResultMpeg4Gif(const data: TJSONObject)
-      : TftInlineQueryResultMpeg4Gif;
-    function parseJsonAndGetInlineQueryResultVideo(const data: TJSONObject)
-      : TftInlineQueryResultVideo;
-    function parseJsonAndGetChosenInlineResult(const data: TJSONObject)
-      : TftChosenInlineResult;
-    function parseJsonAndGetCallbackQuery(const data: TJSONObject)
-      : TftCallbackQuery;
-    function parseJsonAndGetInlineKeyboardMarkup(const data: TJSONObject)
-      : TftInlineKeyboardMarkup;
-    function parseJsonAndGetInlineKeyboardButton(const data: TJSONObject)
-      : TftInlineKeyboardButton;
-    function parseJsonAndGetInputMessageContent(const data: TJSONObject)
-      : TftInputMessageContent;
-    function parseJsonAndGetInputTextMessageContent(const data: TJSONObject)
-      : TftInputTextMessageContent;
-    function parseJsonAndGetInputLocationMessageContent(const data: TJSONObject)
-      : TftInputLocationMessageContent;
-    function parseJsonAndGetInputVenueMessageContent(const data: TJSONObject)
-      : TftInputVenueMessageContent;
-    function parseJsonAndGetInputContactMessageContent(const data: TJSONObject)
-      : TftInputContactMessageContent;
+    function parseJsonAndGetInlineQuery(const data: TJSONObject): TftInlineQuery;
+    function parseJsonAndGetInlineQueryResult(const data: TJSONObject): TftInlineQueryResult;
+    function parseJsonAndGetInlineQueryResultCachedAudio(const data: TJSONObject): TftInlineQueryResultCachedAudio;
+    function parseJsonAndGetInlineQueryResultCachedDocument(const data: TJSONObject): TftInlineQueryResultCachedDocument;
+    function parseJsonAndGetInlineQueryResultCachedGif(const data: TJSONObject): TftInlineQueryResultCachedGif;
+    function parseJsonAndGetInlineQueryResultCachedMpeg4Gif(const data: TJSONObject): TftInlineQueryResultCachedMpeg4Gif;
+    function parseJsonAndGetInlineQueryResultCachedPhoto(const data: TJSONObject): TftInlineQueryResultCachedPhoto;
+    function parseJsonAndGetInlineQueryResultCachedSticker(const data: TJSONObject): TftInlineQueryResultCachedSticker;
+    function parseJsonAndGetInlineQueryResultCachedVideo(const data: TJSONObject): TftInlineQueryResultCachedVideo;
+    function parseJsonAndGetInlineQueryResultCachedVoice(const data: TJSONObject): TftInlineQueryResultCachedVoice;
+    function parseJsonAndGetInlineQueryResultAudio(const data: TJSONObject): TftInlineQueryResultAudio;
+    function parseJsonAndGetInlineQueryResultContact(const data: TJSONObject): TftInlineQueryResultContact;
+    function parseJsonAndGetInlineQueryResultGame(const data: TJSONObject): TftInlineQueryResultGame;
+    function parseJsonAndGetInlineQueryResultDocument(const data: TJSONObject): TftInlineQueryResultDocument;
+    function parseJsonAndGetInlineQueryResultLocation(const data: TJSONObject): TftInlineQueryResultLocation;
+    function parseJsonAndGetInlineQueryResultVenue(const data: TJSONObject): TftInlineQueryResultVenue;
+    function parseJsonAndGetInlineQueryResultVoice(const data: TJSONObject): TftInlineQueryResultVoice;
+    function parseJsonAndGetInlineQueryResultPhoto(const data: TJSONObject): TftInlineQueryResultPhoto;
+    function parseJsonAndGetInlineQueryResultGif(const data: TJSONObject): TftInlineQueryResultGif;
+    function parseJsonAndGetInlineQueryResultMpeg4Gif(const data: TJSONObject): TftInlineQueryResultMpeg4Gif;
+    function parseJsonAndGetInlineQueryResultVideo(const data: TJSONObject): TftInlineQueryResultVideo;
+    function parseJsonAndGetChosenInlineResult(const data: TJSONObject): TftChosenInlineResult;
+    function parseJsonAndGetCallbackQuery(const data: TJSONObject): TftCallbackQuery;
+    function parseJsonAndGetInlineKeyboardMarkup(const data: TJSONObject): TftInlineKeyboardMarkup;
+    function parseJsonAndGetInlineKeyboardButton(const data: TJSONObject): TftInlineKeyboardButton;
+    function parseJsonAndGetInputMessageContent(const data: TJSONObject): TftInputMessageContent;
+    function parseJsonAndGetInputTextMessageContent(const data: TJSONObject): TftInputTextMessageContent;
+    function parseJsonAndGetInputLocationMessageContent(const data: TJSONObject): TftInputLocationMessageContent;
+    function parseJsonAndGetInputVenueMessageContent(const data: TJSONObject): TftInputVenueMessageContent;
+    function parseJsonAndGetInputContactMessageContent(const data: TJSONObject): TftInputContactMessageContent;
     function parseJsonAndGetInvoice(const data: TJSONObject): TftInvoice;
-    function parseJsonAndGetLabeledPrice(const data: TJSONObject)
-      : TftLabeledPrice;
+    function parseJsonAndGetLabeledPrice(const data: TJSONObject): TftLabeledPrice;
     function parseJsonAndGetBotCommand(const data: TJSONObject): TftBotCommand;
     function parseJsonAndGetOrderInfo(const data: TJSONObject): TftOrderInfo;
-    function parseJsonAndGetPreCheckoutQuery(const data: TJSONObject)
-      : TftPreCheckoutQuery;
-    function parseJsonAndGetShippingAddress(const data: TJSONObject)
-      : TftShippingAddress;
-    function parseJsonAndGetShippingOption(const data: TJSONObject)
-      : TftShippingOption;
-    function parseJsonAndGetShippingQuery(const data: TJSONObject)
-      : TftShippingQuery;
-    function parseJsonAndGetSuccessfulPayment(const data: TJSONObject)
-      : TftSuccessfulPayment;
+    function parseJsonAndGetPreCheckoutQuery(const data: TJSONObject): TftPreCheckoutQuery;
+    function parseJsonAndGetShippingAddress(const data: TJSONObject): TftShippingAddress;
+    function parseJsonAndGetShippingOption(const data: TJSONObject): TftShippingOption;
+    function parseJsonAndGetShippingQuery(const data: TJSONObject): TftShippingQuery;
+    function parseJsonAndGetSuccessfulPayment(const data: TJSONObject): TftSuccessfulPayment;
   end;
 
 implementation
 
 { TftTypeParser }
 
-procedure TftTypeParser.appendToJson(var JSON: String; const varName: String;
-  const value: Variant);
+procedure TftTypeParser.appendToJson(var JSON: String; const varName: String; const value: Variant);
 var
   typeString: string;
   basicType: Integer;
@@ -429,8 +351,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseChatPermissions
-  (const obj: TftChatPermissions): String;
+function TftTypeParser.parseChatPermissions(const obj: TftChatPermissions): String;
 begin
   Result := '';
   if (obj = nil) then
@@ -463,8 +384,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseChosenInlineResult
-  (const obj: TftChosenInlineResult): String;
+function TftTypeParser.parseChosenInlineResult(const obj: TftChosenInlineResult): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -548,8 +468,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseInlineKeyboardButton
-  (const obj: TftInlineKeyboardButton): String;
+function TftTypeParser.parseInlineKeyboardButton(const obj: TftInlineKeyboardButton): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -561,14 +480,12 @@ begin
   appendToJson(Result, 'url', obj.url);
   appendToJson(Result, 'callback_data', obj.callbackData);
   appendToJson(Result, 'switch_inline_query', obj.switchInlineQuery);
-  appendToJson(Result, 'switch_inline_query_current_chat',
-    obj.switchInlineQueryCurrentChat);
+  appendToJson(Result, 'switch_inline_query_current_chat', obj.switchInlineQueryCurrentChat);
   removeLastComma(Result);
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseInlineKeyboardMarkup
-  (const obj: TftInlineKeyboardMarkup): String;
+function TftTypeParser.parseInlineKeyboardMarkup(const obj: TftInlineKeyboardMarkup): String;
 var
   I, J: Integer;
 begin
@@ -611,8 +528,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseInlineQueryResult
-  (const obj: TftInlineQueryResult): String;
+function TftTypeParser.parseInlineQueryResult(const obj: TftInlineQueryResult): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -622,16 +538,13 @@ begin
   appendToJson(Result, 'type', obj.TypeInlineQueryResult);
   appendToJson(Result, 'title', obj.Title);
   appendToJson(Result, 'caption', obj.Caption);
-  appendToJson(Result, 'reply_markup',
-    parseInlineKeyboardMarkup(obj.ReplyMarkup));
-  appendToJson(Result, 'input_message_content',
-    parseInputMessageContent(obj.InputMessageContent));
+  appendToJson(Result, 'reply_markup', parseInlineKeyboardMarkup(obj.ReplyMarkup));
+  appendToJson(Result, 'input_message_content', parseInputMessageContent(obj.InputMessageContent));
   removeLastComma(Result);
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseInlineQueryResultArticle
-  (const obj: TftInlineQueryResultArticle): String;
+function TftTypeParser.parseInlineQueryResultArticle(const obj: TftInlineQueryResultArticle): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -647,8 +560,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult()
 end;
 
-function TftTypeParser.parseInlineQueryResultAudio
-  (const obj: TftInlineQueryResultAudio): String;
+function TftTypeParser.parseInlineQueryResultAudio(const obj: TftInlineQueryResultAudio): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -661,8 +573,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult()
 end;
 
-function TftTypeParser.parseInlineQueryResultCachedAudio
-  (const obj: TftInlineQueryResultCachedAudio): String;
+function TftTypeParser.parseInlineQueryResultCachedAudio(const obj: TftInlineQueryResultCachedAudio): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -673,8 +584,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultCachedDocument
-  (const obj: TftInlineQueryResultCachedDocument): String;
+function TftTypeParser.parseInlineQueryResultCachedDocument(const obj: TftInlineQueryResultCachedDocument): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -686,8 +596,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultCachedGif
-  (const obj: TftInlineQueryResultCachedGif): String;
+function TftTypeParser.parseInlineQueryResultCachedGif(const obj: TftInlineQueryResultCachedGif): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -698,8 +607,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultCachedMpeg4Gif
-  (const obj: TftInlineQueryResultCachedMpeg4Gif): String;
+function TftTypeParser.parseInlineQueryResultCachedMpeg4Gif(const obj: TftInlineQueryResultCachedMpeg4Gif): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -710,8 +618,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultCachedPhoto
-  (const obj: TftInlineQueryResultCachedPhoto): String;
+function TftTypeParser.parseInlineQueryResultCachedPhoto(const obj: TftInlineQueryResultCachedPhoto): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -723,8 +630,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultCachedSticker
-  (const obj: TftInlineQueryResultCachedSticker): String;
+function TftTypeParser.parseInlineQueryResultCachedSticker(const obj: TftInlineQueryResultCachedSticker): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -735,8 +641,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultCachedVideo
-  (const obj: TftInlineQueryResultCachedVideo): String;
+function TftTypeParser.parseInlineQueryResultCachedVideo(const obj: TftInlineQueryResultCachedVideo): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -748,8 +653,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultCachedVoice
-  (const obj: TftInlineQueryResultCachedVoice): String;
+function TftTypeParser.parseInlineQueryResultCachedVoice(const obj: TftInlineQueryResultCachedVoice): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -760,8 +664,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultContact
-  (const obj: TftInlineQueryResultContact): String;
+function TftTypeParser.parseInlineQueryResultContact(const obj: TftInlineQueryResultContact): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -778,8 +681,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultDocument
-  (const obj: TftInlineQueryResultDocument): String;
+function TftTypeParser.parseInlineQueryResultDocument(const obj: TftInlineQueryResultDocument): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -795,8 +697,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultGame
-  (const obj: TftInlineQueryResultGame): String;
+function TftTypeParser.parseInlineQueryResultGame(const obj: TftInlineQueryResultGame): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -807,8 +708,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultGif
-  (const obj: TftInlineQueryResultGif): String;
+function TftTypeParser.parseInlineQueryResultGif(const obj: TftInlineQueryResultGif): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -823,8 +723,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultLocation
-  (const obj: TftInlineQueryResultLocation): String;
+function TftTypeParser.parseInlineQueryResultLocation(const obj: TftInlineQueryResultLocation): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -839,8 +738,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultMpeg4Gif
-  (const obj: TftInlineQueryResultMpeg4Gif): String;
+function TftTypeParser.parseInlineQueryResultMpeg4Gif(const obj: TftInlineQueryResultMpeg4Gif): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -855,8 +753,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultPhoto
-  (const obj: TftInlineQueryResultPhoto): String;
+function TftTypeParser.parseInlineQueryResultPhoto(const obj: TftInlineQueryResultPhoto): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -871,8 +768,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultVenue
-  (const obj: TftInlineQueryResultVenue): String;
+function TftTypeParser.parseInlineQueryResultVenue(const obj: TftInlineQueryResultVenue): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -890,8 +786,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().egin
 end;
 
-function TftTypeParser.parseInlineQueryResultVideo
-  (const obj: TftInlineQueryResultVideo): String;
+function TftTypeParser.parseInlineQueryResultVideo(const obj: TftInlineQueryResultVideo): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -908,8 +803,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInlineQueryResultVoice
-  (const obj: TftInlineQueryResultVoice): String;
+function TftTypeParser.parseInlineQueryResultVoice(const obj: TftInlineQueryResultVoice): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -921,8 +815,7 @@ begin
   // The last comma will be erased by parseInlineQueryResult().
 end;
 
-function TftTypeParser.parseInputContactMessageContent
-  (const obj: TftInputContactMessageContent): String;
+function TftTypeParser.parseInputContactMessageContent(const obj: TftInputContactMessageContent): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -935,8 +828,7 @@ begin
   // The last comma will be erased by parseInputMessageContent().
 end;
 
-function TftTypeParser.parseInputLocationMessageContent
-  (const obj: TftInputLocationMessageContent): String;
+function TftTypeParser.parseInputLocationMessageContent(const obj: TftInputLocationMessageContent): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -981,31 +873,25 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseInputMessageContent
-  (const obj: TftInputMessageContent): String;
+function TftTypeParser.parseInputMessageContent(const obj: TftInputMessageContent): String;
 begin
   Result := '';
   if (obj <> nil) then
     Result := '';
   Result := Result + '{';
   if Pos(obj.TypeMessageContent, 'InputTextMessageContent') > 0 then
-    Result := Result + parseInputTextMessageContent
-      (TftInputTextMessageContent(obj))
+    Result := Result + parseInputTextMessageContent(TftInputTextMessageContent(obj))
   else if Pos(obj.TypeMessageContent, 'InputLocationMessageContent') > 0 then
-    Result := Result + parseInputLocationMessageContent
-      (TftInputLocationMessageContent(obj))
+    Result := Result + parseInputLocationMessageContent(TftInputLocationMessageContent(obj))
   else if Pos(obj.TypeMessageContent, 'InputVenueMessageContent') > 0 then
-    Result := Result + parseInputVenueMessageContent
-      (TftInputVenueMessageContent(obj))
+    Result := Result + parseInputVenueMessageContent(TftInputVenueMessageContent(obj))
   else if Pos(obj.TypeMessageContent, 'InputContactMessageContent') > 0 then
-    Result := Result + parseInputContactMessageContent
-      (TftInputContactMessageContent(obj));
+    Result := Result + parseInputContactMessageContent(TftInputContactMessageContent(obj));
   removeLastComma(Result);
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseInputTextMessageContent
-  (const obj: TftInputTextMessageContent): String;
+function TftTypeParser.parseInputTextMessageContent(const obj: TftInputTextMessageContent): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -1017,8 +903,7 @@ begin
   // The last comma will be erased by parseInputMessageContent().
 end;
 
-function TftTypeParser.parseInputVenueMessageContent
-  (const obj: TftInputVenueMessageContent): String;
+function TftTypeParser.parseInputVenueMessageContent(const obj: TftInputVenueMessageContent): String;
 begin
   Result := '';
   if (obj <> nil) then
@@ -1057,13 +942,11 @@ begin
 
 end;
 
-function TftTypeParser.parseJsonAndGetAnimation(const data: TJSONObject)
-  : TftAnimation;
+function TftTypeParser.parseJsonAndGetAnimation(const data: TJSONObject): TftAnimation;
 begin
   Result := TftAnimation.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftAnimation>((data.GetValue('result')
-      ).ToJSON);
+    Result := TJSON.JsonToObject<TftAnimation>((data.GetValue('result')).ToJSON);
 end;
 
 function TftTypeParser.parseJsonAndGetAudio(const data: TJSONObject): TftAudio;
@@ -1073,22 +956,18 @@ begin
     Result := TJSON.JsonToObject<TftAudio>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetBotCommand(const data: TJSONObject)
-  : TftBotCommand;
+function TftTypeParser.parseJsonAndGetBotCommand(const data: TJSONObject): TftBotCommand;
 begin
   Result := TftBotCommand.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotCommand>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftBotCommand>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetCallbackQuery(const data: TJSONObject)
-  : TftCallbackQuery;
+function TftTypeParser.parseJsonAndGetCallbackQuery(const data: TJSONObject): TftCallbackQuery;
 begin
   Result := TftCallbackQuery.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftCallbackQuery>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftCallbackQuery>((data.GetValue('result')).ToJSON);
 end;
 
 function TftTypeParser.parseJsonAndGetChat(const data: TJSONObject): TftChat;
@@ -1098,65 +977,53 @@ begin
     Result := TJSON.JsonToObject<TftChat>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetChatMember(const data: TJSONObject)
-  : TftChatMember;
+function TftTypeParser.parseJsonAndGetChatMember(const data: TJSONObject): TftChatMember;
 begin
   Result := TftChatMember.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatMember>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftChatMember>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetChatPermissions(const data: TJSONObject)
-  : TftChatPermissions;
+function TftTypeParser.parseJsonAndGetChatPermissions(const data: TJSONObject): TftChatPermissions;
 begin
   Result := TftChatPermissions.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatPermissions>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftChatPermissions>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetChatPhoto(const data: TJSONObject)
-  : TftChatPhoto;
+function TftTypeParser.parseJsonAndGetChatPhoto(const data: TJSONObject): TftChatPhoto;
 begin
   Result := TftChatPhoto.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatPhoto>((data.GetValue('result')
-      ).ToJSON);
+    Result := TJSON.JsonToObject<TftChatPhoto>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetChosenInlineResult
-  (const data: TJSONObject): TftChosenInlineResult;
+function TftTypeParser.parseJsonAndGetChosenInlineResult(const data: TJSONObject): TftChosenInlineResult;
 begin
   Result := TftChosenInlineResult.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChosenInlineResult>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftChosenInlineResult>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetContact(const data: TJSONObject)
-  : TftContact;
+function TftTypeParser.parseJsonAndGetContact(const data: TJSONObject): TftContact;
 begin
   Result := TftContact.Create;
   if data.GetValue('result') <> nil then
     Result := TJSON.JsonToObject<TftContact>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetDocument(const data: TJSONObject)
-  : TftDocument;
+function TftTypeParser.parseJsonAndGetDocument(const data: TJSONObject): TftDocument;
 begin
   Result := TftDocument.Create;
   if data.GetValue('result') <> nil then
     Result := TJSON.JsonToObject<TftDocument>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetForceReply(const data: TJSONObject)
-  : TftForceReply;
+function TftTypeParser.parseJsonAndGetForceReply(const data: TJSONObject): TftForceReply;
 begin
   Result := TftForceReply.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftForceReply>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftForceReply>((data.GetValue('result')).ToJSON);
 end;
 
 function TftTypeParser.parseJsonAndGetGame(const data: TJSONObject): TftGame;
@@ -1166,317 +1033,262 @@ begin
     Result := TJSON.JsonToObject<TftGame>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetGameHighScore(const data: TJSONObject)
-  : TftGameHighScore;
+function TftTypeParser.parseJsonAndGetGameHighScore(const data: TJSONObject): TftGameHighScore;
 begin
   Result := TftGameHighScore.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftGameHighScore>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftGameHighScore>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineKeyboardButton
-  (const data: TJSONObject): TftInlineKeyboardButton;
+function TftTypeParser.parseJsonAndGetInlineKeyboardButton(const data: TJSONObject): TftInlineKeyboardButton;
 begin
   Result := TftInlineKeyboardButton.Create('');
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineKeyboardButton>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineKeyboardButton>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineKeyboardMarkup
-  (const data: TJSONObject): TftInlineKeyboardMarkup;
+function TftTypeParser.parseJsonAndGetInlineKeyboardMarkup(const data: TJSONObject): TftInlineKeyboardMarkup;
 begin
   Result := TftInlineKeyboardMarkup.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineKeyboardMarkup>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineKeyboardMarkup>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQuery(const data: TJSONObject)
-  : TftInlineQuery;
+function TftTypeParser.parseJsonAndGetInlineQuery(const data: TJSONObject): TftInlineQuery;
 begin
   Result := TftInlineQuery.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQuery>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQuery>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResult(const data: TJSONObject)
-  : TftInlineQueryResult;
+function TftTypeParser.parseJsonAndGetInlineQueryResult(const data: TJSONObject): TftInlineQueryResult;
 begin
   Result := TftInlineQueryResult.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResult>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResult>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultAudio
-  (const data: TJSONObject): TftInlineQueryResultAudio;
+function TftTypeParser.parseJsonAndGetInlineQueryResultAudio(const data: TJSONObject): TftInlineQueryResultAudio;
 begin
   Result := TftInlineQueryResultAudio.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultAudio>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultAudio>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultCachedAudio
-  (const data: TJSONObject): TftInlineQueryResultCachedAudio;
+function TftTypeParser.parseJsonAndGetInlineQueryResultCachedAudio(const data: TJSONObject): TftInlineQueryResultCachedAudio;
 begin
   Result := TftInlineQueryResultCachedAudio.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedAudio>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultCachedAudio>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultCachedDocument
-  (const data: TJSONObject): TftInlineQueryResultCachedDocument;
+function TftTypeParser.parseJsonAndGetInlineQueryResultCachedDocument(const data: TJSONObject): TftInlineQueryResultCachedDocument;
 begin
   Result := TftInlineQueryResultCachedDocument.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedDocument>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultCachedDocument>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultCachedGif
-  (const data: TJSONObject): TftInlineQueryResultCachedGif;
+function TftTypeParser.parseJsonAndGetInlineQueryResultCachedGif(const data: TJSONObject): TftInlineQueryResultCachedGif;
 begin
   Result := TftInlineQueryResultCachedGif.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedGif>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultCachedGif>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultCachedMpeg4Gif
-  (const data: TJSONObject): TftInlineQueryResultCachedMpeg4Gif;
+function TftTypeParser.parseJsonAndGetInlineQueryResultCachedMpeg4Gif(const data: TJSONObject): TftInlineQueryResultCachedMpeg4Gif;
 begin
   Result := TftInlineQueryResultCachedMpeg4Gif.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedMpeg4Gif>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultCachedMpeg4Gif>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultCachedPhoto
-  (const data: TJSONObject): TftInlineQueryResultCachedPhoto;
+function TftTypeParser.parseJsonAndGetInlineQueryResultCachedPhoto(const data: TJSONObject): TftInlineQueryResultCachedPhoto;
 begin
   Result := TftInlineQueryResultCachedPhoto.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedPhoto>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultCachedPhoto>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultCachedSticker
-  (const data: TJSONObject): TftInlineQueryResultCachedSticker;
+function TftTypeParser.parseJsonAndGetInlineQueryResultCachedSticker(const data: TJSONObject): TftInlineQueryResultCachedSticker;
 begin
   Result := TftInlineQueryResultCachedSticker.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedSticker>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultCachedSticker>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultCachedVideo
-  (const data: TJSONObject): TftInlineQueryResultCachedVideo;
+function TftTypeParser.parseJsonAndGetInlineQueryResultCachedVideo(const data: TJSONObject): TftInlineQueryResultCachedVideo;
 begin
   Result := TftInlineQueryResultCachedVideo.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedVideo>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultCachedVideo>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultCachedVoice
-  (const data: TJSONObject): TftInlineQueryResultCachedVoice;
+function TftTypeParser.parseJsonAndGetInlineQueryResultCachedVoice(const data: TJSONObject): TftInlineQueryResultCachedVoice;
 begin
   Result := TftInlineQueryResultCachedVoice.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedVoice>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultCachedVoice>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultContact
-  (const data: TJSONObject): TftInlineQueryResultContact;
+function TftTypeParser.parseJsonAndGetInlineQueryResultContact(const data: TJSONObject): TftInlineQueryResultContact;
 begin
   Result := TftInlineQueryResultContact.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultContact>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultContact>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultDocument
-  (const data: TJSONObject): TftInlineQueryResultDocument;
+function TftTypeParser.parseJsonAndGetInlineQueryResultDocument(const data: TJSONObject): TftInlineQueryResultDocument;
 begin
   Result := TftInlineQueryResultDocument.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultDocument>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultDocument>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultGame
-  (const data: TJSONObject): TftInlineQueryResultGame;
+function TftTypeParser.parseJsonAndGetInlineQueryResultGame(const data: TJSONObject): TftInlineQueryResultGame;
 begin
   Result := TftInlineQueryResultGame.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultGame>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultGame>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultGif
-  (const data: TJSONObject): TftInlineQueryResultGif;
+function TftTypeParser.parseJsonAndGetInlineQueryResultGif(const data: TJSONObject): TftInlineQueryResultGif;
 begin
   Result := TftInlineQueryResultGif.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultGif>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultGif>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultLocation
-  (const data: TJSONObject): TftInlineQueryResultLocation;
+function TftTypeParser.parseJsonAndGetInlineQueryResultLocation(const data: TJSONObject): TftInlineQueryResultLocation;
 begin
   Result := TftInlineQueryResultLocation.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultLocation>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultLocation>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultMpeg4Gif
-  (const data: TJSONObject): TftInlineQueryResultMpeg4Gif;
+function TftTypeParser.parseJsonAndGetInlineQueryResultMpeg4Gif(const data: TJSONObject): TftInlineQueryResultMpeg4Gif;
 begin
   Result := TftInlineQueryResultMpeg4Gif.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultMpeg4Gif>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultMpeg4Gif>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultPhoto
-  (const data: TJSONObject): TftInlineQueryResultPhoto;
+function TftTypeParser.parseJsonAndGetInlineQueryResultPhoto(const data: TJSONObject): TftInlineQueryResultPhoto;
 begin
   Result := TftInlineQueryResultPhoto.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultPhoto>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultPhoto>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultVenue
-  (const data: TJSONObject): TftInlineQueryResultVenue;
+function TftTypeParser.parseJsonAndGetInlineQueryResultVenue(const data: TJSONObject): TftInlineQueryResultVenue;
 begin
   Result := TftInlineQueryResultVenue.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultVenue>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultVenue>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultVideo
-  (const data: TJSONObject): TftInlineQueryResultVideo;
+function TftTypeParser.parseJsonAndGetInlineQueryResultVideo(const data: TJSONObject): TftInlineQueryResultVideo;
 begin
   Result := TftInlineQueryResultVideo.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultVideo>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultVideo>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInlineQueryResultVoice
-  (const data: TJSONObject): TftInlineQueryResultVoice;
+function TftTypeParser.parseJsonAndGetInlineQueryResultVoice(const data: TJSONObject): TftInlineQueryResultVoice;
 begin
   Result := TftInlineQueryResultVoice.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultVoice>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInlineQueryResultVoice>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInputContactMessageContent
-  (const data: TJSONObject): TftInputContactMessageContent;
+function TftTypeParser.parseJsonAndGetInputContactMessageContent(const data: TJSONObject): TftInputContactMessageContent;
 begin
   Result := TftInputContactMessageContent.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputContactMessageContent>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInputContactMessageContent>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInputLocationMessageContent
-  (const data: TJSONObject): TftInputLocationMessageContent;
+function TftTypeParser.parseJsonAndGetInputLocationMessageContent(const data: TJSONObject): TftInputLocationMessageContent;
 begin
   Result := TftInputLocationMessageContent.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputLocationMessageContent>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInputLocationMessageContent>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInputMedia(const data: TJSONObject)
-  : TftInputMedia;
+function TftTypeParser.parseJsonAndGetInputMedia(const data: TJSONObject): TftInputMedia;
 begin
   Result := TftInputMedia.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputMedia>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInputMedia>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInputMessageContent
-  (const data: TJSONObject): TftInputMessageContent;
+function TftTypeParser.parseJsonAndGetInputMessageContent(const data: TJSONObject): TftInputMessageContent;
 begin
   Result := TftInputMessageContent.Create('');
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputMessageContent>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInputMessageContent>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInputTextMessageContent
-  (const data: TJSONObject): TftInputTextMessageContent;
+function TftTypeParser.parseJsonAndGetInputTextMessageContent(const data: TJSONObject): TftInputTextMessageContent;
 begin
   Result := TftInputTextMessageContent.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputTextMessageContent>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInputTextMessageContent>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInputVenueMessageContent
-  (const data: TJSONObject): TftInputVenueMessageContent;
+function TftTypeParser.parseJsonAndGetInputVenueMessageContent(const data: TJSONObject): TftInputVenueMessageContent;
 begin
   Result := TftInputVenueMessageContent.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputVenueMessageContent>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftInputVenueMessageContent>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetInvoice(const data: TJSONObject)
-  : TftInvoice;
+function TftTypeParser.parseJsonAndGetInvoice(const data: TJSONObject): TftInvoice;
 begin
   Result := TftInvoice.Create;
   if data.GetValue('result') <> nil then
     Result := TJSON.JsonToObject<TftInvoice>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetKeyboardButton(const data: TJSONObject)
-  : TftKeyboardButton;
+function TftTypeParser.parseJsonAndGetKeyboardButton(const data: TJSONObject): TftKeyboardButton;
 begin
   Result := TftKeyboardButton.Create('');
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftKeyboardButton>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftKeyboardButton>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetLabeledPrice(const data: TJSONObject)
-  : TftLabeledPrice;
+function TftTypeParser.parseJsonAndGetLabeledPrice(const data: TJSONObject): TftLabeledPrice;
 begin
   Result := TftLabeledPrice.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftLabeledPrice>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftLabeledPrice>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetList(ParseFunc: TJsonToFtTypeFunc;
-  JSONObject: TJSONObject): TList;
+function TftTypeParser.parseJsonAndGetList(ParseFunc: TJsonToFtTypeFunc; JSONObject: TJSONObject): TList;
 var
   getArrayJSON: TJSONArray;
   I: Byte;
 begin
   Result := TList.Create;
+
+  If Not Assigned(JSONObject) then
+     Exit;
+
   try
-    getArrayJSON := (JSONObject).GetValue('result') as TJSONArray;
-    if getArrayJSON.Count <= 0 then
-      Exit;
-    for I := 0 to Pred(getArrayJSON.Count) do
-    begin
-      Result.Add(ParseFunc(getArrayJSON, I));
-    end;
+
+    Var
+    s := JSONObject.ToString; // Retorna '{"ok":false,"error_code":404,"description":"Not Found"}'
+    getArrayJSON := (JSONObject).GetValue('result') as TJSONArray; // --- Error ya que no es un array
+
+    If Assigned(getArrayJSON) then
+    Begin
+      if getArrayJSON.Count <= 0 then
+        Exit;
+      for I := 0 to Pred(getArrayJSON.Count) do
+      begin
+        Result.Add(ParseFunc(getArrayJSON, I));
+      end;
+    End;
   except
     on E: Exception do
     begin
@@ -1486,46 +1298,53 @@ begin
   end;
 end;
 
-function TftTypeParser.parseJsonAndGetLocation(const data: TJSONObject)
-  : TftLocation;
+function TftTypeParser.parseJsonAndGetLocation(const data: TJSONObject): TftLocation;
 begin
   Result := TftLocation.Create;
   if data.GetValue('result') <> nil then
     Result := TJSON.JsonToObject<TftLocation>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetMaskPosition(const data: TJSONObject)
-  : TftMaskPosition;
+function TftTypeParser.parseJsonAndGetMaskPosition(const data: TJSONObject): TftMaskPosition;
 begin
   Result := TftMaskPosition.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMaskPosition>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftMaskPosition>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetMessage(const data: TJSONObject)
-  : TftMessage;
+function TftTypeParser.parseJsonAndGetMessage(const data: TJSONObject): TftMessage;
+var
+  OkVal: TJSONValue;
+  ErrDesc: TJSONValue;
 begin
+  Result := TftMessage.Create;
+  if data = nil then
+    Exit;
+  OkVal := data.GetValue('ok');
+  if Assigned(OkVal) and (OkVal.value = 'false') then
+  begin
+    ErrDesc := data.GetValue('description');
+    if Assigned(ErrDesc) then
+      raise Exception.Create(ErrDesc.value)
+    else
+      raise Exception.Create('Telegram API error');
+  end;
   if data.GetValue('result') <> nil then
     Result := TJSON.JsonToObject<TftMessage>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetMessageEntity(const data: TJSONObject)
-  : TftMessageEntity;
+function TftTypeParser.parseJsonAndGetMessageEntity(const data: TJSONObject): TftMessageEntity;
 begin
   Result := TftMessageEntity.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMessageEntity>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftMessageEntity>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetOrderInfo(const data: TJSONObject)
-  : TftOrderInfo;
+function TftTypeParser.parseJsonAndGetOrderInfo(const data: TJSONObject): TftOrderInfo;
 begin
   Result := TftOrderInfo.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftOrderInfo>((data.GetValue('result')
-      ).ToJSON);
+    Result := TJSON.JsonToObject<TftOrderInfo>((data.GetValue('result')).ToJSON);
 end;
 
 function TftTypeParser.parseJsonAndGetPoll(const data: TJSONObject): TftPoll;
@@ -1535,115 +1354,91 @@ begin
     Result := TJSON.JsonToObject<TftPoll>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetPollOption(const data: TJSONObject)
-  : TftPollOption;
+function TftTypeParser.parseJsonAndGetPollOption(const data: TJSONObject): TftPollOption;
 begin
   Result := TftPollOption.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPollOption>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftPollOption>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetPreCheckoutQuery(const data: TJSONObject)
-  : TftPreCheckoutQuery;
+function TftTypeParser.parseJsonAndGetPreCheckoutQuery(const data: TJSONObject): TftPreCheckoutQuery;
 begin
   Result := TftPreCheckoutQuery.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPreCheckoutQuery>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftPreCheckoutQuery>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetReplyBase(const data: TJSONObject)
-  : TftReplyBase;
+function TftTypeParser.parseJsonAndGetReplyBase(const data: TJSONObject): TftReplyBase;
 begin
   Result := TftReplyBase.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftReplyBase>((data.GetValue('result')
-      ).ToJSON);
+    Result := TJSON.JsonToObject<TftReplyBase>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetReplyKeyboardMarkup
-  (const data: TJSONObject): TftReplyKeyboardMarkup;
+function TftTypeParser.parseJsonAndGetReplyKeyboardMarkup(const data: TJSONObject): TftReplyKeyboardMarkup;
 begin
   Result := TftReplyKeyboardMarkup.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftReplyKeyboardMarkup>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftReplyKeyboardMarkup>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetReplyKeyboardRemove
-  (const data: TJSONObject): TftReplyKeyboardRemove;
+function TftTypeParser.parseJsonAndGetReplyKeyboardRemove(const data: TJSONObject): TftReplyKeyboardRemove;
 begin
   Result := TftReplyKeyboardRemove.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftReplyKeyboardRemove>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftReplyKeyboardRemove>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetResponseParameters
-  (const data: TJSONObject): TftResponseParameters;
+function TftTypeParser.parseJsonAndGetResponseParameters(const data: TJSONObject): TftResponseParameters;
 begin
   Result := TftResponseParameters.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftResponseParameters>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftResponseParameters>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetShippingAddress(const data: TJSONObject)
-  : TftShippingAddress;
+function TftTypeParser.parseJsonAndGetShippingAddress(const data: TJSONObject): TftShippingAddress;
 begin
   Result := TftShippingAddress.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftShippingAddress>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftShippingAddress>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetShippingOption(const data: TJSONObject)
-  : TftShippingOption;
+function TftTypeParser.parseJsonAndGetShippingOption(const data: TJSONObject): TftShippingOption;
 begin
   Result := TftShippingOption.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftShippingOption>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftShippingOption>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetShippingQuery(const data: TJSONObject)
-  : TftShippingQuery;
+function TftTypeParser.parseJsonAndGetShippingQuery(const data: TJSONObject): TftShippingQuery;
 begin
   Result := TftShippingQuery.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftShippingQuery>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftShippingQuery>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetSticker(const data: TJSONObject)
-  : TftSticker;
+function TftTypeParser.parseJsonAndGetSticker(const data: TJSONObject): TftSticker;
 begin
   Result := TftSticker.Create;
   if data.GetValue('result') <> nil then
     Result := TJSON.JsonToObject<TftSticker>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetStickerSet(const data: TJSONObject)
-  : TftStickerSet;
+function TftTypeParser.parseJsonAndGetStickerSet(const data: TJSONObject): TftStickerSet;
 begin
   Result := TftStickerSet.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftStickerSet>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftStickerSet>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetSuccessfulPayment(const data: TJSONObject)
-  : TftSuccessfulPayment;
+function TftTypeParser.parseJsonAndGetSuccessfulPayment(const data: TJSONObject): TftSuccessfulPayment;
 begin
   Result := TftSuccessfulPayment.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftSuccessfulPayment>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftSuccessfulPayment>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetUpdate(const data: TJSONObject)
-  : TftUpdate;
+function TftTypeParser.parseJsonAndGetUpdate(const data: TJSONObject): TftUpdate;
 begin
   Result := TftUpdate.Create;
   if data.GetValue('result') <> nil then
@@ -1652,17 +1447,14 @@ end;
 
 function TftTypeParser.parseJsonAndGetUser(const data: TJSONObject): TftUser;
 begin
-  Result := TJSON.JsonToObject<TftUser>
-    ((data.GetValue('result') as TJSONObject).ToJSON);
+  Result := TJSON.JsonToObject<TftUser>((data.GetValue('result') as TJSONObject).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetUserProfilePhotos(const data: TJSONObject)
-  : TftUserProfilePhotos;
+function TftTypeParser.parseJsonAndGetUserProfilePhotos(const data: TJSONObject): TftUserProfilePhotos;
 begin
   Result := TftUserProfilePhotos.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftUserProfilePhotos>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftUserProfilePhotos>((data.GetValue('result')).ToJSON);
 end;
 
 function TftTypeParser.parseJsonAndGetVideo(const data: TJSONObject): TftVideo;
@@ -1672,13 +1464,11 @@ begin
     Result := TJSON.JsonToObject<TftVideo>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetVideoNote(const data: TJSONObject)
-  : TftVideoNote;
+function TftTypeParser.parseJsonAndGetVideoNote(const data: TJSONObject): TftVideoNote;
 begin
   Result := TftVideoNote.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftVideoNote>((data.GetValue('result')
-      ).ToJSON);
+    Result := TJSON.JsonToObject<TftVideoNote>((data.GetValue('result')).ToJSON);
 end;
 
 function TftTypeParser.parseJsonAndGetVoice(const data: TJSONObject): TftVoice;
@@ -1688,26 +1478,21 @@ begin
     Result := TJSON.JsonToObject<TftVoice>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndGetWebhookInfo(const data: TJSONObject)
-  : TftWebhookInfo;
+function TftTypeParser.parseJsonAndGetWebhookInfo(const data: TJSONObject): TftWebhookInfo;
 begin
   Result := TftWebhookInfo.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftWebhookInfo>
-      ((data.GetValue('result')).ToJSON);
+    Result := TJSON.JsonToObject<TftWebhookInfo>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseJsonAndPhotoSize(const data: TJSONObject)
-  : TftPhotoSize;
+function TftTypeParser.parseJsonAndPhotoSize(const data: TJSONObject): TftPhotoSize;
 begin
   Result := TftPhotoSize.Create;
   if data.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPhotoSize>((data.GetValue('result')
-      ).ToJSON);
+    Result := TJSON.JsonToObject<TftPhotoSize>((data.GetValue('result')).ToJSON);
 end;
 
-function TftTypeParser.parseKeyboardButton
-  (const obj: TftKeyboardButton): String;
+function TftTypeParser.parseKeyboardButton(const obj: TftKeyboardButton): String;
 begin
   Result := '';
   if (obj = nil) then
@@ -1856,8 +1641,7 @@ begin
   appendToJson(Result, 'location', parseLocation(obj.Location));
   appendToJson(Result, 'poll', parsePoll(obj.Poll));
   appendToJson(Result, 'new_chat_member', parseUser(obj.NewChatMember));
-  appendToJson(Result, 'new_chat_members',
-    parseList(TList(obj.NewChatMembers)));
+  appendToJson(Result, 'new_chat_members', parseList(TList(obj.NewChatMembers)));
   appendToJson(Result, 'left_chat_member', parseUser(obj.LeftChatMember));
   appendToJson(Result, 'new_chat_title', obj.NewChatTitle);
   appendToJson(Result, 'new_chat_photo', parseList(TList(obj.NewChatPhoto)));
@@ -1871,10 +1655,8 @@ begin
   appendToJson(Result, 'pinned_message', parseMessage(obj.PinnedMessage));
   appendToJson(Result, 'connected_website', obj.ConnectedWebsite);
   appendToJson(Result, 'invoice', parseInvoice(obj.Invoice));
-  appendToJson(Result, 'successful_payment',
-    parseSuccessfulPayment(obj.SuccessfulPayment));
-  appendToJson(Result, 'reply_markup',
-    parseInlineKeyboardMarkup(obj.ReplyMarkup));
+  appendToJson(Result, 'successful_payment', parseSuccessfulPayment(obj.SuccessfulPayment));
+  appendToJson(Result, 'reply_markup', parseInlineKeyboardMarkup(obj.ReplyMarkup));
   removeLastComma(Result);
   Result := Result + '}';
 end;
@@ -1957,8 +1739,7 @@ begin
   appendToJson(Result, 'allows_multiple_answers', obj.AllowsMultipleAnswers);
   appendToJson(Result, 'correct_option_id', obj.CorrectOptionId);
   appendToJson(Result, 'explanation', obj.Explanation);
-  appendToJson(Result, 'explanation_entities',
-    parseList(TList(obj.ExplanationEntities)));
+  appendToJson(Result, 'explanation_entities', parseList(TList(obj.ExplanationEntities)));
   appendToJson(Result, 'open_period', obj.OpenPeriod);
   appendToJson(Result, 'close_date', obj.CloseDate);
   removeLastComma(Result);
@@ -1980,8 +1761,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parsePreCheckoutQuery
-  (const obj: TftPreCheckoutQuery): String;
+function TftTypeParser.parsePreCheckoutQuery(const obj: TftPreCheckoutQuery): String;
 begin
   Result := '';
   if (obj = nil) then
@@ -2021,8 +1801,7 @@ begin
     Result := parseInlineKeyboardMarkup(TftInlineKeyboardMarkup(obj));
 end;
 
-function TftTypeParser.parseReplyKeyboardMarkup
-  (const obj: TftReplyKeyboardMarkup): String;
+function TftTypeParser.parseReplyKeyboardMarkup(const obj: TftReplyKeyboardMarkup): String;
 var
   I, J: Integer;
 begin
@@ -2055,8 +1834,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseReplyKeyboardRemove
-  (const obj: TftReplyKeyboardRemove): String;
+function TftTypeParser.parseReplyKeyboardRemove(const obj: TftReplyKeyboardRemove): String;
 begin
   Result := '';
   if (obj = nil) then
@@ -2071,8 +1849,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseResponseParameters
-  (const obj: TftResponseParameters): String;
+function TftTypeParser.parseResponseParameters(const obj: TftResponseParameters): String;
 begin
   Result := '';
   if (obj = nil) then
@@ -2087,8 +1864,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseShippingAddress
-  (const obj: TftShippingAddress): String;
+function TftTypeParser.parseShippingAddress(const obj: TftShippingAddress): String;
 begin
   Result := '';
   if (obj = nil) then
@@ -2107,8 +1883,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseShippingOption
-  (const obj: TftShippingOption): String;
+function TftTypeParser.parseShippingOption(const obj: TftShippingOption): String;
 begin
   Result := '';
   if (obj = nil) then
@@ -2184,8 +1959,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseSuccessfulPayment
-  (const obj: TftSuccessfulPayment): String;
+function TftTypeParser.parseSuccessfulPayment(const obj: TftSuccessfulPayment): String;
 begin
   Result := '';
   if (obj = nil) then
@@ -2218,15 +1992,12 @@ begin
   appendToJson(Result, 'message', parseMessage(obj.Message));
   appendToJson(Result, 'edited_message', parseMessage(obj.EditedMessage));
   appendToJson(Result, 'channel_post', parseMessage(obj.ChannelPost));
-  appendToJson(Result, 'edited_channel_post',
-    parseMessage(obj.EditedChannelPost));
+  appendToJson(Result, 'edited_channel_post', parseMessage(obj.EditedChannelPost));
   appendToJson(Result, 'inline_query', parseInlineQuery(obj.InlineQuery));
-  appendToJson(Result, 'chosen_inline_result',
-    parseChosenInlineResult(obj.ChosenInlineResult));
+  appendToJson(Result, 'chosen_inline_result', parseChosenInlineResult(obj.ChosenInlineResult));
   appendToJson(Result, 'callback_query', parseCallbackQuery(obj.CallbackQuery));
   appendToJson(Result, 'shipping_query', parseShippingQuery(obj.ShippingQuery));
-  appendToJson(Result, 'pre_checkout_query',
-    parsePreCheckoutQuery(obj.PreCheckoutQuery));
+  appendToJson(Result, 'pre_checkout_query', parsePreCheckoutQuery(obj.PreCheckoutQuery));
   removeLastComma(Result);
   Result := Result + '}';
 end;
@@ -2250,8 +2021,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.parseUserProfilePhotos
-  (const obj: TftUserProfilePhotos): String;
+function TftTypeParser.parseUserProfilePhotos(const obj: TftUserProfilePhotos): String;
 begin
 
 end;
@@ -2326,8 +2096,7 @@ begin
   appendToJson(Result, 'last_error_date', obj.last_error_date);
   appendToJson(Result, 'last_error_message', obj.last_error_message);
   appendToJson(Result, 'max_connections', obj.max_connections);
-  appendToJson(Result, 'allowed_updates',
-    parseList(TList(obj.allowed_updates)));
+  appendToJson(Result, 'allowed_updates', parseList(TList(obj.allowed_updates)));
   removeLastComma(Result);
   Result := Result + '}';
 end;

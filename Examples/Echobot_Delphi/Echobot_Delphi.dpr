@@ -10,45 +10,52 @@ uses
   fastTelega.EventBroadcaster,
   fastTelega.LongPoll;
 
+const
+  BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE';
+
 var
   Bot: TftBot;
   LongPoll: TftLongPoll;
 
 begin
   try
-    Bot := TftBot.Create('BOT_TOKEN',
-      'https://api.telegram.org');
+    Bot := TftBot.Create(BOT_TOKEN, 'https://api.telegram.org');
+
     Bot.Events.OnCommand('start',
       procedure(const FTMessage: TObject)
       begin
-        Bot.API.sendMessage(TftMessage(FTMessage).Chat.id, 'Hi!');
+        Bot.API.sendMessage(TftMessage(FTMessage).Chat.Id, 'Hi!');
       end);
+
     Bot.Events.OnAnyMessage(
       procedure(const FTMessage: TObject)
+      var
+        Msg: TftMessage;
       begin
-        Writeln('User wrote ', TftMessage(FTMessage).text);
-        if Pos('/start', TftMessage(FTMessage).text) > 0 then
+        Msg := TftMessage(FTMessage);
+        Writeln('User wrote: ' + Msg.Text);
+        if Pos('/start', Msg.Text) > 0 then
           Exit;
-        Bot.API.sendMessage(TftMessage(FTMessage).Chat.id,
-          'Your message is: ' + TftMessage(FTMessage).text);
+        Bot.API.sendMessage(Msg.Chat.Id, 'Your message is: ' + Msg.Text);
       end);
+
     try
-      Writeln('Bot username: ' + Bot.API.getMe.username);
+      Writeln('Bot username: @' + Bot.API.getMe.UserName);
       Bot.API.deleteWebhook();
 
       LongPoll := TftLongPoll.Create(Bot);
-      while (True) do
-      begin
-        Writeln('Long poll started\n');
-        LongPoll.start();
-      end
+      try
+        while True do
+          LongPoll.start();
+      finally
+        LongPoll.Free;
+      end;
     except
       on E: Exception do
-         Writeln(E.ClassName, ': ', E.Message);
+        Writeln(E.ClassName + ': ' + E.Message);
     end;
   except
     on E: Exception do
-      Writeln(E.ClassName, ': ', E.Message);
+      Writeln(E.ClassName + ': ' + E.Message);
   end;
-
 end.

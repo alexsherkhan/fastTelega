@@ -21,6 +21,7 @@ type
     Flimit: Integer;
     Ftimeout: Integer;
     FallowUpdates: TStrings;
+    FOwnsAllowUpdates: Boolean;  // True only when we created FallowUpdates internally
     FFistInit: Boolean;
   public
     constructor Create(AAPI: TftAPI; AEventHandler: TftEventHandler;
@@ -39,37 +40,53 @@ implementation
 constructor TftLongPoll.Create(ABot: TftBot; Alimit, Atimeout: Integer;
   AallowUpdates: TStrings);
 begin
+  // We store references to Bot's API and EventHandler — we do NOT own them.
   FAPI := ABot.API;
   FEventHandler := ABot.EventHandler;
   FlastUpdateId := 0;
   Flimit := Alimit;
   Ftimeout := Atimeout;
   if AallowUpdates = nil then
-    FallowUpdates := TStringList.Create
+  begin
+    FallowUpdates := TStringList.Create;
+    FOwnsAllowUpdates := True;
+  end
   else
+  begin
     FallowUpdates := AallowUpdates;
+    FOwnsAllowUpdates := False;
+  end;
   FFistInit := true;
 end;
 
 constructor TftLongPoll.Create(AAPI: TftAPI; AEventHandler: TftEventHandler;
   Alimit, Atimeout: Integer; AallowUpdates: TStrings);
 begin
+  // We store references passed in — we do NOT own FAPI or FEventHandler.
   FAPI := AAPI;
   FEventHandler := AEventHandler;
   FlastUpdateId := 0;
   Flimit := Alimit;
   Ftimeout := Atimeout;
   if AallowUpdates = nil then
-    FallowUpdates := TStrings.Create
+  begin
+    FallowUpdates := TStringList.Create;
+    FOwnsAllowUpdates := True;
+  end
   else
+  begin
     FallowUpdates := AallowUpdates;
+    FOwnsAllowUpdates := False;
+  end;
   FFistInit := true;
 end;
 
 destructor TftLongPoll.Destroy;
 begin
-  FreeAndNil(FAPI);
-  FreeAndNil(FEventHandler);
+  // FAPI and FEventHandler are always owned by the caller (TftBot or external code).
+  // Never free them here — doing so causes a double-free when TftBot.Destroy runs.
+  if FOwnsAllowUpdates then
+    FreeAndNil(FallowUpdates);
   inherited;
 end;
 

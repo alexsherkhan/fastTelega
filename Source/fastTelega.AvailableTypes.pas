@@ -121,12 +121,12 @@ type
     /// <summary>
     /// Optional. Identifier of the message sent via the bot in inline mode, that originated the query.
     /// </summary>
-    property InlIneMessageId: String read FinlineMessageId
+    property InlineMessageId: String read FinlineMessageId
       write FinlineMessageId;
     /// <summary>
     /// Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent. Useful for high scores in games.
     /// </summary>
-    property ChatInstanCe: String read FchatInstance write FchatInstance;
+    property ChatInstance: String read FchatInstance write FchatInstance;
     /// <summary>
     /// Data associated with the callback button. Be aware that a bad client can send arbitrary data in this field.
     /// </summary>
@@ -165,7 +165,7 @@ type
     /// Available only if there is an inline keyboard attached to the message.
     /// Will be also received in callback queries and can be used to edit the message.
     /// </summary>
-    property InlIneMessageId: String read FinlineMessageId
+    property InlineMessageId: String read FinlineMessageId
       write FinlineMessageId;
     /// <summary>
     /// The query that was used to obtain the result.
@@ -236,11 +236,11 @@ type
     /// <summary>
     /// Bot specified invoice payload.
     /// </summary>
-    property InvoIcePayload: String read FinvoicePayload write FinvoicePayload;
+    property InvoicePayload: String read FinvoicePayload write FinvoicePayload;
     /// <summary>
     /// User specified shipping address.
     /// </summary>
-    property ShippingAddreSS: TftShippingAddress read FshippingAddress
+    property ShippingAddress: TftShippingAddress read FshippingAddress
       write FshippingAddress;
   end;
 
@@ -319,7 +319,7 @@ type
     /// <summary>
     /// Optional. User shipping address.
     /// </summary>
-    property ShippingAddreSS: TftShippingAddress read FshippingAddress
+    property ShippingAddress: TftShippingAddress read FshippingAddress
       write FshippingAddress;
   end;
 
@@ -350,7 +350,7 @@ type
     /// <summary>
     /// Three-letter ISO 4217 currency code.
     /// </summary>
-    property CurrenCy: String read Fcurrency write Fcurrency;
+    property Currency: String read Fcurrency write Fcurrency;
     /// <summary>
     /// Total price in the smallest units of the currency (integer,
     /// For example, for a price of US$ 1.45 pass
@@ -363,7 +363,7 @@ type
     /// <summary>
     /// Bot specified invoice payload.
     /// </summary>
-    property InvoIcePayload: String read FinvoicePayload write FinvoicePayload;
+    property InvoicePayload: String read FinvoicePayload write FinvoicePayload;
     /// <summary>
     /// Optional. Identifier of the shipping option chosen by the user.
     /// </summary>
@@ -601,7 +601,7 @@ type
     /// <summary>
     /// Three-letter ISO 4217 currency code
     /// </summary>
-    property CurrenCy: String read Fcurrency write Fcurrency;
+    property Currency: String read Fcurrency write Fcurrency;
     /// <summary>
     /// Total price in the smallest units of the currency (integer,
     /// not float/double).
@@ -615,7 +615,7 @@ type
     /// <summary>
     /// Bot specified invoice payload.
     /// </summary>
-    property InvoIcePayload: String read FinvoicePayload write FinvoicePayload;
+    property InvoicePayload: String read FinvoicePayload write FinvoicePayload;
     /// <summary>
     /// Optional. Identifier of the shipping option chosen by the user.
     /// </summary>
@@ -628,7 +628,7 @@ type
     /// <summary>
     /// Telegram payment identifier.
     /// </summary>
-    property TelegramPaymenTChargeId: String read FtelegramPaymentChargeId
+    property TelegramPaymentChargeId: String read FtelegramPaymentChargeId
       write FtelegramPaymentChargeId;
     /// <summary>
     /// Provider payment identifier.
@@ -1658,7 +1658,7 @@ type
     /// <summary>
     /// Three-letter ISO 4217 currency code
     /// </summary>
-    property CurrenCy: String read Fcurrency write Fcurrency;
+    property Currency: String read Fcurrency write Fcurrency;
     /// <summary>
     /// Total price in the smallest units of the currency (integer,
     /// not float/double). For example, for a price of US$ 1.45 pass
@@ -1889,7 +1889,7 @@ type
     /// <summary>
     /// The member's status in the chat. Can be “creator”, “administrator”, “member”, “restricted”, “left” or “kicked”
     /// </summary>
-    property StatuS: String read Fstatus write Fstatus;
+    property Status: String read Fstatus write Fstatus;
     /// <summary>
     /// Optional. Restricted and kicked only. Date when restrictions will be lifted for this user, unix time.
     /// </summary>
@@ -1924,7 +1924,7 @@ type
     /// <summary>
     /// Optional. Administrators only. True, if the administrator can restrict, ban or unban chat members.
     /// </summary>
-    property CanRestriCtMembers: Boolean read FcanRestrictMembers
+    property CanRestrictMembers: Boolean read FcanRestrictMembers
       write FcanRestrictMembers;
     /// <summary>
     /// Optional. Administrators only. True, if the administrator can pin messages, supergroups only.
@@ -2106,7 +2106,7 @@ type
     /// <summary>
     /// Optional. Pass True, if the uploaded video is suitable for streaming
     /// </summary>
-    property SupportSStreaming: Boolean read FsupportsStreaming
+    property SupportsStreaming: Boolean read FsupportsStreaming
       write FsupportsStreaming;
   end;
 

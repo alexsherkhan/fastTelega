@@ -7,8 +7,8 @@ unit fastTelega.HttpClient;
 interface
 
 uses System.SysUtils, System.Classes, System.Net.URLClient,
-  System.Net.HttpClientComponent,
-  System.Net.Mime;
+  System.Net.HttpClientComponent, System.Net.HttpClient,
+  System.Net.Mime, System.NetEncoding;
 
 type
   /// <summary>
@@ -18,10 +18,9 @@ type
   private
     FHttpClient: TNetHTTPClient;
     function POST_Method(AUrl: String; AData: TStrings): String; overload;
-    function POST_Method(AUrl: String; AData: TMultipartFormData)
-      : String; overload;
-    function GET_Method(AUrl: String; const AResponseContent: TStream = nil;
-      const AHeaders: TNetHeaders = nil): String;
+    function POST_Method(AUrl: String; AData: TMultipartFormData): String; overload;
+    function POST_MethodJson(AUrl: String; AData: TStrings): String;
+    function GET_Method(AUrl: String; const AResponseContent: TStream = nil; const AHeaders: TNetHeaders = nil): String;
     function GetContentType: String;
     procedure SetContentType(const Value: String);
   public
@@ -32,8 +31,7 @@ type
     /// If there's no args specified, a GET request will be sent, otherwise a POST request will be sent.
     /// If at least 1 arg is marked as file, the content type of a request will be multipart/form-data, otherwise it will be application/x-www-form-urlencoded.
     /// </summary>
-    function makeRequest(const AUrl: String; args: TObject;
-      const MethodType: String): string;
+    function makeRequest(const AUrl: String; args: TObject; const MethodType: String): string;
     property ContentType: String read GetContentType write SetContentType;
   end;
 
@@ -75,7 +73,11 @@ begin
   else if AnsiCompareText(ContentType, 'multipart/form-data') = 0 then
     Result := POST_Method(AUrl, TMultipartFormData(args))
   else
-    Result := POST_Method(AUrl, TStrings(args));
+    // Use POST_MethodJson for all TStrings posts: it explicitly URL-encodes each
+    // value as UTF-8 (EncodeForm), preventing garbled Unicode (emojis, accented
+    // chars) that occurs when TNetHTTPClient mixes ContentType=application/json
+    // with a TStrings body.
+    Result := POST_MethodJson(AUrl, TStrings(args));
 end;
 
 function TftHttpClient.GetContentType: String;
@@ -83,13 +85,11 @@ begin
   Result := FHttpClient.ContentType;
 end;
 
-function TftHttpClient.GET_Method(AUrl: String; const AResponseContent: TStream;
-  const AHeaders: TNetHeaders): String;
+function TftHttpClient.GET_Method(AUrl: String; const AResponseContent: TStream; const AHeaders: TNetHeaders): String;
 begin
   Result := '';
   try
-    Result := FHttpClient.Get(AUrl, AResponseContent, AHeaders)
-      .ContentAsString(TEncoding.UTF8);
+    Result := FHttpClient.Get(AUrl, AResponseContent, AHeaders).ContentAsString(TEncoding.UTF8);
   except
     on E: Exception do
     begin
@@ -113,8 +113,36 @@ begin
   end;
 end;
 
-function TftHttpClient.POST_Method(AUrl: String;
-  AData: TMultipartFormData): String;
+function TftHttpClient.POST_MethodJson(AUrl: String; AData: TStrings): String;
+var
+  I: Integer;
+  Body: string;
+  Stream: TStringStream;
+begin
+  // Build application/x-www-form-urlencoded body with explicit UTF-8 URL-encoding.
+  // This avoids the encoding bug that occurs when TNetHTTPClient.Post(TStrings) is
+  // called while ContentType is already set to 'application/json': the Unicode
+  // bytes (emojis, accented chars, etc.) end up not being URL-encoded and Telegram
+  // misinterprets them as Latin-1, producing garbled characters.
+  Result := '';
+  Body := '';
+  for I := 0 to AData.Count - 1 do
+  begin
+    if I > 0 then Body := Body + '&';
+    Body := Body
+      + TNetEncoding.URL.EncodeForm(AData.Names[I]) + '='
+      + TNetEncoding.URL.EncodeForm(AData.ValueFromIndex[I]);
+  end;
+  Stream := TStringStream.Create(Body, TEncoding.UTF8);
+  try
+    FHttpClient.ContentType := 'application/x-www-form-urlencoded';
+    Result := FHttpClient.Post(AUrl, Stream).ContentAsString(TEncoding.UTF8);
+  finally
+    Stream.Free;
+  end;
+end;
+
+function TftHttpClient.POST_Method(AUrl: String; AData: TMultipartFormData): String;
 begin
   Result := '';
   try
