@@ -1,73 +1,131 @@
 # Webhooks
 
-## Status
+## Overview
 
-Telegram supports two update delivery modes: long polling and webhooks.
-fastTelega currently implements **long polling**.
+fastTelega includes an HTTP webhook server based on Indy
+(`TIdHTTPServer`). It receives Telegram updates over HTTP and dispatches them
+through `TftEventHandler`.
 
-The webhook units are scaffolds:
+The built-in server speaks **plain HTTP**. TLS is expected to be terminated by
+a reverse proxy (nginx, Caddy, IIS, etc.). This keeps the library independent
+of OpenSSL DLLs and certificate management.
 
-- `fastTelega.WebhookServer` — base class with empty `Create`/`Destroy`.
-- `fastTelega.WebhookLocalServer` — placeholder.
-- `fastTelega.WebhookTCPServer` — placeholder.
-- `fastTelega.HttpServer`, `fastTelega.HttpParser`, `fastTelega.Url` —
-  helper units used by the planned server implementation.
-
-These classes do not listen on a socket, parse requests or call the update
-handler. Do not rely on them in production.
-
-## Registering a webhook
-
-The Bot API method is available:
-
-```pascal
-Bot.API.SetWebhook(
-  'https://example.com/telegram', // public HTTPS URL
-  nil,                            // certificate (optional)
-  40,                             // max connections
-  nil,                            // allowed updates
-  '',                             // IP address (optional)
-  False,                          // drop pending updates
-  SecretToken);                   // X-Telegram-Bot-Api-Secret-Token
-```
-
-Telegram requires a public HTTPS endpoint with a valid certificate. The
-endpoint must answer quickly and pass the raw JSON body to the library.
-
-## Feeding updates manually
-
-If you implement your own HTTP endpoint, parse the request body into a
-`TJSONObject` and deserialize a `TftUpdate`, then dispatch it:
+## Quick start
 
 ```pascal
 var
-  JSON: TJSONObject;
-  Update: TftUpdate;
+  Bot: TftBot;
+  Webhook: TftWebhookLocalServer;
 begin
-  JSON := TJSONObject.ParseJSONValue(Body) as TJSONObject;
+  Bot := TftBot.Create(Token, 'https://api.telegram.org');
+  Webhook := TftWebhookLocalServer.Create(Bot);
   try
-    Update := TJSON.JsonToObject<TftUpdate>(JSON.ToJSON);
-    try
-      Bot.EventHandler.HandleUpdate(Update);
-    finally
-      Update.Free;
-    end;
+    Webhook.Port := 8080;
+    Webhook.Path := '/telegram';
+    Webhook.SecretToken := 'change-me';
+    Webhook.Start;
+
+    Bot.API.SetWebhook(
+      'https://bot.example.com/telegram', // public HTTPS URL
+      nil,                                // certificate
+      40,                                 // max connections
+      nil,                                // allowed updates
+      '',                                 // IP address
+      False,                              // drop pending updates
+      'change-me');                       // secret token
+
+    WriteLn('Webhook listening on ', Webhook.Host, ':', Webhook.Port);
+    ReadLn; // keep the process alive
   finally
-    JSON.Free;
+    Webhook.Stop;
+    Webhook.Free;
+    Bot.Free;
   end;
-end;
+end.
 ```
 
-Validate the `X-Telegram-Bot-Api-Secret-Token` header when a secret token is
-configured.
+## Server classes
 
-## Long polling comparison
-
-| | Long polling | Webhooks |
+| Class | Bind address | Use case |
 |---|---|---|
-| Server required | No | Public HTTPS endpoint |
-| Updates while offline | Stored by Telegram | Retried by Telegram |
-| Latency | One request per loop | Immediate push |
-| Implemented in fastTelega | Yes | No |
+| `TftWebhookServer` | `127.0.0.1` by default | Base class; configure `Host` |
+| `TftWebhookLocalServer` | `127.0.0.1` | Behind a local reverse proxy |
+| `TftWebhookTCPServer` | `0.0.0.0` | Direct access or external proxy |
 
-Use `TftLongPoll` for now. See [Getting started](GettingStarted.md).
+Properties:
+
+| Property | Default | Description |
+|---|---|---|
+| `Host` | `127.0.0.1` | Bind address |
+| `Port` | `8080` | Listening port |
+| `Path` | `/telegram` | Accepted request path |
+| `SecretToken` | empty | Expected `X-Telegram-Bot-Api-Secret-Token` |
+| `MaxBodySize` | 1 MiB | Maximum request body size |
+| `EventHandler` | `nil` | Dispatcher; set from `TftBot` |
+| `OnUpdate` | `nil` | Optional direct update callback |
+| `Active` | `False` | Whether the server is listening |
+
+`Start` binds the socket and begins accepting requests. `Stop` stops accepting
+new requests; requests already in progress may finish.
+
+## Reverse proxy and TLS
+
+Telegram requires a public HTTPS endpoint with a valid certificate. A minimal
+nginx configuration:
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name bot.example.com;
+
+    ssl_certificate     /etc/letsencrypt/live/bot.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bot.example.com/privkey.pem;
+
+    location /telegram {
+        proxy_pass http://127.0.0.1:8080/telegram;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Telegram-Bot-Api-Secret-Token $http_x_telegram_bot_api_secret_token;
+    }
+}
+```
+
+Keep the webhook server bound to `127.0.0.1` and expose only the proxy. Do not
+expose port 8080 to the internet.
+
+## Dispatch and threading
+
+For every valid POST request the server:
+
+1. validates the path and secret token;
+2. parses the JSON body into `TftUpdate`;
+3. calls `OnUpdate` if assigned;
+4. calls `EventHandler.HandleUpdate` if assigned (this broadcasts `OnUpdate`
+   and the typed events);
+5. frees the update and returns `{"ok":true}`.
+
+Indy handles requests on worker threads. Listeners therefore run on an Indy
+thread, not on the main thread. In VCL/FMX applications, synchronize UI access
+with `TThread.Synchronize` or `TThread.Queue`.
+
+## Error responses
+
+| Status | Reason |
+|---|---|
+| `200` | Update accepted (also returned for GET health checks) |
+| `400` | Empty or invalid JSON body |
+| `403` | Secret token mismatch |
+| `404` | Wrong request path |
+| `413` | Body larger than `MaxBodySize` |
+| `405` | Not used; non-POST requests get a health response |
+
+## Switching back to long polling
+
+Call `DeleteWebhook`, stop the server and start `TftLongPoll`:
+
+```pascal
+Bot.API.DeleteWebhook;
+Webhook.Stop;
+```
+
+A webhook and long polling cannot be active for the same bot at the same time.

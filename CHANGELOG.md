@@ -13,6 +13,15 @@
   (`sendGame`) and `GetMyDefaultAdministratorRights` (`for_channels`).
 - Fixed the `SendVoice` declaration that was missing a parameter type.
 
+### Webhooks
+
+- Implemented `TftWebhookServer`, `TftWebhookLocalServer` and
+  `TftWebhookTCPServer` on top of Indy (`TIdHTTPServer`).
+- Added path and secret-token validation, body size limits, health responses
+  and JSON error responses.
+- Added Indy dependencies to the RTL package.
+- TLS is terminated by a reverse proxy; the built-in server speaks plain HTTP.
+
 ### Updates and dispatch
 
 - Extended `TftUpdate` with business connection/message, deleted business

@@ -21,7 +21,7 @@ runtime dependencies beyond the Delphi RTL/REST components.
 | [API reference](API.md) | `TftAPI` conventions and the full method index |
 | [Types](Types.md) | Telegram object model and lists |
 | [File uploads](FileUploads.md) | `TftInputFile`, multipart requests and attach references |
-| [Webhooks](Webhooks.md) | Current webhook support status |
+| [Webhooks](Webhooks.md) | Webhook server, reverse proxy and TLS setup |
 | [VCL component](VCLComponent.md) | `TftTelegramBot` component |
 | [Examples](Examples.md) | Included examples and corrected snippets |
 | [Building](Building.md) | Packages, build script and installer |
@@ -33,7 +33,7 @@ runtime dependencies beyond the Delphi RTL/REST components.
 | Area | Status |
 |---|---|
 | Long polling | Supported (`TftLongPoll`) |
-| Webhook servers | Experimental scaffolds, not functional yet |
+| Webhook servers | Indy HTTP server; TLS via reverse proxy |
 | Bot API methods | 185/185 methods declared |
 | Telegram object types | Core types plus Bot API 10.3 additions |
 | File uploads | Supported for single-file methods, profile photos and stories |

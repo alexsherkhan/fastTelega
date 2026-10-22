@@ -7,8 +7,8 @@
 | `Packages/RAD Studio 11 Alexandria/fastTelega.Package.RTL.dpk` | Runtime package: API, bot, parser, events, networking, types |
 | `Packages/RAD Studio 11 Alexandria/fastTelega.Package.VCL.dpk` | VCL component package (`TftTelegramBot`) |
 
-The RTL package requires `rtl` and `RESTComponents`. The VCL package requires
-`rtl`, `vcl` and the RTL package.
+The RTL package requires `rtl`, `RESTComponents`, `IndyCore` and
+`IndyProtocols`. The VCL package requires `rtl`, `vcl` and the RTL package.
 
 Open `fastTelega.groupproj` to build both visible projects.
 

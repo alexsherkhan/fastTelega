@@ -38,7 +38,7 @@ flowchart LR
 | `fastTelega.AvailableTypes.*` | Individual object units used by the aggregate unit. |
 | `fastTelega.Helpers.*` | Class helpers, including a `TftPreCheckoutQuery.From` helper. |
 | `fastTelega.Components.VCL` | Experimental `TftTelegramBot` component. |
-| `fastTelega.Net.Server.*` | Webhook/HTTP server scaffolding (not functional yet). |
+| `fastTelega.Net.Server.*` | Indy-based webhook server and legacy HTTP server scaffolding. |
 
 ## Request lifecycle
 
@@ -98,8 +98,7 @@ empty; see [Types](Types.md#json-mapping).
 
 ## Long polling vs webhooks
 
-The implemented update source is long polling. The webhook units under
-`Source/Net/Server` are scaffolds and do not start an HTTP server or register a
-webhook. `TftAPI.SetWebhook` is available, but you must provide your own HTTPS
-endpoint and feed updates to `TftEventHandler.HandleUpdate`. See
+Two update sources are available: long polling (`TftLongPoll`) and webhooks
+(`TftWebhookServer`, `TftWebhookLocalServer`, `TftWebhookTCPServer`). The
+webhook server listens over plain HTTP; terminate TLS in a reverse proxy. See
 [Webhooks](Webhooks.md).

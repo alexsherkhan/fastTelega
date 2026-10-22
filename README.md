@@ -2,7 +2,7 @@
 
 Delphi library for Telegram Bot API.
 
-This library is under development. It implements the Telegram Bot API methods and long polling; webhook server support is not functional yet.
+This library is under development. It implements the Telegram Bot API methods, long polling and a plain-HTTP webhook server (TLS via a reverse proxy).
 
 Markdown documentation is in [Docs](Docs). The legacy CHM documentation is in [Doc](Doc).
 Version history is in [CHANGELOG.md](CHANGELOG.md).

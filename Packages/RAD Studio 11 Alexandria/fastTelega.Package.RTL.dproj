@@ -89,6 +89,8 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="RESTComponents.dcp"/>
+        <DCCReference Include="IndyCore.dcp"/>
+        <DCCReference Include="IndyProtocols.dcp"/>
         <DCCReference Include="..\..\Source\fastTelega.API.pas"/>
         <DCCReference Include="..\..\Source\fastTelega.Bot.pas"/>
         <DCCReference Include="..\..\Source\Parser\fastTelega.Parser.TypeParser.pas"/>
@@ -175,6 +177,9 @@
         <DCCReference Include="..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftGeneralForumTopicHidden.pas"/>
         <DCCReference Include="..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftGeneralForumTopicUnhidden.pas"/>
         <DCCReference Include="..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftWriteAccessAllowed.pas"/>
+        <DCCReference Include="..\..\Source\Net\Server\fastTelega.WebhookServer.pas"/>
+        <DCCReference Include="..\..\Source\Net\Server\fastTelega.WebhookLocalServer.pas"/>
+        <DCCReference Include="..\..\Source\Net\Server\fastTelega.WebhookTCPServer.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

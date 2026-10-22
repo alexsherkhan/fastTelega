@@ -289,5 +289,6 @@ Bot.API.SetWebhook('https://example.com/telegram', nil, 40, nil, '',
   False, SecretToken);
 ```
 
-The API method exists, but fastTelega does not provide a working webhook
-server. See [Webhooks](Webhooks.md).
+The webhook server is provided by `TftWebhookServer`,
+`TftWebhookLocalServer` and `TftWebhookTCPServer`. See
+[Webhooks](Webhooks.md).

@@ -105,11 +105,12 @@ guest message) through the command listeners and also dispatches
 `subscription`, etc.) are available only through `OnUpdate`; dedicated typed
 events are not implemented yet.
 
-## Webhooks do not work
+## Webhook errors
 
-The webhook server classes are placeholders. They do not open a socket, parse
-HTTP requests or answer Telegram. Use long polling or implement the endpoint
-yourself. See [Webhooks](Webhooks.md).
+The webhook server listens over plain HTTP. If Telegram reports a webhook
+error, verify that the public HTTPS endpoint reaches the reverse proxy, that the
+proxy forwards `X-Telegram-Bot-Api-Secret-Token`, and that the path matches the
+server's `Path` property. See [Webhooks](Webhooks.md).
 
 ## VCL package does not compile
 
