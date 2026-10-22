@@ -48,6 +48,11 @@
 - Added `business_connection_id`, `direct_messages_topic_id`,
   `message_effect_id`, `allow_paid_broadcast`, `link_preview_options`,
   `reply_parameters` and `suggested_post_parameters` to `SendMessage`.
+- Added the same optional send parameters (plus `show_caption_above_media`
+  for media) to SendPhoto, SendAudio, SendDocument, SendVideo, SendAnimation,
+  SendVoice, SendVideoNote, SendSticker, SendMediaGroup, SendLocation,
+  SendVenue, SendContact, SendPoll, SendDice, SendGame, SendInvoice,
+  SendPaidMedia, SendLivePhoto, SendChecklist and SendRichMessage.
 - Fixed `SendMessage` sending message entities as `caption_entities`.
 
 ### Rich messages
