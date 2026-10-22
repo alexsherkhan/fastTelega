@@ -135,6 +135,7 @@ contains
   fastTelega.AvailableTypes.ftWriteAccessAllowed in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftWriteAccessAllowed.pas',
   fastTelega.WebhookServer in '..\..\Source\Net\Server\fastTelega.WebhookServer.pas',
   fastTelega.WebhookLocalServer in '..\..\Source\Net\Server\fastTelega.WebhookLocalServer.pas',
-  fastTelega.WebhookTCPServer in '..\..\Source\Net\Server\fastTelega.WebhookTCPServer.pas';
+  fastTelega.WebhookTCPServer in '..\..\Source\Net\Server\fastTelega.WebhookTCPServer.pas',
+  fastTelega.JsonMapper in '..\..\Source\Delphi\fastTelega.JsonMapper.pas';
 
 end.

@@ -7,9 +7,9 @@ unit fastTelega.AvailableTypes.ftBotCommand;
 interface
 
 uses
-  System.Generics.Collections,
-  System.SysUtils,
-  System.Classes,
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
 
   {fastTelega}
   fastTelega.AvailableTypes.ftCallbackGame;

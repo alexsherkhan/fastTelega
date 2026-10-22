@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega FireMonkey component
 /// Alexander Syrykh
 /// </summary>
@@ -8,8 +8,8 @@ interface
 
 uses
   {Delphi}
-  System.SysUtils,
-  System.Classes,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
 
   {FireMonkey}
   FMX.Controls,

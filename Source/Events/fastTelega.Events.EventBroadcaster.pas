@@ -8,15 +8,19 @@ interface
 
 uses
   {Delphi}
-  System.SysUtils,
-  System.Classes,
-  System.Generics.Collections,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
 
   {fastTelega}
   fastTelega.AvailableTypes;
 
 type
+{$IFDEF FPC}
+  TftListenerType = procedure(const obj: TObject);
+{$ELSE}
   TftListenerType = reference to procedure(const obj: TObject);
+{$ENDIF}
 
   /// <summary>
   /// This class holds all event listeners.

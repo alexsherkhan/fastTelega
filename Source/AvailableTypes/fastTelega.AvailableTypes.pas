@@ -8,9 +8,9 @@ interface
 
 uses
   {Delphi}
-  System.Generics.Collections,
-  System.SysUtils,
-  System.Classes,
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
 
   {fastTelega}
   fastTelega.AvailableTypes.ftAnimation,
@@ -40,6 +40,7 @@ uses
   fastTelega.AvailableTypes.ftLabeledPrice,
   fastTelega.AvailableTypes.ftLocation,
   fastTelega.AvailableTypes.ftLoginUrl,
+  fastTelega.AvailableTypes.ftMaskPosition,
   fastTelega.AvailableTypes.ftMessageAutoDeleteTimerChanged,
   fastTelega.AvailableTypes.ftMessageId,
   fastTelega.AvailableTypes.ftOrderInfo,
@@ -2933,6 +2934,8 @@ type
   /// </summary>
   TftRichMessageButton = class;
   TftInputRichBlock = class;
+  TftRichBlockTableCell = class;
+  TftRichBlockTableRow = TList<TftRichBlockTableCell>;
 
   /// <summary>
   /// Media embedded in a rich message.
@@ -3057,7 +3060,7 @@ type
     FText: TftRichText;
     FBlocks: TList<TftInputRichBlock>;
     FItems: TList<TftInputRichBlockListItem>;
-    FCells: TList<TList<TftRichBlockTableCell>>;
+    FCells: TList<TftRichBlockTableRow>;
     FButtons: TList<TftRichMessageButton>;
     FCaption: TftRichBlockCaption;
     FCredit: TftRichText;
@@ -3081,7 +3084,7 @@ type
     property Text: TftRichText read FText write FText;
     property Blocks: TList<TftInputRichBlock> read FBlocks write FBlocks;
     property Items: TList<TftInputRichBlockListItem> read FItems write FItems;
-    property Cells: TList<TList<TftRichBlockTableCell>> read FCells
+    property Cells: TList<TftRichBlockTableRow> read FCells
       write FCells;
     property Buttons: TList<TftRichMessageButton> read FButtons
       write FButtons;

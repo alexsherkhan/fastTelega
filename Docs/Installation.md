@@ -35,6 +35,7 @@ Source/Helpers
 Source/Net
 Source/Net/Server
 Source/Parser
+Source/Delphi          (Delphi JSON mapper)
 Source/Components/VCL   (only for the VCL component)
 ```
 

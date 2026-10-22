@@ -92,6 +92,15 @@
   `TftLongPoll` no longer frees the borrowed API and event handler.
 - `TftLongPoll` now frees the allowed-updates list it creates.
 
+### Free Pascal / Lazarus
+
+- Added FPC compatibility shims (`System.JSON`, `Rest.JSON`, `System.Net.*`).
+- Added generated `fastTelega.JsonMapper` for public properties and a Delphi
+  `TJSON.JsonToObject` mapper.
+- Added FPC conditionals for base units and generic collections.
+- Added `Lazarus/fasttelega.lpk`, `Lazarus/EchoBot.lpr` and `build.sh`.
+- Verified types, parser, API, bot and long polling compile with FPC 3.2.2.
+
 ### FMX support
 
 - Added `TftTelegramBotFMX` (unit `fastTelega.Fmx`) wrapping `TftBot`.

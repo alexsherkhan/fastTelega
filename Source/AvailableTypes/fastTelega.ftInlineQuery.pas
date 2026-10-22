@@ -8,10 +8,10 @@ interface
 
 uses
   {Delphi}
-  System.Generics.Collections,
-  System.SysUtils,
-  System.Classes
-  fastTelega.ftLocation;
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
+  fastTelega.AvailableTypes.ftLocation;
 
 type
 

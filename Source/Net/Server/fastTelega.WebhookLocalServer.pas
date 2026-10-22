@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega WebhookLocalServer
 /// Alexander Syrykh
 /// </summary>
@@ -7,8 +7,8 @@ unit fastTelega.WebhookLocalServer;
 interface
 
 uses
-  System.SysUtils,
-  System.Classes,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
   fastTelega.Bot,
   fastTelega.Events.EventHandler,
   fastTelega.WebhookServer;

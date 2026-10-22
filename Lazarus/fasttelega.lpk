@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="5">
+    <PathDelim Value="\"/>
+    <Name Value="fasttelega"/>
+    <Type Value="RunAndDesignTime"/>
+    <Author Value="fastTelega Project"/>
+    <License Value="MIT"/>
+    <Description Value="fastTelega - Delphi/Free Pascal Telegram Bot API library"/>
+    <Files Count="93">
+      <Item1>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftAnimation.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftAnimation"/>
+        <IsPartOfPackage Value="True"/>
+      </Item1>
+      <Item2>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftAudio.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftAudio"/>
+        <IsPartOfPackage Value="True"/>
+      </Item2>
+      <Item3>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftBotCommand.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftBotCommand"/>
+        <IsPartOfPackage Value="True"/>
+      </Item3>
+      <Item4>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftCallbackGame.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftCallbackGame"/>
+        <IsPartOfPackage Value="True"/>
+      </Item4>
+      <Item5>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftChatAdministratorRights.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftChatAdministratorRights"/>
+        <IsPartOfPackage Value="True"/>
+      </Item5>
+      <Item6>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftChatLocation.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftChatLocation"/>
+        <IsPartOfPackage Value="True"/>
+      </Item6>
+      <Item7>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftChatPermissions.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftChatPermissions"/>
+        <IsPartOfPackage Value="True"/>
+      </Item7>
+      <Item8>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftChatPhoto.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftChatPhoto"/>
+        <IsPartOfPackage Value="True"/>
+      </Item8>
+      <Item9>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftContact.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftContact"/>
+        <IsPartOfPackage Value="True"/>
+      </Item9>
+      <Item10>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftDice.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftDice"/>
+        <IsPartOfPackage Value="True"/>
+      </Item10>
+      <Item11>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftDocument.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftDocument"/>
+        <IsPartOfPackage Value="True"/>
+      </Item11>
+      <Item12>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftEncryptedCredentials.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftEncryptedCredentials"/>
+        <IsPartOfPackage Value="True"/>
+      </Item12>
+      <Item13>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftEncryptedPassportElement.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftEncryptedPassportElement"/>
+        <IsPartOfPackage Value="True"/>
+      </Item13>
+      <Item14>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftFile.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftFile"/>
+        <IsPartOfPackage Value="True"/>
+      </Item14>
+      <Item15>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftForceReply.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftForceReply"/>
+        <IsPartOfPackage Value="True"/>
+      </Item15>
+      <Item16>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftForumTopic.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftForumTopic"/>
+        <IsPartOfPackage Value="True"/>
+      </Item16>
+      <Item17>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftForumTopicClosed.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftForumTopicClosed"/>
+        <IsPartOfPackage Value="True"/>
+      </Item17>
+      <Item18>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftForumTopicCreated.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftForumTopicCreated"/>
+        <IsPartOfPackage Value="True"/>
+      </Item18>
+      <Item19>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftForumTopicEdited.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftForumTopicEdited"/>
+        <IsPartOfPackage Value="True"/>
+      </Item19>
+      <Item20>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftForumTopicReopened.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftForumTopicReopened"/>
+        <IsPartOfPackage Value="True"/>
+      </Item20>
+      <Item21>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftGeneralForumTopicHidden.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftGeneralForumTopicHidden"/>
+        <IsPartOfPackage Value="True"/>
+      </Item21>
+      <Item22>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftGeneralForumTopicUnhidden.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftGeneralForumTopicUnhidden"/>
+        <IsPartOfPackage Value="True"/>
+      </Item22>
+      <Item23>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInlineKeyboardButton.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInlineKeyboardButton"/>
+        <IsPartOfPackage Value="True"/>
+      </Item23>
+      <Item24>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInlineKeyboardMarkup.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInlineKeyboardMarkup"/>
+        <IsPartOfPackage Value="True"/>
+      </Item24>
+      <Item25>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInlineQueryResult.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInlineQueryResult"/>
+        <IsPartOfPackage Value="True"/>
+      </Item25>
+      <Item26>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInputInvoiceMessageContent.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInputInvoiceMessageContent"/>
+        <IsPartOfPackage Value="True"/>
+      </Item26>
+      <Item27>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInputMedia.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInputMedia"/>
+        <IsPartOfPackage Value="True"/>
+      </Item27>
+      <Item28>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInputMediaAnimation.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInputMediaAnimation"/>
+        <IsPartOfPackage Value="True"/>
+      </Item28>
+      <Item29>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInputMediaAudio.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInputMediaAudio"/>
+        <IsPartOfPackage Value="True"/>
+      </Item29>
+      <Item30>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInputMediaDocument.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInputMediaDocument"/>
+        <IsPartOfPackage Value="True"/>
+      </Item30>
+      <Item31>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInputMediaPhoto.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInputMediaPhoto"/>
+        <IsPartOfPackage Value="True"/>
+      </Item31>
+      <Item32>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInputMediaVideo.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInputMediaVideo"/>
+        <IsPartOfPackage Value="True"/>
+      </Item32>
+      <Item33>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInputMessageContent.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInputMessageContent"/>
+        <IsPartOfPackage Value="True"/>
+      </Item33>
+      <Item34>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftInvoice.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftInvoice"/>
+        <IsPartOfPackage Value="True"/>
+      </Item34>
+      <Item35>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftKeyboardButton.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftKeyboardButton"/>
+        <IsPartOfPackage Value="True"/>
+      </Item35>
+      <Item36>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftKeyboardButtonPollType.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftKeyboardButtonPollType"/>
+        <IsPartOfPackage Value="True"/>
+      </Item36>
+      <Item37>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftLabeledPrice.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftLabeledPrice"/>
+        <IsPartOfPackage Value="True"/>
+      </Item37>
+      <Item38>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftLocation.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftLocation"/>
+        <IsPartOfPackage Value="True"/>
+      </Item38>
+      <Item39>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftLoginUrl.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftLoginUrl"/>
+        <IsPartOfPackage Value="True"/>
+      </Item39>
+      <Item40>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftMaskPosition.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftMaskPosition"/>
+        <IsPartOfPackage Value="True"/>
+      </Item40>
+      <Item41>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftMenuButton.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftMenuButton"/>
+        <IsPartOfPackage Value="True"/>
+      </Item41>
+      <Item42>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftMenuButtonCommands.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftMenuButtonCommands"/>
+        <IsPartOfPackage Value="True"/>
+      </Item42>
+      <Item43>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftMenuButtonDefault.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftMenuButtonDefault"/>
+        <IsPartOfPackage Value="True"/>
+      </Item43>
+      <Item44>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftMenuButtonWebApp.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftMenuButtonWebApp"/>
+        <IsPartOfPackage Value="True"/>
+      </Item44>
+      <Item45>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftMessageAutoDeleteTimerChanged.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftMessageAutoDeleteTimerChanged"/>
+        <IsPartOfPackage Value="True"/>
+      </Item45>
+      <Item46>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftMessageId.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftMessageId"/>
+        <IsPartOfPackage Value="True"/>
+      </Item46>
+      <Item47>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftOrderInfo.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftOrderInfo"/>
+        <IsPartOfPackage Value="True"/>
+      </Item47>
+      <Item48>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportData.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportData"/>
+        <IsPartOfPackage Value="True"/>
+      </Item48>
+      <Item49>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportElementError.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportElementError"/>
+        <IsPartOfPackage Value="True"/>
+      </Item49>
+      <Item50>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportElementErrorDataField.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportElementErrorDataField"/>
+        <IsPartOfPackage Value="True"/>
+      </Item50>
+      <Item51>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportElementErrorFile.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportElementErrorFile"/>
+        <IsPartOfPackage Value="True"/>
+      </Item51>
+      <Item52>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportElementErrorFiles.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportElementErrorFiles"/>
+        <IsPartOfPackage Value="True"/>
+      </Item52>
+      <Item53>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportElementErrorFrontSide.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportElementErrorFrontSide"/>
+        <IsPartOfPackage Value="True"/>
+      </Item53>
+      <Item54>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportElementErrorReverseSide.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportElementErrorReverseSide"/>
+        <IsPartOfPackage Value="True"/>
+      </Item54>
+      <Item55>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportElementErrorSelfie.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportElementErrorSelfie"/>
+        <IsPartOfPackage Value="True"/>
+      </Item55>
+      <Item56>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportElementErrorTranslationFile.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportElementErrorTranslationFile"/>
+        <IsPartOfPackage Value="True"/>
+      </Item56>
+      <Item57>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportElementErrorTranslationFiles.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportElementErrorTranslationFiles"/>
+        <IsPartOfPackage Value="True"/>
+      </Item57>
+      <Item58>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportElementErrorUnspecified.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportElementErrorUnspecified"/>
+        <IsPartOfPackage Value="True"/>
+      </Item58>
+      <Item59>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPassportFile.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPassportFile"/>
+        <IsPartOfPackage Value="True"/>
+      </Item59>
+      <Item60>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPhotoSize.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPhotoSize"/>
+        <IsPartOfPackage Value="True"/>
+      </Item60>
+      <Item61>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftPollOption.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftPollOption"/>
+        <IsPartOfPackage Value="True"/>
+      </Item61>
+      <Item62>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftReplyBase.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftReplyBase"/>
+        <IsPartOfPackage Value="True"/>
+      </Item62>
+      <Item63>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftReplyKeyboardMarkup.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftReplyKeyboardMarkup"/>
+        <IsPartOfPackage Value="True"/>
+      </Item63>
+      <Item64>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftReplyKeyboardRemove.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftReplyKeyboardRemove"/>
+        <IsPartOfPackage Value="True"/>
+      </Item64>
+      <Item65>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftResponseParameters.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftResponseParameters"/>
+        <IsPartOfPackage Value="True"/>
+      </Item65>
+      <Item66>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftSentWebAppMessage.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftSentWebAppMessage"/>
+        <IsPartOfPackage Value="True"/>
+      </Item66>
+      <Item67>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftShippingAddress.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftShippingAddress"/>
+        <IsPartOfPackage Value="True"/>
+      </Item67>
+      <Item68>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftShippingOption.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftShippingOption"/>
+        <IsPartOfPackage Value="True"/>
+      </Item68>
+      <Item69>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftSticker.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftSticker"/>
+        <IsPartOfPackage Value="True"/>
+      </Item69>
+      <Item70>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftStickerSet.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftStickerSet"/>
+        <IsPartOfPackage Value="True"/>
+      </Item70>
+      <Item71>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftSuccessfulPayment.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftSuccessfulPayment"/>
+        <IsPartOfPackage Value="True"/>
+      </Item71>
+      <Item72>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftVenue.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftVenue"/>
+        <IsPartOfPackage Value="True"/>
+      </Item72>
+      <Item73>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftVideo.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftVideo"/>
+        <IsPartOfPackage Value="True"/>
+      </Item73>
+      <Item74>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftVoice.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftVoice"/>
+        <IsPartOfPackage Value="True"/>
+      </Item74>
+      <Item75>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftWebAppData.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftWebAppData"/>
+        <IsPartOfPackage Value="True"/>
+      </Item75>
+      <Item76>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftWebAppInfo.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftWebAppInfo"/>
+        <IsPartOfPackage Value="True"/>
+      </Item76>
+      <Item77>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftWebhookInfo.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftWebhookInfo"/>
+        <IsPartOfPackage Value="True"/>
+      </Item77>
+      <Item78>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftWriteAccessAllowed.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes.ftWriteAccessAllowed"/>
+        <IsPartOfPackage Value="True"/>
+      </Item78>
+      <Item79>
+        <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.pas"/>
+        <UnitName Value="fastTelega.AvailableTypes"/>
+        <IsPartOfPackage Value="True"/>
+      </Item79>
+      <Item80>
+        <Filename Value="../Source/Events/fastTelega.Events.EventBroadcaster.pas"/>
+        <UnitName Value="fastTelega.Events.EventBroadcaster"/>
+        <IsPartOfPackage Value="True"/>
+      </Item80>
+      <Item81>
+        <Filename Value="../Source/Events/fastTelega.Events.EventHandler.pas"/>
+        <UnitName Value="fastTelega.Events.EventHandler"/>
+        <IsPartOfPackage Value="True"/>
+      </Item81>
+      <Item82>
+        <Filename Value="../Source/Helpers/fastTelega.AvailableTypesHelpers.pas"/>
+        <UnitName Value="fastTelega.AvailableTypesHelpers"/>
+        <IsPartOfPackage Value="True"/>
+      </Item82>
+      <Item83>
+        <Filename Value="../Source/Net/fastTelega.Net.HttpClient.pas"/>
+        <UnitName Value="fastTelega.Net.HttpClient"/>
+        <IsPartOfPackage Value="True"/>
+      </Item83>
+      <Item84>
+        <Filename Value="../Source/Net/fastTelega.Net.LongPoll.pas"/>
+        <UnitName Value="fastTelega.Net.LongPoll"/>
+        <IsPartOfPackage Value="True"/>
+      </Item84>
+      <Item85>
+        <Filename Value="../Source/Parser/fastTelega.Parser.TypeParser.pas"/>
+        <UnitName Value="fastTelega.Parser.TypeParser"/>
+        <IsPartOfPackage Value="True"/>
+      </Item85>
+      <Item86>
+        <Filename Value="../Source/Compat/FPC/Rest.JSON.pas"/>
+        <UnitName Value="Rest.JSON"/>
+        <IsPartOfPackage Value="True"/>
+      </Item86>
+      <Item87>
+        <Filename Value="../Source/Compat/FPC/System.JSON.pas"/>
+        <UnitName Value="System.JSON"/>
+        <IsPartOfPackage Value="True"/>
+      </Item87>
+      <Item88>
+        <Filename Value="../Source/Compat/FPC/System.Net.HttpClientComponent.pas"/>
+        <UnitName Value="System.Net.HttpClientComponent"/>
+        <IsPartOfPackage Value="True"/>
+      </Item88>
+      <Item89>
+        <Filename Value="../Source/Compat/FPC/System.Net.Mime.pas"/>
+        <UnitName Value="System.Net.Mime"/>
+        <IsPartOfPackage Value="True"/>
+      </Item89>
+      <Item90>
+        <Filename Value="../Source/Compat/FPC/System.Net.URLClient.pas"/>
+        <UnitName Value="System.Net.URLClient"/>
+        <IsPartOfPackage Value="True"/>
+      </Item90>
+      <Item91>
+        <Filename Value="../Source/Compat/FPC/fastTelega.JsonMapper.pas"/>
+        <UnitName Value="fastTelega.JsonMapper"/>
+        <IsPartOfPackage Value="True"/>
+      </Item91>
+      <Item92>
+        <Filename Value="../Source/fastTelega.API.pas"/>
+        <UnitName Value="fastTelega.API"/>
+        <IsPartOfPackage Value="True"/>
+      </Item92>
+      <Item93>
+        <Filename Value="../Source/fastTelega.Bot.pas"/>
+        <UnitName Value="fastTelega.Bot"/>
+        <IsPartOfPackage Value="True"/>
+      </Item93>
+    </Files>
+    <RequiredPkgs Count="1">
+      <Item1>
+        <PackageName Value="FCL"/>
+      </Item1>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="../Source;../Source/AvailableTypes;../Source/Events;../Source/Helpers;../Source/Net;../Source/Parser;../Source/Compat/FPC"/>
+    </UsageOptions>
+  </Package>
+</CONFIG>

@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega HttpParser
 /// Alexander Syrykh
 /// </summary>
@@ -7,9 +7,9 @@ unit fastTelega.HttpParser;
 interface
 
 uses
-  System.SysUtils,
-  System.Classes,
-  System.Generics.Collections,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
   System.Net.URLClient,
   System.Net.HttpClientComponent,
   System.Net.Mime,

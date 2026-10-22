@@ -8,15 +8,17 @@ interface
 
 uses
   {Delphi}
-  System.SysUtils,
-  System.Classes,
-  System.Generics.Collections,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
 
   {fastTelega}
   fastTelega.AvailableTypes.ftReplyBase,
   fastTelega.AvailableTypes.ftKeyboardButton;
 
 type
+  TftKeyboardRow = TList<TftKeyboardButton>;
+
 
   /// <summary>
   /// This object represents a custom keyboard with reply options
@@ -24,7 +26,7 @@ type
   /// </summary>
   TftReplyKeyboardMarkup = class(TftReplyBase)
   private
-    FKeyboard: TList<TList<TftKeyboardButton>>;
+    FKeyboard: TList<TftKeyboardRow>;
     FIsPersistent: Boolean;
     FResizeKeyboard: Boolean;
     FOneTimeKeyboard: Boolean;
@@ -36,7 +38,7 @@ type
     /// <summary>
     /// Array of button rows, each represented by an Array of KeyboardButton objects
     /// </summary>
-    property Keyboard: TList < TList < TftKeyboardButton >> read FKeyboard
+    property Keyboard: TList<TftKeyboardRow> read FKeyboard
       write FKeyboard;
     /// <summary>
     /// Requests clients to always show the keyboard when the regular keyboard is hidden.
@@ -76,7 +78,7 @@ implementation
 
 constructor TftReplyKeyboardMarkup.Create;
 begin
-  FKeyboard := TList < TList < TftKeyboardButton >>.Create;
+  FKeyboard := TList<TftKeyboardRow>.Create;
   FResizeKeyboard := false;
   FOneTimeKeyboard := false;
   FSelective := false;

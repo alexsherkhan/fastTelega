@@ -8,18 +8,18 @@ interface
 
 uses
   {Delphi}
-  System.SysUtils,
-  System.Classes,
-  System.Variants,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
+  {$IFDEF FPC}Variants{$ELSE}System.Variants{$ENDIF},
   System.Net.Mime,
-  System.Generics.Collections,
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
   System.JSON,
-  Rest.JSON,
 
   {fastTelega}
   fastTelega.Net.HttpClient,
   fastTelega.Parser.TypeParser,
   fastTelega.AvailableTypes,
+  fastTelega.JsonMapper,
   fastTelega.AvailableTypes.ftBotCommand,
   fastTelega.AvailableTypes.ftResponseParameters,
   fastTelega.AvailableTypes.ftWebAppData,
@@ -84,15 +84,15 @@ type
     procedure AddOptionalSendArgs(AArgs: TStringList;
       const ABusinessConnectionId: String; ADirectMessagesTopicId: Integer;
       const AMessageEffectId: String; AAllowPaidBroadcast: Boolean;
-      AReplyParameters: TftReplyParameters;
-      ASuggestedPostParameters: TftSuggestedPostParameters;
-      AShowCaptionAboveMedia: Boolean); overload;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+      AShowCaptionAboveMedia: Boolean = false); overload;
     procedure AddOptionalSendArgs(AArgs: TMultipartFormData;
       const ABusinessConnectionId: String; ADirectMessagesTopicId: Integer;
       const AMessageEffectId: String; AAllowPaidBroadcast: Boolean;
-      AReplyParameters: TftReplyParameters;
-      ASuggestedPostParameters: TftSuggestedPostParameters;
-      AShowCaptionAboveMedia: Boolean); overload;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+      AShowCaptionAboveMedia: Boolean = false); overload;
     /// <summary>
     /// Getting a token
     /// </summary>
@@ -1477,13 +1477,13 @@ type
       const ACaptionEntities: TftMessageEntityList = nil;
       AAllowSendingWithoutReply: Boolean = false;
       AProtectContent: Boolean = false; AMessageThreadId: Integer = 0;
-      AHasSpoiler: Boolean = false,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AHasSpoiler: Boolean = false;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -1551,13 +1551,13 @@ type
       ADisableNotification: Boolean = false;
       const ACaptionEntities: TftMessageEntityList = nil;
       AAllowSendingWithoutReply: Boolean = false;
-      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false)
       : TftMessage;
 
@@ -1630,13 +1630,13 @@ type
       const AVcard: String = ''; ADisableNotification: Boolean = false;
       AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil;
       AAllowSendingWithoutReply: Boolean = false;
-      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false)
       : TftMessage;
 
@@ -1673,13 +1673,13 @@ type
     function SendDice(AChatId: Variant; ADisableNotification: Boolean = false;
       AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil;
       AEmoji: String = ''; AAllowSendingWithoutReply: Boolean = false;
-      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false)
       : TftMessage;
 
@@ -1737,13 +1737,13 @@ type
       const ACaptionEntities: TftMessageEntityList = nil;
       ADisableContentTypeDetection: Boolean = false;
       AAllowSendingWithoutReply: Boolean = false;
-      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false)
       : TftMessage;
 
@@ -1782,13 +1782,13 @@ type
       AReplyMarkup: TftInlineKeyboardMarkup = nil;
       ADisableNotification: Boolean = false;
       AAllowSendingWithoutReply: Boolean = false;
-      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false)
       : TftMessage;
 
@@ -1879,13 +1879,13 @@ type
       ASendPhoneNumberToProvider: Boolean = false;
       ASendEmailToProvider: Boolean = false; AIsFlexible: Boolean = false;
       AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil;
-      ADisableNotification: Boolean = false,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      ADisableNotification: Boolean = false;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -1938,13 +1938,13 @@ type
       AReplyMarkup: TftReplyBase; ADisableNotification: Boolean;
       AHorizontalAccuracy: Double; AHeading: Integer;
       AProximityAlertRadius: Integer; AAllowSendingWithoutReply: Boolean;
-      AProtectContent: Boolean; AMessageThreadId: Integer,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AProtectContent: Boolean; AMessageThreadId: Integer;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -1979,13 +1979,13 @@ type
     function SendMediaGroup(AChatId: Variant; AMedia: TList<TftInputMedia>;
       ADisableNotification: Boolean; AReplyToMessageId: Integer;
       AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
-      AMessageThreadId: Integer,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AMessageThreadId: Integer;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessageList;
 
     /// <summary>
@@ -2088,13 +2088,13 @@ type
     function SendPhoto(AChatId: Variant; APhoto: TftInputFile = nil;
       const ACaption: string = ''; AReplyToMessageId: Integer = 0;
       AReplyMarkup: TftReplyBase = nil; const AParseMode: String = '';
-      ADisableNotification: Boolean = false,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      ADisableNotification: Boolean = false;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -2162,13 +2162,13 @@ type
     /// </retrns>
     function SendPoll(AChatId: Variant; const AQuestion: string;
       const AOptions: TObject; ADisableNotification: Boolean = false;
-      AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false)
       : TftMessage;
 
@@ -2195,13 +2195,13 @@ type
     /// </returns>
     function SendSticker(AChatId: Variant; ASticker: TftInputFile;
       AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil;
-      ADisableNotification: Boolean = false,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      ADisableNotification: Boolean = false;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -2261,13 +2261,13 @@ type
       AReplyToMessageId: Integer; AReplyMarkup: TftReplyBase;
       const AGooglePlaceId: String; const AGooglePlaceType: String;
       AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
-      AMessageThreadId: Integer,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AMessageThreadId: Integer;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -2334,13 +2334,13 @@ type
       const AParseMode: String; ADisableNotification: Boolean;
       const ACaptionEntities: TftMessageEntityList;
       AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
-      AMessageThreadId: Integer; AHasSpoiler: Boolean,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AMessageThreadId: Integer; AHasSpoiler: Boolean;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -2386,13 +2386,13 @@ type
       AReplyToMessageId: Integer; ADisableNotification: Boolean;
       ADuration: Integer; Alength: Integer; AThumb: TftInputFile;
       AReplyMarkup: TftReplyBase; AAllowSendingWithoutReply: Boolean;
-      AProtectContent: Boolean; AMessageThreadId: Integer,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AProtectContent: Boolean; AMessageThreadId: Integer;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -2446,13 +2446,13 @@ type
       ADisableNotification: Boolean;
       const ACaptionEntities: TftMessageEntityList;
       AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
-      AMessageThreadId: Integer,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AMessageThreadId: Integer;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -3389,13 +3389,13 @@ type
       ACaptionEntities: TftMessageEntityList = nil;
       ADisableNotification: Boolean = false; AProtectContent: Boolean = false;
       AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil;
-      AMessageThreadId: Integer = 0,
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AMessageThreadId: Integer = 0;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -3427,13 +3427,13 @@ type
       ACaptionEntities: TftMessageEntityList = nil;
       ADisableNotification: Boolean = false; AProtectContent: Boolean = false;
       AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil;
-      AMessageThreadId: Integer = 0; const APayload: String = '',
-      const ABusinessConnectionId: String = '',
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AMessageThreadId: Integer = 0; const APayload: String = '';
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -3442,12 +3442,12 @@ type
     function SendChecklist(const ABusinessConnectionId: String;
       AChatId: Variant; AChecklist: TftInputChecklist;
       ADisableNotification: Boolean = false; AProtectContent: Boolean = false;
-      AReplyMarkup: TftInlineKeyboardMarkup = nil,
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AReplyMarkup: TftInlineKeyboardMarkup = nil;
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -3465,12 +3465,12 @@ type
       const ABusinessConnectionId: String = '';
       ADisableNotification: Boolean = false; AProtectContent: Boolean = false;
       AMessageThreadId: Integer = 0; AReplyToMessageId: Integer = 0;
-      AReplyMarkup: TftReplyBase = nil,
-      ADirectMessagesTopicId: Integer = 0,
-      const AMessageEffectId: String = '',
-      AAllowPaidBroadcast: Boolean = false,
-      AReplyParameters: TftReplyParameters = nil,
-      ASuggestedPostParameters: TftSuggestedPostParameters = nil,
+      AReplyMarkup: TftReplyBase = nil;
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil;
       AShowCaptionAboveMedia: Boolean = false): TftMessage;
 
     /// <summary>
@@ -3739,7 +3739,7 @@ begin
   FHttpClient.ContentType := 'application/json';
   LArgs := TStringList.Create;
   LArgs.AddPair('inline_query_id', AInlineQueryId);
-  LArgs.AddPair('results', FTypeParser.ParseList(TList(AResults)));
+  LArgs.AddPair('results', FTypeParser.ParseList(AResults));
   if (ACacheTime <> 0) then
   begin
     LArgs.AddPair('cache_time', IntToStr(ACacheTime));
@@ -3887,7 +3887,7 @@ end;
 
 function TftAPI.Close: Boolean;
 begin
-  Result := SendRequest('close').GetValue<Boolean>('result');
+  Result := JsonToBool(SendRequest('close').GetValue('result'));
 end;
 
 function TftAPI.CloseForumTopic(AChatId: Int64;
@@ -4056,12 +4056,12 @@ begin
   LArgs.AddPair('payload', APayload);
   LArgs.AddPair('provider_token', AProviderToken);
   LArgs.AddPair('currency', ACurrency);
-  LArgs.AddPair('prices', FTypeParser.ParseList(TList(APrices)));
+  LArgs.AddPair('prices', FTypeParser.ParseList(APrices));
   LArgs.AddPair('max_tip_amount', IntToStr(AMaxTipAmount));
   if Assigned(ASuggestedTipAmounts) then
   begin
     LArgs.AddPair('suggested_tip_amounts',
-      FTypeParser.ParseList(TList(ASuggestedTipAmounts)));
+      FTypeParser.ParseList(ASuggestedTipAmounts));
   end;
   if AProviderData <> '' then
   begin
@@ -4578,7 +4578,7 @@ end;
 function ParseFunJSONArrayTftChatMember(JSONArray: TJSONArray;
   Index: Integer): TObject;
 begin
-  Result := TJSON.JsonToObject<TftChatMember>(JSONArray.Items[Index].ToJSON);
+  Result := TftChatMemberFromJson(JSONArray.Items[Index]);
 end;
 
 function TftAPI.GetChatAdministrators(AChatId: Variant): TList<TftChatMember>;
@@ -4645,7 +4645,7 @@ end;
 function ParseFunJSONArrayTftSticker(JSONArray: TJSONArray;
   Index: Integer): TObject;
 begin
-  Result := TJSON.JsonToObject<TftSticker>(JSONArray.Items[Index].ToJSON);
+  Result := TftStickerFromJson(JSONArray.Items[Index]);
 end;
 
 function TftAPI.GetForumTopicIconStickers: TList<TftSticker>;
@@ -4663,7 +4663,7 @@ end;
 function ParseFunJSONArrayTftGameHighScore(JSONArray: TJSONArray;
   Index: Integer): TObject;
 begin
-  Result := TJSON.JsonToObject<TftGameHighScore>(JSONArray.Items[Index].ToJSON);
+  Result := TftGameHighScoreFromJson(JSONArray.Items[Index]);
 end;
 
 function TftAPI.GetGameHighScores(AUserId, AChatId: Int64; AMessageId: Integer;
@@ -4702,7 +4702,7 @@ end;
 function parseFunJSONArrayTftBotCommand(JSONArray: TJSONArray;
   Index: Integer): TObject;
 begin
-  Result := TJSON.JsonToObject<TftBotCommand>(JSONArray.Items[Index].ToJSON);
+  Result := TftBotCommandFromJson(JSONArray.Items[Index]);
 end;
 
 function TftAPI.GetMyCommands(AScope: TftBotCommandScope;
@@ -4762,13 +4762,13 @@ end;
 function ParseFunJSONArrayTftMessage(JSONArray: TJSONArray;
   Index: Integer): TObject;
 begin
-  Result := TJSON.JsonToObject<TftMessage>(JSONArray.Items[Index].ToJSON);
+  Result := TftMessageFromJson(JSONArray.Items[Index]);
 end;
 
 function ParseFunJSONArrayTftUpdate(JSONArray: TJSONArray;
   Index: Integer): TObject;
 begin
-  Result := TJSON.JsonToObject<TftUpdate>(JSONArray.Items[Index].ToJSON);
+  Result := TftUpdateFromJson(JSONArray.Items[Index]);
 end;
 
 function TftAPI.GetUpdates(AOffset, ALimit, ATimeout: Integer;
@@ -4851,7 +4851,7 @@ end;
 
 function TftAPI.LogOut: Boolean;
 begin
-  Result := SendRequest('logOut').GetValue<Boolean>('result');
+  Result := JsonToBool(SendRequest('logOut').GetValue('result'));
 end;
 
 function TftAPI.PinChatMessage(AChatId: Variant; AMessageId: Integer;
@@ -5017,14 +5017,14 @@ function TftAPI.SendAnimation(AChatId: Variant; AAnimation: TftInputFile;
   const AParseMode: String = ''; ADisableNotification: Boolean = false;
   const ACaptionEntities: TftMessageEntityList = nil;
   AAllowSendingWithoutReply: Boolean = false; AProtectContent: Boolean = false;
-  AMessageThreadId: Integer = 0; AHasSpoiler: Boolean = false,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AMessageThreadId: Integer = 0; AHasSpoiler: Boolean = false;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TMultipartFormData;
 begin
@@ -5111,14 +5111,14 @@ function TftAPI.SendAudio(AChatId: Variant; AAudio: TftInputFile = nil;
   ADisableNotification: Boolean = false;
   const ACaptionEntities: TftMessageEntityList = nil;
   AAllowSendingWithoutReply: Boolean = false; AProtectContent: Boolean = false;
-  AMessageThreadId: Integer = 0,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AMessageThreadId: Integer = 0;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TMultipartFormData;
 begin
@@ -5232,14 +5232,14 @@ function TftAPI.SendContact(AChatId: Variant; const APhoneNumber: String;
   const AVcard: String = ''; ADisableNotification: Boolean = false;
   AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil;
   AAllowSendingWithoutReply: Boolean = false; AProtectContent: Boolean = false;
-  AMessageThreadId: Integer = 0,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AMessageThreadId: Integer = 0;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -5311,14 +5311,14 @@ function TftAPI.SendDice(AChatId: Variant;
   ADisableNotification: Boolean = false; AReplyToMessageId: Integer = 0;
   AReplyMarkup: TftReplyBase = nil; AEmoji: String = '';
   AAllowSendingWithoutReply: Boolean = false; AProtectContent: Boolean = false;
-  AMessageThreadId: Integer = 0,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AMessageThreadId: Integer = 0;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -5378,14 +5378,14 @@ function TftAPI.SendDocument(AChatId: Variant; ADocument: TftInputFile = nil;
   const ACaptionEntities: TftMessageEntityList = nil;
   ADisableContentTypeDetection: Boolean = false;
   AAllowSendingWithoutReply: Boolean = false; AProtectContent: Boolean = false;
-  AMessageThreadId: Integer = 0,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AMessageThreadId: Integer = 0;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TMultipartFormData;
 begin
@@ -5462,14 +5462,14 @@ function TftAPI.SendGame(AChatId: Variant; AGameShortName: String;
   AReplyToMessageId: Integer = 0; AReplyMarkup: TftInlineKeyboardMarkup = nil;
   ADisableNotification: Boolean = false;
   AAllowSendingWithoutReply: Boolean = false; AProtectContent: Boolean = false;
-  AMessageThreadId: Integer = 0,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AMessageThreadId: Integer = 0;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -5528,14 +5528,14 @@ function TftAPI.SendInvoice(AChatId: Variant; const ATitle, ADescription,
   ANeedName, ANeedPhoneNumber, ANeedEmail, ANeedShippingAddress,
   ASendPhoneNumberToProvider, ASendEmailToProvider, AIsFlexible: Boolean;
   AReplyToMessageId: Integer; AReplyMarkup: TftReplyBase;
-  ADisableNotification: Boolean,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  ADisableNotification: Boolean;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -5629,14 +5629,14 @@ function TftAPI.SendLocation(AChatId: Variant; ALatitude: Double;
   AReplyMarkup: TftReplyBase; ADisableNotification: Boolean;
   AHorizontalAccuracy: Double; AHeading: Integer;
   AProximityAlertRadius: Integer; AAllowSendingWithoutReply: Boolean;
-  AProtectContent: Boolean; AMessageThreadId: Integer,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AProtectContent: Boolean; AMessageThreadId: Integer;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -5705,14 +5705,14 @@ end;
 function TftAPI.SendMediaGroup(AChatId: Variant; AMedia: TList<TftInputMedia>;
   ADisableNotification: Boolean; AReplyToMessageId: Integer;
   AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
-  AMessageThreadId: Integer,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessageList;
+  AMessageThreadId: Integer;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessageList;
 var
   I: Integer;
   LHasFiles: Boolean;
@@ -5807,8 +5807,8 @@ function TftAPI.SendMessage(AChatId: Variant; const AText: String;
   AMessageThreadId: Integer; const ABusinessConnectionId: String;
   ADirectMessagesTopicId: Integer; const AMessageEffectId: String;
   AAllowPaidBroadcast: Boolean; ALinkPreviewOptions: TftLinkPreviewOptions;
-  AReplyParameters: TftReplyParameters;
-  ASuggestedPostParameters: TftSuggestedPostParameters): TftMessage;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -5903,14 +5903,14 @@ end;
 function TftAPI.SendPhoto(AChatId: Variant; APhoto: TftInputFile;
   const ACaption: string; AReplyToMessageId: Integer;
   AReplyMarkup: TftReplyBase; const AParseMode: String;
-  ADisableNotification: Boolean,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  ADisableNotification: Boolean;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TMultipartFormData;
 begin
@@ -5946,14 +5946,14 @@ end;
 
 function TftAPI.SendPoll(AChatId: Variant; const AQuestion: string;
   const AOptions: TObject; ADisableNotification: Boolean;
-  AReplyToMessageId: Integer; AReplyMarkup: TftReplyBase,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AReplyToMessageId: Integer; AReplyMarkup: TftReplyBase;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -6001,9 +6001,9 @@ end;
 procedure TftAPI.AddOptionalSendArgs(AArgs: TStringList;
   const ABusinessConnectionId: String; ADirectMessagesTopicId: Integer;
   const AMessageEffectId: String; AAllowPaidBroadcast: Boolean;
-  AReplyParameters: TftReplyParameters;
-  ASuggestedPostParameters: TftSuggestedPostParameters;
-  AShowCaptionAboveMedia: Boolean);
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false);
 begin
   if (ABusinessConnectionId <> '') then
     AArgs.AddPair('business_connection_id', ABusinessConnectionId);
@@ -6028,9 +6028,9 @@ end;
 procedure TftAPI.AddOptionalSendArgs(AArgs: TMultipartFormData;
   const ABusinessConnectionId: String; ADirectMessagesTopicId: Integer;
   const AMessageEffectId: String; AAllowPaidBroadcast: Boolean;
-  AReplyParameters: TftReplyParameters;
-  ASuggestedPostParameters: TftSuggestedPostParameters;
-  AShowCaptionAboveMedia: Boolean);
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false);
 begin
   if (ABusinessConnectionId <> '') then
     AArgs.AddField('business_connection_id', ABusinessConnectionId);
@@ -6055,14 +6055,14 @@ end;
 
 function TftAPI.SendSticker(AChatId: Variant; ASticker: TftInputFile;
   AReplyToMessageId: Integer; AReplyMarkup: TftReplyBase;
-  ADisableNotification: Boolean,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  ADisableNotification: Boolean;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TMultipartFormData;
 begin
@@ -6100,14 +6100,14 @@ function TftAPI.SendVenue(AChatId: Variant; ALatitude: Double;
   ADisableNotification: Boolean; AReplyToMessageId: Integer;
   AReplyMarkup: TftReplyBase; const AGooglePlaceId: String;
   const AGooglePlaceType: String; AAllowSendingWithoutReply: Boolean;
-  AProtectContent: Boolean; AMessageThreadId: Integer,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AProtectContent: Boolean; AMessageThreadId: Integer;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -6175,14 +6175,14 @@ function TftAPI.SendVideo(AChatId: Variant; AVideo: TftInputFile;
   const AParseMode: String; ADisableNotification: Boolean;
   const ACaptionEntities: TftMessageEntityList;
   AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
-  AMessageThreadId: Integer; AHasSpoiler: Boolean,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AMessageThreadId: Integer; AHasSpoiler: Boolean;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TMultipartFormData;
 begin
@@ -6268,14 +6268,14 @@ function TftAPI.SendVideoNote(AChatId: Variant; AVideoNote: TftInputFile;
   AReplyToMessageId: Integer; ADisableNotification: Boolean; ADuration: Integer;
   Alength: Integer; AThumb: TftInputFile; AReplyMarkup: TftReplyBase;
   AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
-  AMessageThreadId: Integer,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AMessageThreadId: Integer;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TMultipartFormData;
 begin
@@ -6338,14 +6338,14 @@ function TftAPI.SendVoice(AChatId: Variant; AVoice: TftInputFile;
   ADisableNotification: Boolean;
   const ACaptionEntities: TftMessageEntityList;
   AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
-  AMessageThreadId: Integer,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AMessageThreadId: Integer;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TMultipartFormData;
 begin
@@ -6558,7 +6558,7 @@ begin
 
   LArgs := TStringList.Create;
   if (ACommands <> nil) then
-    LArgs.AddPair('commands', FTypeParser.ParseList(TList(ACommands)));
+    LArgs.AddPair('commands', FTypeParser.ParseList(ACommands));
 
   Result := SendRequest('setMyCommands', LArgs, 'POST')
     .GetValue('result') <> nil;
@@ -6592,7 +6592,7 @@ begin
   FHttpClient.ContentType := 'application/json';
   LArgs := TStringList.Create;
   LArgs.AddPair('user_id', IntToStr(AUserId));
-  LArgs.AddPair('errors', FTypeParser.ParseList(TList(AErrors)));
+  LArgs.AddPair('errors', FTypeParser.ParseList(AErrors));
 
   Result := Boolean(SendRequest('setStickerPositionInSet', LArgs, 'POST')
     .GetValue('result'));
@@ -6697,7 +6697,7 @@ begin
 end;
 
 function TftAPI.StopPoll(AChatId: Variant; AMessageId: Integer;
-  AReplyMarkup: TftInlineKeyboardMarkup): TftPoll;
+  AReplyMarkup: TftInlineKeyboardMarkup = nil): TftPoll;
 var
   LArgs: TStringList;
 begin
@@ -6842,7 +6842,7 @@ end;
 function ParseFunJSONArrayTftMessageId(JSONArray: TJSONArray;
   Index: Integer): TObject;
 begin
-  Result := TJSON.JsonToObject<TftMessageId>(JSONArray.Items[Index].ToJSON);
+  Result := TftMessageIdFromJson(JSONArray.Items[Index]);
 end;
 
 function TftAPI.ForwardMessages(AChatId, AFromChatId: Variant;
@@ -7870,14 +7870,14 @@ function TftAPI.SendLivePhoto(AChatId: Variant;
   ALivePhoto, APhoto: TftInputFile; const ACaption, AParseMode: String;
   ACaptionEntities: TftMessageEntityList; ADisableNotification,
   AProtectContent: Boolean; AReplyToMessageId: Integer;
-  AReplyMarkup: TftReplyBase; AMessageThreadId: Integer,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AReplyMarkup: TftReplyBase; AMessageThreadId: Integer;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TMultipartFormData;
 begin
@@ -7958,14 +7958,14 @@ function TftAPI.SendPaidMedia(AChatId: Variant; AStarCount: Integer;
   ACaptionEntities: TftMessageEntityList; ADisableNotification,
   AProtectContent: Boolean; AReplyToMessageId: Integer;
   AReplyMarkup: TftReplyBase; AMessageThreadId: Integer;
-  const APayload: String,
-  const ABusinessConnectionId: String,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  const APayload: String;
+  const ABusinessConnectionId: String = '';
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -8004,13 +8004,13 @@ end;
 
 function TftAPI.SendChecklist(const ABusinessConnectionId: String;
   AChatId: Variant; AChecklist: TftInputChecklist; ADisableNotification,
-  AProtectContent: Boolean; AReplyMarkup: TftInlineKeyboardMarkup,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AProtectContent: Boolean; AReplyMarkup: TftInlineKeyboardMarkup;
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -8036,7 +8036,7 @@ end;
 
 function TftAPI.EditMessageChecklist(const ABusinessConnectionId: String;
   AChatId: Variant; AMessageId: Integer; AChecklist: TftInputChecklist;
-  AReplyMarkup: TftInlineKeyboardMarkup): TftMessage;
+  AReplyMarkup: TftInlineKeyboardMarkup = nil): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -8056,13 +8056,13 @@ end;
 function TftAPI.SendRichMessage(AChatId: Variant;
   ARichMessage: TftInputRichMessage; const ABusinessConnectionId: String;
   ADisableNotification, AProtectContent: Boolean; AMessageThreadId,
-  AReplyToMessageId: Integer; AReplyMarkup: TftReplyBase,
-  ADirectMessagesTopicId: Integer,
-  const AMessageEffectId: String,
-  AAllowPaidBroadcast: Boolean,
-  AReplyParameters: TftReplyParameters,
-  ASuggestedPostParameters: TftSuggestedPostParameters,
-  AShowCaptionAboveMedia: Boolean): TftMessage;
+  AReplyToMessageId: Integer; AReplyMarkup: TftReplyBase;
+  ADirectMessagesTopicId: Integer = 0;
+  const AMessageEffectId: String = '';
+  AAllowPaidBroadcast: Boolean = false;
+  AReplyParameters: TftReplyParameters = nil;
+  ASuggestedPostParameters: TftSuggestedPostParameters = nil;
+  AShowCaptionAboveMedia: Boolean = false): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -8119,7 +8119,7 @@ function TftAPI.EditEphemeralMessageText(AChatId: Variant;
   AReceiverUserId: Int64; AEphemeralMessageId: Integer; const AText,
   AParseMode: String; AEntities: TftMessageEntityList;
   ALinkPreviewOptions: TftLinkPreviewOptions;
-  AReplyMarkup: TftInlineKeyboardMarkup): Boolean;
+  AReplyMarkup: TftInlineKeyboardMarkup = nil): Boolean;
 var
   LArgs: TStringList;
 begin
@@ -8146,7 +8146,7 @@ end;
 
 function TftAPI.EditEphemeralMessageMedia(AChatId: Variant;
   AReceiverUserId: Int64; AEphemeralMessageId: Integer; AMedia: TftInputMedia;
-  AReplyMarkup: TftInlineKeyboardMarkup): Boolean;
+  AReplyMarkup: TftInlineKeyboardMarkup = nil): Boolean;
 var
   LArgs: TStringList;
 begin
@@ -8166,8 +8166,8 @@ end;
 function TftAPI.EditEphemeralMessageCaption(AChatId: Variant;
   AReceiverUserId: Int64; AEphemeralMessageId: Integer; const ACaption,
   AParseMode: String; ACaptionEntities: TftMessageEntityList;
-  AShowCaptionAboveMedia: Boolean;
-  AReplyMarkup: TftInlineKeyboardMarkup): Boolean;
+  AShowCaptionAboveMedia: Boolean = false;
+  AReplyMarkup: TftInlineKeyboardMarkup = nil): Boolean;
 var
   LArgs: TStringList;
 begin
@@ -8195,7 +8195,7 @@ end;
 
 function TftAPI.EditEphemeralMessageReplyMarkup(AChatId: Variant;
   AReceiverUserId: Int64; AEphemeralMessageId: Integer;
-  AReplyMarkup: TftInlineKeyboardMarkup): Boolean;
+  AReplyMarkup: TftInlineKeyboardMarkup = nil): Boolean;
 var
   LArgs: TStringList;
 begin

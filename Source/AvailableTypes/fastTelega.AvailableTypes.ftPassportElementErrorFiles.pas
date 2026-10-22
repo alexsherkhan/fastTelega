@@ -8,9 +8,9 @@ interface
 
 uses
   {Delphi}
-  System.SysUtils,
-  System.Classes,
-  System.Generics.Collections,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
   {fastTelega}
   fastTelega.AvailableTypes.ftPassportElementError;
 

@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega Url
 /// Alexander Syrykh
 /// </summary>
@@ -7,8 +7,8 @@ unit fastTelega.Url;
 interface
 
 uses
-  System.SysUtils,
-  System.Classes;
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF};
 
 type
   /// <summary>

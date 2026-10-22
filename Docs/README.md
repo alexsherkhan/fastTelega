@@ -24,6 +24,7 @@ runtime dependencies beyond the Delphi RTL/REST components.
 | [Webhooks](Webhooks.md) | Webhook server, reverse proxy and TLS setup |
 | [VCL component](VCLComponent.md) | `TftTelegramBot` component |
 | [FMX component](FMXComponent.md) | `TftTelegramBotFMX` component |
+| [Lazarus / FPC](Lazarus.md) | Free Pascal port and Lazarus package |
 | [Examples](Examples.md) | Included examples and corrected snippets |
 | [Building](Building.md) | Packages, build script and installer |
 | [Troubleshooting](Troubleshooting.md) | Common errors and known limitations |

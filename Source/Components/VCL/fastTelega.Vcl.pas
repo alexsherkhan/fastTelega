@@ -1,4 +1,4 @@
-{ ************************************************************************ }
+﻿{ ************************************************************************ }
 { }
 { fastTelega }
 { }
@@ -19,12 +19,12 @@ uses
   {Delphi}
   Winapi.Windows,
   Winapi.Messages,
-  System.SysUtils,
-  System.Types,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Types{$ELSE}System.Types{$ENDIF},
   System.UITypes,
-  System.Classes,
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
   System.Messaging,
-  System.Generics.Collections,
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
   Vcl.Graphics,
   Vcl.Controls,
   Vcl.ExtCtrls,
@@ -66,13 +66,13 @@ implementation
 
 // uses
 // {Delphi}
-// System.Math,
-// System.Math.Vectors,
+// {$IFDEF FPC}Math{$ELSE}System.Math{$ENDIF},
+// {$IFDEF FPC}Math{$ELSE}System.Math{$ENDIF}.Vectors,
 // System.ZLib,
 // System.IOUtils,
-// System.TypInfo,
-// System.Character,
-// System.Generics.Defaults,
+// {$IFDEF FPC}TypInfo{$ELSE}System.TypInfo{$ENDIF},
+// {$IFDEF FPC}Character{$ELSE}System.Character{$ENDIF},
+// {$IFDEF FPC}Generics.Defaults{$ELSE}System.Generics.Defaults{$ENDIF},
 // System.RTLConsts,
 // Vcl.Forms;
 

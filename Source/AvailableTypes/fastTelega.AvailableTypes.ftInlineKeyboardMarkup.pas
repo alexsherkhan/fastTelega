@@ -8,15 +8,17 @@ interface
 
 uses
   {Delphi}
-  System.Generics.Collections,
-  System.SysUtils,
-  System.Classes,
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
 
   {fastTelega}
   fastTelega.AvailableTypes.ftReplyBase,
   fastTelega.AvailableTypes.ftInlineKeyboardButton;
 
 type
+  TftInlineKeyboardRow = TList<TftInlineKeyboardButton>;
+
 
   /// <summary>
   /// This object represents an inline keyboard that appears right next
@@ -24,7 +26,7 @@ type
   /// </summary>
   TftInlineKeyboardMarkup = class(TftReplyBase)
   private
-    FInlineKeyboard: TList<TList<TftInlineKeyboardButton>>;
+    FInlineKeyboard: TList<TftInlineKeyboardRow>;
   public
     constructor Create;
     destructor Destroy; override;
@@ -32,7 +34,7 @@ type
     /// Array of button rows, each represented by an Array of
     /// TftInlineKeyboardButton objects
     /// </summary>
-    property InlineKeyboard: TList < TList < TftInlineKeyboardButton >>
+    property InlineKeyboard: TList<TftInlineKeyboardRow>
       read FInlineKeyboard write FInlineKeyboard;
   end;
 
@@ -42,7 +44,7 @@ implementation
 
 constructor TftInlineKeyboardMarkup.Create;
 begin
-  FInlineKeyboard := TList < TList < TftInlineKeyboardButton >>.Create;
+  FInlineKeyboard := TList<TftInlineKeyboardRow>.Create;
 end;
 
 destructor TftInlineKeyboardMarkup.Destroy;

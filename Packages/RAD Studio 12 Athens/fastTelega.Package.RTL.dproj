@@ -180,6 +180,7 @@
         <DCCReference Include="..\..\Source\Net\Server\fastTelega.WebhookServer.pas"/>
         <DCCReference Include="..\..\Source\Net\Server\fastTelega.WebhookLocalServer.pas"/>
         <DCCReference Include="..\..\Source\Net\Server\fastTelega.WebhookTCPServer.pas"/>
+        <DCCReference Include="..\..\Source\Delphi\fastTelega.JsonMapper.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -1,4 +1,4 @@
-{************************************************************************}
+﻿{************************************************************************}
 {                                                                        }
 {                              fastTelega                                }
 {                                                                        }
@@ -19,11 +19,11 @@ interface
 
 uses
   {Delphi}
-  System.Classes,
-  System.DateUtils,
-  System.Math.Vectors,
-  System.SysUtils,
-  System.Types,
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
+  {$IFDEF FPC}DateUtils{$ELSE}System.DateUtils{$ENDIF},
+  {$IFDEF FPC}Math{$ELSE}System.Math{$ENDIF}.Vectors,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Types{$ELSE}System.Types{$ENDIF},
   System.UITypes,
 
   {fastTelega}
@@ -42,9 +42,9 @@ implementation
 
 uses
   {Delphi}
-  System.Generics.Collections,
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
   System.IOUtils,
-  System.Math,
+  {$IFDEF FPC}Math{$ELSE}System.Math{$ENDIF},
   System.RTLConsts,
   System.TimeSpan;
 

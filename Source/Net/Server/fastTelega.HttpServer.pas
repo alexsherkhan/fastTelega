@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega HttpServer
 /// Alexander Syrykh
 /// </summary>
@@ -7,8 +7,8 @@ unit fastTelega.HttpServer;
 interface
 
 uses
-  System.SysUtils,
-  System.Classes,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
   System.Net.URLClient,
   System.Net.HttpClientComponent,
   System.Net.Mime,

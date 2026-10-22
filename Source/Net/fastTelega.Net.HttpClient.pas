@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega HttpClient
 /// Alexander Syrykh
 /// </summary>
@@ -8,8 +8,8 @@ interface
 
 uses
   {Delphi}
-  System.SysUtils,
-  System.Classes,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
   System.Net.URLClient,
   System.Net.HttpClientComponent,
   System.Net.Mime;
@@ -70,7 +70,7 @@ begin
     for I := 0 to TStringList(AArgs).Count - 1 do
     begin
       TNameValuePair(LHeaders[I]) := TNameValuePair.Create
-        (TStringList(AArgs).KeyNames[I], TStringList(AArgs).ValueFromIndex[I]);
+        (TStringList(AArgs).Names[I], TStringList(AArgs).ValueFromIndex[I]);
     end;
     Result := GET_Method(AUrl, nil, LHeaders);
   end

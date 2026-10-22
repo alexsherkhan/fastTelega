@@ -8,15 +8,15 @@ interface
 
 uses
   {Delphi}
-  System.SysUtils,
-  System.Classes,
-  System.Variants,
-  System.Generics.Collections,
+  {$IFDEF FPC}SysUtils{$ELSE}System.SysUtils{$ENDIF},
+  {$IFDEF FPC}Classes{$ELSE}System.Classes{$ENDIF},
+  {$IFDEF FPC}Variants{$ELSE}System.Variants{$ENDIF},
+  {$IFDEF FPC}Generics.Collections{$ELSE}System.Generics.Collections{$ENDIF},
   System.JSON,
-  Rest.JSON,
 
   {fastTelega}
   fastTelega.AvailableTypes,
+  fastTelega.JsonMapper,
   fastTelega.AvailableTypes.ftAnimation,
   fastTelega.AvailableTypes.ftAudio,
   fastTelega.AvailableTypes.ftBotCommand,
@@ -233,12 +233,13 @@ type
     function ParseInvoice(const AObj: TftInvoice): String;
     function ParseJson(AServerResponse: String): TJSONObject;
     function ParseJsonAndGetList(AParseFunc: TJsonToFtTypeFunc;
-      AJSONObject: TJSONObject): TList;
+      AJSONObject: TJSONObject): TList<TObject>;
     function ParseKeyboardButton(const AObj: TftKeyboardButton): String;
     function ParseKeyboardButtonPollType(const AObj
       : TftKeyboardButtonPollType): String;
     function ParseLabeledPrice(const AObj: TftLabeledPrice): String;
-    function ParseList(const AObj: TList): String;
+    function ParseList<T: class>(const AObj: TList<T>): String; overload;
+    function ParseList<T: class>(const AObj: TArray<T>): String; overload;
     function ParseLocation(const AObj: TftLocation): String;
     function ParseLoginUrl(const AObj: TftLoginUrl): String;
     function ParseMaskPosition(const AObj: TftMaskPosition): String;
@@ -569,10 +570,15 @@ type
       : TftBusinessConnection;
     function ParseIntegers(const AValues: TArray<Integer>): String;
     function ParseStringArray(const AValues: TArray<String>): String;
+    function ParseStringList(const AValues: TList<String>): String;
+    function ParseLabeledPriceList(const AValues: TArray<TftLabeledPrice>): String;
+    function ParseIntList(const AValues: TList<Integer>): String;
     function ParseReactionType(const AObj: TftReactionType): String;
     function ParseReactionTypes(const AReaction: TList<TftReactionType>): String;
     function ParseMessageEntities
-      (const AEntities: TftMessageEntityList): String;
+      (const AEntities: TftMessageEntityList): String; overload;
+    function ParseMessageEntities
+      (const AEntities: TList<TftMessageEntity>): String; overload;
     function ParseInputPaidMedia(const AObj: TftInputPaidMedia): String;
     function ParseInputPaidMediaList
       (const AMedia: TList<TftInputPaidMedia>): String;
@@ -597,7 +603,7 @@ type
     function ParseRichBlockCaption(const ACaption: TftRichBlockCaption): String;
     function ParseRichBlockTableCell(const ACell: TftRichBlockTableCell): String;
     function ParseRichBlockTableCells
-      (const ACells: TList<TList<TftRichBlockTableCell>>): String;
+      (const ACells: TList<TftRichBlockTableRow>): String;
     function ParseInputRichBlock(const ABlock: TftInputRichBlock): String;
     function ParseInputRichBlocks(const ABlocks: TList<TftInputRichBlock>): String;
     function ParseInputRichBlockItems
@@ -945,7 +951,7 @@ begin
   AppendToJson(Result, 'is_forum', AObj.IsForum);
   AppendToJson(Result, 'photo', ParseChatPhoto(AObj.photo));
   AppendToJson(Result, 'active_usernames',
-    ParseList(TList(AObj.ActiveUsernames)));
+    ParseStringList(AObj.ActiveUsernames));
   AppendToJson(Result, 'emoji_status_custom_emoji_id',
     AObj.EmojiStatusCustomEmojiId);
   AppendToJson(Result, 'bio', AObj.bio);
@@ -1353,11 +1359,11 @@ begin
   AppendToJson(Result, 'data', AObj.Data);
   AppendToJson(Result, 'phone_number', AObj.PhoneNumber);
   AppendToJson(Result, 'email', AObj.Email);
-  AppendToJson(Result, 'files', ParseList(TList(AObj.Files)));
+  AppendToJson(Result, 'files', ParseList<TftPassportFile>(AObj.Files));
   AppendToJson(Result, 'front_side', ParsePassportFile(AObj.FrontSide));
   AppendToJson(Result, 'reverse_side', ParsePassportFile(AObj.ReverseSide));
   AppendToJson(Result, 'selfie', ParsePassportFile(AObj.Selfie));
-  AppendToJson(Result, 'translation', ParseList(TList(AObj.Translation)));
+  AppendToJson(Result, 'translation', ParseList<TftPassportFile>(AObj.Translation));
   AppendToJson(Result, 'hash', AObj.hash);
   RemoveLastComma(Result);
   Result := Result + '}';
@@ -1451,7 +1457,7 @@ begin
   Result := Result + '{';
   AppendToJson(Result, 'title', AObj.Title);
   AppendToJson(Result, 'description', AObj.Description);
-  AppendToJson(Result, 'photo', ParseList(TList(AObj.photo)));
+  AppendToJson(Result, 'photo', ParseList<TftPhotoSize>(AObj.photo));
   AppendToJson(Result, 'text', AObj.Text);
   AppendToJson(Result, 'text_entities', ParseMessageEntities(AObj.TextEntities));
   AppendToJson(Result, 'animation', ParseAnimation(AObj.Animation));
@@ -2156,7 +2162,11 @@ function TftTypeParser.ParseJson(AServerResponse: String): TJSONObject;
 begin
   Result := nil;
   try
+    {$IFDEF FPC}
+    Result := TJSON.ParseJSONValue(AServerResponse) as TJSONObject;
+{$ELSE}
     Result := TJSONObject.ParseJSONValue(AServerResponse) as TJSONObject;
+{$ENDIF}
   except
     // on E: Exception do
     // begin
@@ -2170,15 +2180,15 @@ function TftTypeParser.ParseJsonAndGetAnimation(const AData: TJSONObject)
 begin
   Result := TftAnimation.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftAnimation>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftAnimationFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetAudio(const AData: TJSONObject): TftAudio;
 begin
   Result := TftAudio.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftAudio>((AData.GetValue('result')).ToJSON);
+    Result := TftAudioFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotCommand(const AData: TJSONObject)
@@ -2186,8 +2196,8 @@ function TftTypeParser.ParseJsonAndGetBotCommand(const AData: TJSONObject)
 begin
   Result := TftBotCommand.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotCommand>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBotCommandFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotCommandScope(const AData: TJSONObject)
@@ -2204,38 +2214,38 @@ begin
 
     if (LType = TypeBotCommandScopeDefault) then
     begin
-      Result := TJSON.JsonToObject<TftBotCommandScopeDefault>
-        ((AData.GetValue('result')).ToJSON);
+      Result := TftBotCommandScopeDefaultFromJson
+        ((AData.GetValue('result')));
     end
     else if (LType = TypeBotCommandScopeAllPrivateChats) then
     begin
-      Result := TJSON.JsonToObject<TftBotCommandScopeAllPrivateChats>
-        ((AData.GetValue('result')).ToJSON);
+      Result := TftBotCommandScopeAllPrivateChatsFromJson
+        ((AData.GetValue('result')));
     end
     else if (LType = TypeBotCommandScopeAllGroupChats) then
     begin
-      Result := TJSON.JsonToObject<TftBotCommandScopeAllGroupChats>
-        ((AData.GetValue('result')).ToJSON);
+      Result := TftBotCommandScopeAllGroupChatsFromJson
+        ((AData.GetValue('result')));
     end
     else if (LType = TypeBotCommandScopeAllChatAdministrators) then
     begin
-      Result := TJSON.JsonToObject<TftBotCommandScopeAllChatAdministrators>
-        ((AData.GetValue('result')).ToJSON);
+      Result := TftBotCommandScopeAllChatAdministratorsFromJson
+        ((AData.GetValue('result')));
     end
     else if (LType = TypeBotCommandScopeChat) then
     begin
-      Result := TJSON.JsonToObject<TftBotCommandScopeChat>
-        ((AData.GetValue('result')).ToJSON);
+      Result := TftBotCommandScopeChatFromJson
+        ((AData.GetValue('result')));
     end
     else if (LType = TypeBotCommandScopeChatAdministrators) then
     begin
-      Result := TJSON.JsonToObject<TftBotCommandScopeChatAdministrators>
-        ((AData.GetValue('result')).ToJSON);
+      Result := TftBotCommandScopeChatAdministratorsFromJson
+        ((AData.GetValue('result')));
     end
     else if (LType = TypeBotCommandScopeChatMember) then
     begin
-      Result := TJSON.JsonToObject<TftBotCommandScopeChatMember>
-        ((AData.GetValue('result')).ToJSON);
+      Result := TftBotCommandScopeChatMemberFromJson
+        ((AData.GetValue('result')));
     end;
   end;
 
@@ -2246,8 +2256,8 @@ function TftTypeParser.ParseJsonAndGetBotCommandScopeAllChatAdministrators
 begin
   Result := TftBotCommandScopeAllChatAdministrators.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotCommandScopeAllChatAdministrators>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBotCommandScopeAllChatAdministratorsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotCommandScopeAllGroupChats
@@ -2255,8 +2265,8 @@ function TftTypeParser.ParseJsonAndGetBotCommandScopeAllGroupChats
 begin
   Result := TftBotCommandScopeAllGroupChats.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotCommandScopeAllGroupChats>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBotCommandScopeAllGroupChatsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotCommandScopeAllPrivateChats
@@ -2264,8 +2274,8 @@ function TftTypeParser.ParseJsonAndGetBotCommandScopeAllPrivateChats
 begin
   Result := TftBotCommandScopeAllPrivateChats.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotCommandScopeAllPrivateChats>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBotCommandScopeAllPrivateChatsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotCommandScopeChat
@@ -2273,8 +2283,8 @@ function TftTypeParser.ParseJsonAndGetBotCommandScopeChat
 begin
   Result := TftBotCommandScopeChat.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotCommandScopeChat>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBotCommandScopeChatFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotCommandScopeChatAdministrators
@@ -2282,8 +2292,8 @@ function TftTypeParser.ParseJsonAndGetBotCommandScopeChatAdministrators
 begin
   Result := TftBotCommandScopeChatAdministrators.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotCommandScopeChatAdministrators>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBotCommandScopeChatAdministratorsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotCommandScopeChatMember
@@ -2291,8 +2301,8 @@ function TftTypeParser.ParseJsonAndGetBotCommandScopeChatMember
 begin
   Result := TftBotCommandScopeChatMember.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotCommandScopeChatMember>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBotCommandScopeChatMemberFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotCommandScopeDefault
@@ -2300,8 +2310,8 @@ function TftTypeParser.ParseJsonAndGetBotCommandScopeDefault
 begin
   Result := TftBotCommandScopeDefault.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotCommandScopeDefault>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBotCommandScopeDefaultFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetCallbackGame(const AData: TJSONObject)
@@ -2309,8 +2319,8 @@ function TftTypeParser.ParseJsonAndGetCallbackGame(const AData: TJSONObject)
 begin
   Result := TftCallbackGame.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftCallbackGame>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftCallbackGameFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetCallbackQuery(const AData: TJSONObject)
@@ -2318,15 +2328,15 @@ function TftTypeParser.ParseJsonAndGetCallbackQuery(const AData: TJSONObject)
 begin
   Result := TftCallbackQuery.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftCallbackQuery>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftCallbackQueryFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChat(const AData: TJSONObject): TftChat;
 begin
   Result := TftChat.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChat>((AData.GetValue('result')).ToJSON);
+    Result := TftChatFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatAdministratorRights
@@ -2334,8 +2344,8 @@ function TftTypeParser.ParseJsonAndGetChatAdministratorRights
 begin
   Result := TftChatAdministratorRights.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatAdministratorRights>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatAdministratorRightsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatInviteLink(const AData: TJSONObject)
@@ -2343,8 +2353,8 @@ function TftTypeParser.ParseJsonAndGetChatInviteLink(const AData: TJSONObject)
 begin
   Result := TftChatInviteLink.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatInviteLink>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatInviteLinkFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatJoinRequest(const AData: TJSONObject)
@@ -2352,8 +2362,8 @@ function TftTypeParser.ParseJsonAndGetChatJoinRequest(const AData: TJSONObject)
 begin
   Result := TftChatJoinRequest.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatJoinRequest>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatJoinRequestFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatLocation(const AData: TJSONObject)
@@ -2361,8 +2371,8 @@ function TftTypeParser.ParseJsonAndGetChatLocation(const AData: TJSONObject)
 begin
   Result := TftChatLocation.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatLocation>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatLocationFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatMember(const AData: TJSONObject)
@@ -2370,8 +2380,8 @@ function TftTypeParser.ParseJsonAndGetChatMember(const AData: TJSONObject)
 begin
   Result := TftChatMember.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatMember>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatMemberFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatMemberAdministrator
@@ -2379,8 +2389,8 @@ function TftTypeParser.ParseJsonAndGetChatMemberAdministrator
 begin
   Result := TftChatMemberAdministrator.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatMemberAdministrator>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatMemberAdministratorFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatMemberBanned(const AData: TJSONObject)
@@ -2388,8 +2398,8 @@ function TftTypeParser.ParseJsonAndGetChatMemberBanned(const AData: TJSONObject)
 begin
   Result := TftChatMemberBanned.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatMemberBanned>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatMemberBannedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatMemberLeft(const AData: TJSONObject)
@@ -2397,8 +2407,8 @@ function TftTypeParser.ParseJsonAndGetChatMemberLeft(const AData: TJSONObject)
 begin
   Result := TftChatMemberLeft.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatMemberLeft>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatMemberLeftFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatMemberOwner(const AData: TJSONObject)
@@ -2406,8 +2416,8 @@ function TftTypeParser.ParseJsonAndGetChatMemberOwner(const AData: TJSONObject)
 begin
   Result := TftChatMemberOwner.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatMemberOwner>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatMemberOwnerFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatMemberRestricted
@@ -2415,8 +2425,8 @@ function TftTypeParser.ParseJsonAndGetChatMemberRestricted
 begin
   Result := TftChatMemberRestricted.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatMemberRestricted>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatMemberRestrictedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatMemberUpdated
@@ -2424,8 +2434,8 @@ function TftTypeParser.ParseJsonAndGetChatMemberUpdated
 begin
   Result := TftChatMemberUpdated.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatMemberUpdated>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatMemberUpdatedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatPermissions(const AData: TJSONObject)
@@ -2433,8 +2443,8 @@ function TftTypeParser.ParseJsonAndGetChatPermissions(const AData: TJSONObject)
 begin
   Result := TftChatPermissions.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatPermissions>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatPermissionsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChatPhoto(const AData: TJSONObject)
@@ -2442,8 +2452,8 @@ function TftTypeParser.ParseJsonAndGetChatPhoto(const AData: TJSONObject)
 begin
   Result := TftChatPhoto.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChatPhoto>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChatPhotoFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetChosenInlineResult
@@ -2451,8 +2461,8 @@ function TftTypeParser.ParseJsonAndGetChosenInlineResult
 begin
   Result := TftChosenInlineResult.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftChosenInlineResult>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftChosenInlineResultFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetContact(const AData: TJSONObject)
@@ -2460,14 +2470,14 @@ function TftTypeParser.ParseJsonAndGetContact(const AData: TJSONObject)
 begin
   Result := TftContact.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftContact>((AData.GetValue('result')).ToJSON);
+    Result := TftContactFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetDice(const AData: TJSONObject): TftDice;
 begin
   Result := TftDice.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftDice>((AData.GetValue('result')).ToJSON);
+    Result := TftDiceFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetDocument(const AData: TJSONObject)
@@ -2475,8 +2485,8 @@ function TftTypeParser.ParseJsonAndGetDocument(const AData: TJSONObject)
 begin
   Result := TftDocument.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftDocument>((AData.GetValue('result')
-      ).ToJSON);
+    Result := TftDocumentFromJson((AData.GetValue('result')
+      ));
 end;
 
 function TftTypeParser.ParseJsonAndGetEncryptedCredentials
@@ -2484,8 +2494,8 @@ function TftTypeParser.ParseJsonAndGetEncryptedCredentials
 begin
   Result := TftEncryptedCredentials.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftEncryptedCredentials>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftEncryptedCredentialsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetEncryptedPassportElement
@@ -2493,15 +2503,15 @@ function TftTypeParser.ParseJsonAndGetEncryptedPassportElement
 begin
   Result := TftEncryptedPassportElement.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftEncryptedPassportElement>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftEncryptedPassportElementFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetFile(const AData: TJSONObject): TftFile;
 begin
   Result := TftFile.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftFile>((AData.GetValue('result')).ToJSON);
+    Result := TftFileFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetForceReply(const AData: TJSONObject)
@@ -2509,8 +2519,8 @@ function TftTypeParser.ParseJsonAndGetForceReply(const AData: TJSONObject)
 begin
   Result := TftForceReply.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftForceReply>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftForceReplyFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetForumTopic(const AData: TJSONObject)
@@ -2518,8 +2528,8 @@ function TftTypeParser.ParseJsonAndGetForumTopic(const AData: TJSONObject)
 begin
   Result := TftForumTopic.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftForumTopic>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftForumTopicFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetForumTopicClosed(const AData: TJSONObject)
@@ -2527,8 +2537,8 @@ function TftTypeParser.ParseJsonAndGetForumTopicClosed(const AData: TJSONObject)
 begin
   Result := TftForumTopicClosed.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftForumTopicClosed>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftForumTopicClosedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetForumTopicCreated
@@ -2536,8 +2546,8 @@ function TftTypeParser.ParseJsonAndGetForumTopicCreated
 begin
   Result := TftForumTopicCreated.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftForumTopicCreated>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftForumTopicCreatedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetForumTopicEdited(const AData: TJSONObject)
@@ -2545,8 +2555,8 @@ function TftTypeParser.ParseJsonAndGetForumTopicEdited(const AData: TJSONObject)
 begin
   Result := TftForumTopicEdited.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftForumTopicEdited>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftForumTopicEditedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetForumTopicReopened
@@ -2554,15 +2564,15 @@ function TftTypeParser.ParseJsonAndGetForumTopicReopened
 begin
   Result := TftForumTopicReopened.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftForumTopicReopened>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftForumTopicReopenedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetGame(const AData: TJSONObject): TftGame;
 begin
   Result := TftGame.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftGame>((AData.GetValue('result')).ToJSON);
+    Result := TftGameFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetGameHighScore(const AData: TJSONObject)
@@ -2570,8 +2580,8 @@ function TftTypeParser.ParseJsonAndGetGameHighScore(const AData: TJSONObject)
 begin
   Result := TftGameHighScore.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftGameHighScore>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftGameHighScoreFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetGeneralForumTopicHidden
@@ -2579,8 +2589,8 @@ function TftTypeParser.ParseJsonAndGetGeneralForumTopicHidden
 begin
   Result := TftGeneralForumTopicHidden.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftGeneralForumTopicHidden>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftGeneralForumTopicHiddenFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetGeneralForumTopicUnhidden
@@ -2588,8 +2598,8 @@ function TftTypeParser.ParseJsonAndGetGeneralForumTopicUnhidden
 begin
   Result := TftGeneralForumTopicUnhidden.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftGeneralForumTopicUnhidden>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftGeneralForumTopicUnhiddenFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineKeyboardButton
@@ -2597,8 +2607,8 @@ function TftTypeParser.ParseJsonAndGetInlineKeyboardButton
 begin
   Result := TftInlineKeyboardButton.Create('');
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineKeyboardButton>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineKeyboardButtonFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineKeyboardMarkup
@@ -2606,8 +2616,8 @@ function TftTypeParser.ParseJsonAndGetInlineKeyboardMarkup
 begin
   Result := TftInlineKeyboardMarkup.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineKeyboardMarkup>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineKeyboardMarkupFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQuery(const AData: TJSONObject)
@@ -2615,8 +2625,8 @@ function TftTypeParser.ParseJsonAndGetInlineQuery(const AData: TJSONObject)
 begin
   Result := TftInlineQuery.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQuery>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResult
@@ -2624,8 +2634,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResult
 begin
   Result := TftInlineQueryResult.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResult>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultAudio
@@ -2633,8 +2643,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultAudio
 begin
   Result := TftInlineQueryResultAudio.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultAudio>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultAudioFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedAudio
@@ -2642,8 +2652,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedAudio
 begin
   Result := TftInlineQueryResultCachedAudio.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedAudio>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultCachedAudioFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedDocument
@@ -2651,8 +2661,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedDocument
 begin
   Result := TftInlineQueryResultCachedDocument.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedDocument>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultCachedDocumentFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedGif
@@ -2660,8 +2670,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedGif
 begin
   Result := TftInlineQueryResultCachedGif.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedGif>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultCachedGifFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedMpeg4Gif
@@ -2669,8 +2679,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedMpeg4Gif
 begin
   Result := TftInlineQueryResultCachedMpeg4Gif.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedMpeg4Gif>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultCachedMpeg4GifFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedPhoto
@@ -2678,8 +2688,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedPhoto
 begin
   Result := TftInlineQueryResultCachedPhoto.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedPhoto>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultCachedPhotoFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedSticker
@@ -2687,8 +2697,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedSticker
 begin
   Result := TftInlineQueryResultCachedSticker.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedSticker>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultCachedStickerFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedVideo
@@ -2696,8 +2706,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedVideo
 begin
   Result := TftInlineQueryResultCachedVideo.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedVideo>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultCachedVideoFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedVoice
@@ -2705,8 +2715,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultCachedVoice
 begin
   Result := TftInlineQueryResultCachedVoice.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultCachedVoice>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultCachedVoiceFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultContact
@@ -2714,8 +2724,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultContact
 begin
   Result := TftInlineQueryResultContact.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultContact>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultContactFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultDocument
@@ -2723,8 +2733,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultDocument
 begin
   Result := TftInlineQueryResultDocument.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultDocument>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultDocumentFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultGame
@@ -2732,8 +2742,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultGame
 begin
   Result := TftInlineQueryResultGame.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultGame>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultGameFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultGif
@@ -2741,8 +2751,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultGif
 begin
   Result := TftInlineQueryResultGif.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultGif>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultGifFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultLocation
@@ -2750,8 +2760,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultLocation
 begin
   Result := TftInlineQueryResultLocation.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultLocation>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultLocationFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultMpeg4Gif
@@ -2759,8 +2769,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultMpeg4Gif
 begin
   Result := TftInlineQueryResultMpeg4Gif.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultMpeg4Gif>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultMpeg4GifFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultPhoto
@@ -2768,8 +2778,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultPhoto
 begin
   Result := TftInlineQueryResultPhoto.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultPhoto>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultPhotoFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultVenue
@@ -2777,8 +2787,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultVenue
 begin
   Result := TftInlineQueryResultVenue.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultVenue>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultVenueFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultVideo
@@ -2786,8 +2796,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultVideo
 begin
   Result := TftInlineQueryResultVideo.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultVideo>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultVideoFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInlineQueryResultVoice
@@ -2795,8 +2805,8 @@ function TftTypeParser.ParseJsonAndGetInlineQueryResultVoice
 begin
   Result := TftInlineQueryResultVoice.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInlineQueryResultVoice>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInlineQueryResultVoiceFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputContactMessageContent
@@ -2804,8 +2814,8 @@ function TftTypeParser.ParseJsonAndGetInputContactMessageContent
 begin
   Result := TftInputContactMessageContent.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputContactMessageContent>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputContactMessageContentFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputFile(const AData: TJSONObject)
@@ -2813,8 +2823,8 @@ function TftTypeParser.ParseJsonAndGetInputFile(const AData: TJSONObject)
 begin
   Result := TftInputFile.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputFile>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputFileFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputLocationMessageContent
@@ -2822,8 +2832,8 @@ function TftTypeParser.ParseJsonAndGetInputLocationMessageContent
 begin
   Result := TftInputLocationMessageContent.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputLocationMessageContent>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputLocationMessageContentFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputMedia(const AData: TJSONObject)
@@ -2831,8 +2841,8 @@ function TftTypeParser.ParseJsonAndGetInputMedia(const AData: TJSONObject)
 begin
   Result := TftInputMedia.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputMedia>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputMediaFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputMediaAnimation
@@ -2840,8 +2850,8 @@ function TftTypeParser.ParseJsonAndGetInputMediaAnimation
 begin
   Result := TftInputMediaAnimation.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputMediaAnimation>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputMediaAnimationFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputMediaAudio(const AData: TJSONObject)
@@ -2849,8 +2859,8 @@ function TftTypeParser.ParseJsonAndGetInputMediaAudio(const AData: TJSONObject)
 begin
   Result := TftInputMediaAudio.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputMediaAudio>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputMediaAudioFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputMediaDocument
@@ -2858,8 +2868,8 @@ function TftTypeParser.ParseJsonAndGetInputMediaDocument
 begin
   Result := TftInputMediaDocument.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputMediaDocument>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputMediaDocumentFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputMediaPhoto(const AData: TJSONObject)
@@ -2867,8 +2877,8 @@ function TftTypeParser.ParseJsonAndGetInputMediaPhoto(const AData: TJSONObject)
 begin
   Result := TftInputMediaPhoto.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputMediaPhoto>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputMediaPhotoFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputMediaVideo(const AData: TJSONObject)
@@ -2876,8 +2886,8 @@ function TftTypeParser.ParseJsonAndGetInputMediaVideo(const AData: TJSONObject)
 begin
   Result := TftInputMediaVideo.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputMediaVideo>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputMediaVideoFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputMessageContent
@@ -2885,8 +2895,8 @@ function TftTypeParser.ParseJsonAndGetInputMessageContent
 begin
   Result := TftInputMessageContent.Create('');
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputMessageContent>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputMessageContentFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputTextMessageContent
@@ -2894,8 +2904,8 @@ function TftTypeParser.ParseJsonAndGetInputTextMessageContent
 begin
   Result := TftInputTextMessageContent.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputTextMessageContent>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputTextMessageContentFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInputVenueMessageContent
@@ -2903,8 +2913,8 @@ function TftTypeParser.ParseJsonAndGetInputVenueMessageContent
 begin
   Result := TftInputVenueMessageContent.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInputVenueMessageContent>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftInputVenueMessageContentFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetInvoice(const AData: TJSONObject)
@@ -2912,7 +2922,7 @@ function TftTypeParser.ParseJsonAndGetInvoice(const AData: TJSONObject)
 begin
   Result := TftInvoice.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftInvoice>((AData.GetValue('result')).ToJSON);
+    Result := TftInvoiceFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetKeyboardButton(const AData: TJSONObject)
@@ -2920,8 +2930,8 @@ function TftTypeParser.ParseJsonAndGetKeyboardButton(const AData: TJSONObject)
 begin
   Result := TftKeyboardButton.Create('');
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftKeyboardButton>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftKeyboardButtonFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetKeyboardButtonPollType
@@ -2929,8 +2939,8 @@ function TftTypeParser.ParseJsonAndGetKeyboardButtonPollType
 begin
   Result := TftKeyboardButtonPollType.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftKeyboardButtonPollType>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftKeyboardButtonPollTypeFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetLabeledPrice(const AData: TJSONObject)
@@ -2938,17 +2948,17 @@ function TftTypeParser.ParseJsonAndGetLabeledPrice(const AData: TJSONObject)
 begin
   Result := TftLabeledPrice.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftLabeledPrice>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftLabeledPriceFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetList(AParseFunc: TJsonToFtTypeFunc;
-  AJSONObject: TJSONObject): TList;
+  AJSONObject: TJSONObject): TList<TObject>;
 var
   getArrayJSON: TJSONArray;
   I: Byte;
 begin
-  Result := TList.Create;
+  Result := TList<TObject>.Create;
   try
     getArrayJSON := (AJSONObject).GetValue('result') as TJSONArray;
     if getArrayJSON.Count <= 0 then
@@ -2971,8 +2981,8 @@ function TftTypeParser.ParseJsonAndGetLocation(const AData: TJSONObject)
 begin
   Result := TftLocation.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftLocation>((AData.GetValue('result')
-      ).ToJSON);
+    Result := TftLocationFromJson((AData.GetValue('result')
+      ));
 end;
 
 function TftTypeParser.ParseJsonAndGetLoginUrl(const AData: TJSONObject)
@@ -2980,8 +2990,8 @@ function TftTypeParser.ParseJsonAndGetLoginUrl(const AData: TJSONObject)
 begin
   Result := TftLoginUrl.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftLoginUrl>((AData.GetValue('result')
-      ).ToJSON);
+    Result := TftLoginUrlFromJson((AData.GetValue('result')
+      ));
 end;
 
 function TftTypeParser.ParseJsonAndGetMaskPosition(const AData: TJSONObject)
@@ -2989,8 +2999,8 @@ function TftTypeParser.ParseJsonAndGetMaskPosition(const AData: TJSONObject)
 begin
   Result := TftMaskPosition.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMaskPosition>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftMaskPositionFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetMenuButton(const AData: TJSONObject)
@@ -2998,8 +3008,8 @@ function TftTypeParser.ParseJsonAndGetMenuButton(const AData: TJSONObject)
 begin
   Result := TftMenuButton.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMenuButton>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftMenuButtonFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetMenuButtonCommands
@@ -3007,8 +3017,8 @@ function TftTypeParser.ParseJsonAndGetMenuButtonCommands
 begin
   Result := TftMenuButtonCommands.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMenuButtonCommands>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftMenuButtonCommandsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetMenuButtonDefault
@@ -3016,8 +3026,8 @@ function TftTypeParser.ParseJsonAndGetMenuButtonDefault
 begin
   Result := TftMenuButtonDefault.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMenuButtonDefault>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftMenuButtonDefaultFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetMenuButtonWebApp(const AData: TJSONObject)
@@ -3025,8 +3035,8 @@ function TftTypeParser.ParseJsonAndGetMenuButtonWebApp(const AData: TJSONObject)
 begin
   Result := TftMenuButtonWebApp.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMenuButtonWebApp>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftMenuButtonWebAppFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetMessage(const AData: TJSONObject)
@@ -3034,7 +3044,7 @@ function TftTypeParser.ParseJsonAndGetMessage(const AData: TJSONObject)
 begin
   Result := nil;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMessage>((AData.GetValue('result')).ToJSON);
+    Result := TftMessageFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetMessageAutoDeleteTimerChanged
@@ -3042,8 +3052,8 @@ function TftTypeParser.ParseJsonAndGetMessageAutoDeleteTimerChanged
 begin
   Result := TftMessageAutoDeleteTimerChanged.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMessageAutoDeleteTimerChanged>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftMessageAutoDeleteTimerChangedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetMessageEntity(const AData: TJSONObject)
@@ -3051,8 +3061,8 @@ function TftTypeParser.ParseJsonAndGetMessageEntity(const AData: TJSONObject)
 begin
   Result := TftMessageEntity.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMessageEntity>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftMessageEntityFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetMessageId(const AData: TJSONObject)
@@ -3060,8 +3070,8 @@ function TftTypeParser.ParseJsonAndGetMessageId(const AData: TJSONObject)
 begin
   Result := TftMessageId.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftMessageId>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftMessageIdFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetOrderInfo(const AData: TJSONObject)
@@ -3069,8 +3079,8 @@ function TftTypeParser.ParseJsonAndGetOrderInfo(const AData: TJSONObject)
 begin
   Result := TftOrderInfo.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftOrderInfo>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftOrderInfoFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportData(const AData: TJSONObject)
@@ -3078,8 +3088,8 @@ function TftTypeParser.ParseJsonAndGetPassportData(const AData: TJSONObject)
 begin
   Result := TftPassportData.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportData>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportDataFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportElementError
@@ -3087,8 +3097,8 @@ function TftTypeParser.ParseJsonAndGetPassportElementError
 begin
   Result := TftPassportElementError.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportElementError>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportElementErrorFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportElementErrorDataField
@@ -3096,8 +3106,8 @@ function TftTypeParser.ParseJsonAndGetPassportElementErrorDataField
 begin
   Result := TftPassportElementErrorDataField.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportElementErrorDataField>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportElementErrorDataFieldFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportElementErrorFile
@@ -3105,8 +3115,8 @@ function TftTypeParser.ParseJsonAndGetPassportElementErrorFile
 begin
   Result := TftPassportElementErrorFile.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportElementErrorFile>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportElementErrorFileFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportElementErrorFiles
@@ -3114,8 +3124,8 @@ function TftTypeParser.ParseJsonAndGetPassportElementErrorFiles
 begin
   Result := TftPassportElementErrorFiles.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportElementErrorFiles>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportElementErrorFilesFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportElementErrorFrontSide
@@ -3123,8 +3133,8 @@ function TftTypeParser.ParseJsonAndGetPassportElementErrorFrontSide
 begin
   Result := TftPassportElementErrorFrontSide.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportElementErrorFrontSide>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportElementErrorFrontSideFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportElementErrorReverseSide
@@ -3132,8 +3142,8 @@ function TftTypeParser.ParseJsonAndGetPassportElementErrorReverseSide
 begin
   Result := TftPassportElementErrorReverseSide.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportElementErrorReverseSide>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportElementErrorReverseSideFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportElementErrorSelfie
@@ -3141,8 +3151,8 @@ function TftTypeParser.ParseJsonAndGetPassportElementErrorSelfie
 begin
   Result := TftPassportElementErrorSelfie.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportElementErrorSelfie>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportElementErrorSelfieFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportElementErrorTranslationFile
@@ -3150,8 +3160,8 @@ function TftTypeParser.ParseJsonAndGetPassportElementErrorTranslationFile
 begin
   Result := TftPassportElementErrorTranslationFile.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportElementErrorTranslationFile>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportElementErrorTranslationFileFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportElementErrorTranslationFiles
@@ -3159,8 +3169,8 @@ function TftTypeParser.ParseJsonAndGetPassportElementErrorTranslationFiles
 begin
   Result := TftPassportElementErrorTranslationFiles.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportElementErrorTranslationFiles>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportElementErrorTranslationFilesFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportElementErrorUnspecified
@@ -3168,8 +3178,8 @@ function TftTypeParser.ParseJsonAndGetPassportElementErrorUnspecified
 begin
   Result := TftPassportElementErrorUnspecified.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportElementErrorUnspecified>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportElementErrorUnspecifiedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPassportFile(const AData: TJSONObject)
@@ -3177,15 +3187,15 @@ function TftTypeParser.ParseJsonAndGetPassportFile(const AData: TJSONObject)
 begin
   Result := TftPassportFile.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPassportFile>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPassportFileFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPoll(const AData: TJSONObject): TftPoll;
 begin
   Result := TftPoll.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPoll>((AData.GetValue('result')).ToJSON);
+    Result := TftPollFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPollOption(const AData: TJSONObject)
@@ -3193,8 +3203,8 @@ function TftTypeParser.ParseJsonAndGetPollOption(const AData: TJSONObject)
 begin
   Result := TftPollOption.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPollOption>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPollOptionFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPreCheckoutQuery(const AData: TJSONObject)
@@ -3202,8 +3212,8 @@ function TftTypeParser.ParseJsonAndGetPreCheckoutQuery(const AData: TJSONObject)
 begin
   Result := TftPreCheckoutQuery.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPreCheckoutQuery>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPreCheckoutQueryFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetProximityAlertTriggered
@@ -3211,8 +3221,8 @@ function TftTypeParser.ParseJsonAndGetProximityAlertTriggered
 begin
   Result := TftProximityAlertTriggered.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftProximityAlertTriggered>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftProximityAlertTriggeredFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetReplyBase(const AData: TJSONObject)
@@ -3220,8 +3230,8 @@ function TftTypeParser.ParseJsonAndGetReplyBase(const AData: TJSONObject)
 begin
   Result := TftReplyBase.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftReplyBase>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftReplyBaseFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetReplyKeyboardMarkup
@@ -3229,8 +3239,8 @@ function TftTypeParser.ParseJsonAndGetReplyKeyboardMarkup
 begin
   Result := TftReplyKeyboardMarkup.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftReplyKeyboardMarkup>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftReplyKeyboardMarkupFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetReplyKeyboardRemove
@@ -3238,8 +3248,8 @@ function TftTypeParser.ParseJsonAndGetReplyKeyboardRemove
 begin
   Result := TftReplyKeyboardRemove.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftReplyKeyboardRemove>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftReplyKeyboardRemoveFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetResponseParameters
@@ -3247,8 +3257,8 @@ function TftTypeParser.ParseJsonAndGetResponseParameters
 begin
   Result := TftResponseParameters.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftResponseParameters>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftResponseParametersFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetSentWebAppMessage
@@ -3256,8 +3266,8 @@ function TftTypeParser.ParseJsonAndGetSentWebAppMessage
 begin
   Result := TftSentWebAppMessage.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftSentWebAppMessage>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftSentWebAppMessageFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetShippingAddress(const AData: TJSONObject)
@@ -3265,8 +3275,8 @@ function TftTypeParser.ParseJsonAndGetShippingAddress(const AData: TJSONObject)
 begin
   Result := TftShippingAddress.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftShippingAddress>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftShippingAddressFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetShippingOption(const AData: TJSONObject)
@@ -3274,8 +3284,8 @@ function TftTypeParser.ParseJsonAndGetShippingOption(const AData: TJSONObject)
 begin
   Result := TftShippingOption.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftShippingOption>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftShippingOptionFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetShippingQuery(const AData: TJSONObject)
@@ -3283,8 +3293,8 @@ function TftTypeParser.ParseJsonAndGetShippingQuery(const AData: TJSONObject)
 begin
   Result := TftShippingQuery.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftShippingQuery>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftShippingQueryFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetSticker(const AData: TJSONObject)
@@ -3292,7 +3302,7 @@ function TftTypeParser.ParseJsonAndGetSticker(const AData: TJSONObject)
 begin
   Result := TftSticker.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftSticker>((AData.GetValue('result')).ToJSON);
+    Result := TftStickerFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetStickerSet(const AData: TJSONObject)
@@ -3300,8 +3310,8 @@ function TftTypeParser.ParseJsonAndGetStickerSet(const AData: TJSONObject)
 begin
   Result := TftStickerSet.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftStickerSet>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftStickerSetFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetSuccessfulPayment
@@ -3309,8 +3319,8 @@ function TftTypeParser.ParseJsonAndGetSuccessfulPayment
 begin
   Result := TftSuccessfulPayment.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftSuccessfulPayment>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftSuccessfulPaymentFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetUpdate(const AData: TJSONObject)
@@ -3318,13 +3328,13 @@ function TftTypeParser.ParseJsonAndGetUpdate(const AData: TJSONObject)
 begin
   Result := TftUpdate.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftUpdate>((AData.GetValue('result')).ToJSON);
+    Result := TftUpdateFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetUser(const AData: TJSONObject): TftUser;
 begin
-  Result := TJSON.JsonToObject<TftUser>
-    ((AData.GetValue('result') as TJSONObject).ToJSON);
+  Result := TftUserFromJson
+    ((AData.GetValue('result') as TJSONObject));
 end;
 
 function TftTypeParser.ParseJsonAndGetUserProfilePhotos
@@ -3332,22 +3342,22 @@ function TftTypeParser.ParseJsonAndGetUserProfilePhotos
 begin
   Result := TftUserProfilePhotos.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftUserProfilePhotos>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftUserProfilePhotosFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetVenue(const AData: TJSONObject): TftVenue;
 begin
   Result := TftVenue.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftVenue>((AData.GetValue('result')).ToJSON);
+    Result := TftVenueFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetVideo(const AData: TJSONObject): TftVideo;
 begin
   Result := TftVideo.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftVideo>((AData.GetValue('result')).ToJSON);
+    Result := TftVideoFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetVideoChatEnded(const AData: TJSONObject)
@@ -3355,8 +3365,8 @@ function TftTypeParser.ParseJsonAndGetVideoChatEnded(const AData: TJSONObject)
 begin
   Result := TftVideoChatEnded.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftVideoChatEnded>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftVideoChatEndedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetVideoChatParticipantsInvited
@@ -3364,8 +3374,8 @@ function TftTypeParser.ParseJsonAndGetVideoChatParticipantsInvited
 begin
   Result := TftVideoChatParticipantsInvited.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftVideoChatParticipantsInvited>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftVideoChatParticipantsInvitedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetVideoChatScheduled
@@ -3373,8 +3383,8 @@ function TftTypeParser.ParseJsonAndGetVideoChatScheduled
 begin
   Result := TftVideoChatScheduled.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftVideoChatScheduled>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftVideoChatScheduledFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetVideoChatStarted(const AData: TJSONObject)
@@ -3382,8 +3392,8 @@ function TftTypeParser.ParseJsonAndGetVideoChatStarted(const AData: TJSONObject)
 begin
   Result := TftVideoChatStarted.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftVideoChatStarted>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftVideoChatStartedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetVideoNote(const AData: TJSONObject)
@@ -3391,15 +3401,15 @@ function TftTypeParser.ParseJsonAndGetVideoNote(const AData: TJSONObject)
 begin
   Result := TftVideoNote.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftVideoNote>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftVideoNoteFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetVoice(const AData: TJSONObject): TftVoice;
 begin
   Result := TftVoice.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftVoice>((AData.GetValue('result')).ToJSON);
+    Result := TftVoiceFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetWebAppData(const AData: TJSONObject)
@@ -3407,8 +3417,8 @@ function TftTypeParser.ParseJsonAndGetWebAppData(const AData: TJSONObject)
 begin
   Result := TftWebAppData.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftWebAppData>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftWebAppDataFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetWebAppInfo(const AData: TJSONObject)
@@ -3416,8 +3426,8 @@ function TftTypeParser.ParseJsonAndGetWebAppInfo(const AData: TJSONObject)
 begin
   Result := TftWebAppInfo.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftWebAppInfo>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftWebAppInfoFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetWebhookInfo(const AData: TJSONObject)
@@ -3425,8 +3435,8 @@ function TftTypeParser.ParseJsonAndGetWebhookInfo(const AData: TJSONObject)
 begin
   Result := TftWebhookInfo.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftWebhookInfo>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftWebhookInfoFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetWriteAccessAllowed
@@ -3434,8 +3444,8 @@ function TftTypeParser.ParseJsonAndGetWriteAccessAllowed
 begin
   Result := TftWriteAccessAllowed.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftWriteAccessAllowed>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftWriteAccessAllowedFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndPhotoSize(const AData: TJSONObject)
@@ -3443,8 +3453,8 @@ function TftTypeParser.ParseJsonAndPhotoSize(const AData: TJSONObject)
 begin
   Result := TftPhotoSize.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPhotoSize>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPhotoSizeFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseKeyboardButton(const AObj
@@ -3503,6 +3513,20 @@ begin
   Result := Result + '}';
 end;
 
+function TftTypeParser.ParseLabeledPriceList
+  (const AValues: TArray<TftLabeledPrice>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  for I := 0 to High(AValues) do
+  begin
+    if I > 0 then Result := Result + ',';
+    Result := Result + ParseLabeledPrice(AValues[I]);
+  end;
+  Result := Result + ']';
+end;
+
 function TftTypeParser.ParseLabeledPrice(const AObj: TftLabeledPrice): String;
 begin
   Result := '';
@@ -3518,7 +3542,7 @@ begin
   Result := Result + '}';
 end;
 
-function TftTypeParser.ParseList(const AObj: TList): string;
+function TftTypeParser.ParseList<T>(const AObj: TList<T>): string;
 var
   I: Integer;
 begin
@@ -3532,33 +3556,48 @@ begin
 
   for I := 0 to AObj.Count - 1 do
   begin
-    if (TftPhotoSize(AObj[I]) is TftPhotoSize) then
-      Result := Result + ParsePhotoSize(AObj[I])
-    else if (TftUser(AObj[I]) is TftUser) then
-      Result := Result + ParseUser(AObj[I])
-    else if (TftSticker(AObj[I]) is TftSticker) then
-      Result := Result + ParseSticker(AObj[I])
-    else if (TftPollOption(AObj[I]) is TftPollOption) then
-      Result := Result + ParsePollOption(AObj[I])
-    else if (TftMessageEntity(AObj[I]) is TftMessageEntity) then
-      Result := Result + ParseMessageEntity(AObj[I])
-    else if (TftBotCommand(AObj[I]) is TftBotCommand) then
-      Result := Result + ParseBotCommand(AObj[I])
-    else if (TftPassportFile(AObj[I]) is TftPassportFile) then
-      Result := Result + ParsePassportFile(AObj[I])
-    else if (TftInlineQueryResult(AObj[I]) is TftInlineQueryResult) then
-      Result := Result + ParseInlineQueryResult(AObj[I])
-    else if (TftLabeledPrice(AObj[I]) is TftLabeledPrice) then
-      Result := Result + ParseLabeledPrice(AObj[I])
-    else if (TftPassportElementError(AObj[I]) is TftPassportElementError) then
-      Result := Result + ParsePassportElementError(AObj[I])
-    else if (TftInputMedia(AObj[I]) is TftInputMedia) then
-      Result := Result + ParseInputMedia(AObj[I]);
+    if (TObject(AObj[I]) is TftPhotoSize) then
+      Result := Result + ParsePhotoSize(TftPhotoSize(TObject(AObj[I])))
+    else if (TObject(AObj[I]) is TftUser) then
+      Result := Result + ParseUser(TftUser(TObject(AObj[I])))
+    else if (TObject(AObj[I]) is TftSticker) then
+      Result := Result + ParseSticker(TftSticker(TObject(AObj[I])))
+    else if (TObject(AObj[I]) is TftPollOption) then
+      Result := Result + ParsePollOption(TftPollOption(TObject(AObj[I])))
+    else if (TObject(AObj[I]) is TftMessageEntity) then
+      Result := Result + ParseMessageEntity(TftMessageEntity(TObject(AObj[I])))
+    else if (TObject(AObj[I]) is TftBotCommand) then
+      Result := Result + ParseBotCommand(TftBotCommand(TObject(AObj[I])))
+    else if (TObject(AObj[I]) is TftPassportFile) then
+      Result := Result + ParsePassportFile(TftPassportFile(TObject(AObj[I])))
+    else if (TObject(AObj[I]) is TftInlineQueryResult) then
+      Result := Result + ParseInlineQueryResult(TftInlineQueryResult(TObject(AObj[I])))
+    else if (TObject(AObj[I]) is TftLabeledPrice) then
+      Result := Result + ParseLabeledPrice(TftLabeledPrice(TObject(AObj[I])))
+    else if (TObject(AObj[I]) is TftPassportElementError) then
+      Result := Result + ParsePassportElementError(TftPassportElementError(TObject(AObj[I])))
+    else if (TObject(AObj[I]) is TftInputMedia) then
+      Result := Result + ParseInputMedia(TftInputMedia(TObject(AObj[I])));
 
     Result := Result + ',';
   end;
   RemoveLastComma(Result);
   Result := Result + '}';
+end;
+
+function TftTypeParser.ParseList<T>(const AObj: TArray<T>): string;
+var
+  LList: TList<T>;
+  I: Integer;
+begin
+  LList := TList<T>.Create;
+  try
+    for I := 0 to High(AObj) do
+      LList.Add(AObj[I]);
+    Result := ParseList<T>(LList);
+  finally
+    LList.Free;
+  end;
 end;
 
 function TftTypeParser.ParseLocation(const AObj: TftLocation): String;
@@ -3717,11 +3756,11 @@ begin
   AppendToJson(Result, 'media_group_id', AObj.mediaGroupId);
   AppendToJson(Result, 'author_signature', AObj.AuthorSignature);
   AppendToJson(Result, 'text', AObj.Text);
-  AppendToJson(Result, 'entities', ParseList(TList(AObj.entities)));
+  AppendToJson(Result, 'entities', ParseList<TftMessageEntity>(AObj.entities));
   AppendToJson(Result, 'animation', ParseAnimation(AObj.Animation));
   AppendToJson(Result, 'audio', ParseAudio(AObj.Audio));
   AppendToJson(Result, 'document', ParseDocument(AObj.Document));
-  AppendToJson(Result, 'photo', ParseList(TList(AObj.photo)));
+  AppendToJson(Result, 'photo', ParseList<TftPhotoSize>(AObj.photo));
   AppendToJson(Result, 'sticker', ParseSticker(AObj.Sticker));
   AppendToJson(Result, 'video', ParseVideo(AObj.Video));
   AppendToJson(Result, 'video_note', ParseVideoNote(AObj.videoNote));
@@ -3737,10 +3776,10 @@ begin
   AppendToJson(Result, 'venue', ParseVenue(AObj.venue));
   AppendToJson(Result, 'location', ParseLocation(AObj.Location));
   AppendToJson(Result, 'new_chat_members',
-    ParseList(TList(AObj.NewChatMembers)));
+    ParseList<TftUser>(AObj.NewChatMembers));
   AppendToJson(Result, 'left_chat_member', ParseUser(AObj.LeftChatMember));
   AppendToJson(Result, 'new_chat_title', AObj.NewChatTitle);
-  AppendToJson(Result, 'new_chat_photo', ParseList(TList(AObj.NewChatPhoto)));
+  AppendToJson(Result, 'new_chat_photo', ParseList<TftPhotoSize>(AObj.NewChatPhoto));
   AppendToJson(Result, 'delete_chat_photo', AObj.DeleteChatPhoto);
   AppendToJson(Result, 'group_chat_created', AObj.GroupChatCreated);
   AppendToJson(Result, 'supergroup_chat_created', AObj.SupergroupChatCreated);
@@ -3918,7 +3957,7 @@ begin
     Exit;
   end;
   Result := Result + '{';
-  AppendToJson(Result, 'data', ParseList(TList(AObj.Data)));
+  AppendToJson(Result, 'data', ParseList<TftEncryptedPassportElement>(AObj.Data));
   AppendToJson(Result, 'credentials',
     ParseEncryptedCredentials(AObj.credentials));
   RemoveLastComma(Result);
@@ -4032,7 +4071,7 @@ begin
   Result := '';
   // This function will be called by ParsePassportElementError(), so I don't add
   // curly brackets to the result String.
-  AppendToJson(Result, 'file_hashes', ParseList(TList(AObj.FileHashes)));
+  AppendToJson(Result, 'file_hashes', ParseStringList(AObj.FileHashes));
   // The last comma will be erased by ParsePassportElementError().
 end;
 
@@ -4112,7 +4151,7 @@ begin
   Result := '';
   // This function will be called by ParsePassportElementError(), so I don't add
   // curly brackets to the result String.
-  AppendToJson(Result, 'file_hashes', ParseList(TList(AObj.FileHashes)));
+  AppendToJson(Result, 'file_hashes', ParseStringList(AObj.FileHashes));
   // The last comma will be erased by ParsePassportElementError().
 end;
 
@@ -4178,7 +4217,7 @@ begin
   Result := Result + '{';
   AppendToJson(Result, 'id', AObj.Id);
   AppendToJson(Result, 'question', AObj.Question);
-  AppendToJson(Result, 'options', ParseList(TList(AObj.Options)));
+  AppendToJson(Result, 'options', ParseList<TftPollOption>(AObj.Options));
   AppendToJson(Result, 'total_voter_count', AObj.TotalVoterCount);
   AppendToJson(Result, 'is_closed', AObj.IsClosed);
   AppendToJson(Result, 'is_anonymous', AObj.IsAnonymous);
@@ -4205,7 +4244,7 @@ begin
   Result := Result + '{';
   AppendToJson(Result, 'poll_id', AObj.PollId);
   AppendToJson(Result, 'user', ParseUser(AObj.User));
-  AppendToJson(Result, 'option_ids', ParseList(TList(AObj.OptionIds)));
+  AppendToJson(Result, 'option_ids', ParseIntList(AObj.OptionIds));
   RemoveLastComma(Result);
   Result := Result + '}';
 end;
@@ -4399,7 +4438,7 @@ begin
   AppendToJson(Result, 'title', AObj.Title);
   RemoveLastComma(Result);
   Result := Result + '"prices":';
-  Result := Result + ParseList(TList(AObj.prices));
+  Result := Result + ParseLabeledPriceList(AObj.prices);
   Result := Result + '}';
 end;
 
@@ -4477,7 +4516,7 @@ begin
 
   AppendToJson(Result, 'is_animated', AObj.IsAnimated);
   AppendToJson(Result, 'is_video', AObj.IsVideo);
-  AppendToJson(Result, 'stickers', ParseList(TList(AObj.Stickers)));
+  AppendToJson(Result, 'stickers', ParseList<TftSticker>(AObj.Stickers));
   AppendToJson(Result, 'thumb', ParsePhotoSize(AObj.Thumb));
   RemoveLastComma(Result);
   Result := Result + '}';
@@ -4575,7 +4614,7 @@ begin
   end;
   Result := Result + '{';
   AppendToJson(Result, 'total_count', AObj.TotalCount);
-  AppendToJson(Result, 'photos', ParseList(TList(AObj.Photos)));
+  AppendToJson(Result, 'photos', ParseList<TftPhotoSize>(AObj.Photos));
   RemoveLastComma(Result);
   Result := Result + '}';
 end;
@@ -4647,7 +4686,7 @@ begin
     Exit;
   end;
   Result := Result + '{';
-  AppendToJson(Result, 'users', ParseList(TList(AObj.Users)));
+  AppendToJson(Result, 'users', ParseList<TftUser>(AObj.Users));
   RemoveLastComma(Result);
   Result := Result + '}';
 end;
@@ -4750,7 +4789,7 @@ begin
     AObj.LastSynchronizationErrorDate);
   AppendToJson(Result, 'max_connections', AObj.MaxConnections);
   AppendToJson(Result, 'allowed_updates',
-    ParseList(TList(AObj.AllowedUpdates)));
+    ParseStringArray(AObj.AllowedUpdates));
   RemoveLastComma(Result);
   Result := Result + '}';
 end;
@@ -4773,7 +4812,7 @@ function TftTypeParser.ParseJsonAndGetBotName(const AData: TJSONObject)
 begin
   Result := TftBotName.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotName>((AData.GetValue('result')).ToJSON);
+    Result := TftBotNameFromJson((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotDescription(const AData: TJSONObject)
@@ -4781,8 +4820,8 @@ function TftTypeParser.ParseJsonAndGetBotDescription(const AData: TJSONObject)
 begin
   Result := TftBotDescription.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotDescription>((AData.GetValue('result')
-      ).ToJSON);
+    Result := TftBotDescriptionFromJson((AData.GetValue('result')
+      ));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotShortDescription
@@ -4790,8 +4829,8 @@ function TftTypeParser.ParseJsonAndGetBotShortDescription
 begin
   Result := TftBotShortDescription.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotShortDescription>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBotShortDescriptionFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetStarAmount(const AData: TJSONObject)
@@ -4799,8 +4838,8 @@ function TftTypeParser.ParseJsonAndGetStarAmount(const AData: TJSONObject)
 begin
   Result := TftStarAmount.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftStarAmount>((AData.GetValue('result')
-      ).ToJSON);
+    Result := TftStarAmountFromJson((AData.GetValue('result')
+      ));
 end;
 
 function TftTypeParser.ParseJsonAndGetUserProfileAudios
@@ -4808,8 +4847,8 @@ function TftTypeParser.ParseJsonAndGetUserProfileAudios
 begin
   Result := TftUserProfileAudios.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftUserProfileAudios>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftUserProfileAudiosFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPreparedInlineMessage
@@ -4817,8 +4856,8 @@ function TftTypeParser.ParseJsonAndGetPreparedInlineMessage
 begin
   Result := TftPreparedInlineMessage.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPreparedInlineMessage>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPreparedInlineMessageFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetPreparedKeyboardButton
@@ -4826,8 +4865,8 @@ function TftTypeParser.ParseJsonAndGetPreparedKeyboardButton
 begin
   Result := TftPreparedKeyboardButton.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftPreparedKeyboardButton>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftPreparedKeyboardButtonFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBusinessConnection
@@ -4835,8 +4874,8 @@ function TftTypeParser.ParseJsonAndGetBusinessConnection
 begin
   Result := TftBusinessConnection.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBusinessConnection>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBusinessConnectionFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseIntegers(const AValues: TArray<Integer>): String;
@@ -4867,6 +4906,34 @@ begin
     LValue := StringReplace(LValue, '"', '\"', [rfReplaceAll]);
     Result := Result + '"' + LValue + '"';
   end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseIntList(const AValues: TList<Integer>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  if AValues <> nil then
+    for I := 0 to AValues.Count - 1 do
+    begin
+      if I > 0 then Result := Result + ',';
+      Result := Result + IntToStr(AValues[I]);
+    end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseStringList(const AValues: TList<String>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  if AValues <> nil then
+    for I := 0 to AValues.Count - 1 do
+    begin
+      if I > 0 then Result := Result + ',';
+      Result := Result + '"' + JsonEscape(AValues[I]) + '"';
+    end;
   Result := Result + ']';
 end;
 
@@ -4909,6 +4976,21 @@ begin
       Result := Result + ',';
     Result := Result + ParseReactionType(AReaction[I]);
   end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseMessageEntities
+  (const AEntities: TList<TftMessageEntity>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  if AEntities <> nil then
+    for I := 0 to AEntities.Count - 1 do
+    begin
+      if I > 0 then Result := Result + ',';
+      Result := Result + ParseMessageEntity(AEntities[I]);
+    end;
   Result := Result + ']';
 end;
 
@@ -5295,8 +5377,8 @@ function TftTypeParser.ParseJsonAndGetSentGuestMessage
 begin
   Result := TftSentGuestMessage.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftSentGuestMessage>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftSentGuestMessageFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetUserChatBoosts
@@ -5304,8 +5386,8 @@ function TftTypeParser.ParseJsonAndGetUserChatBoosts
 begin
   Result := TftUserChatBoosts.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftUserChatBoosts>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftUserChatBoostsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetBotAccessSettings
@@ -5313,16 +5395,16 @@ function TftTypeParser.ParseJsonAndGetBotAccessSettings
 begin
   Result := TftBotAccessSettings.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftBotAccessSettings>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftBotAccessSettingsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetGifts(const AData: TJSONObject): TftGifts;
 begin
   Result := TftGifts.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftGifts>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftGiftsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetOwnedGifts
@@ -5330,16 +5412,16 @@ function TftTypeParser.ParseJsonAndGetOwnedGifts
 begin
   Result := TftOwnedGifts.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftOwnedGifts>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftOwnedGiftsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetStory(const AData: TJSONObject): TftStory;
 begin
   Result := TftStory.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftStory>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftStoryFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.ParseJsonAndGetStarTransactions
@@ -5347,8 +5429,8 @@ function TftTypeParser.ParseJsonAndGetStarTransactions
 begin
   Result := TftStarTransactions.Create;
   if AData.GetValue('result') <> nil then
-    Result := TJSON.JsonToObject<TftStarTransactions>
-      ((AData.GetValue('result')).ToJSON);
+    Result := TftStarTransactionsFromJson
+      ((AData.GetValue('result')));
 end;
 
 function TftTypeParser.JsonEscape(const AValue: String): String;
@@ -5548,7 +5630,7 @@ begin
 end;
 
 function TftTypeParser.ParseRichBlockTableCells
-  (const ACells: TList<TList<TftRichBlockTableCell>>): String;
+  (const ACells: TList<TftRichBlockTableRow>): String;
 var
   I, J: Integer;
 begin
