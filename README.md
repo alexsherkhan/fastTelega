@@ -1,25 +1,70 @@
-# fastTelega
+<p align="center">
+  <img src="Assets/Resources/TftTelegramBot/TftTelegramBot128.png" alt="fastTelega logo" width="128" height="128">
+</p>
 
-Delphi library for Telegram Bot API.
+<h1 align="center">fastTelega</h1>
 
-This library is under development. It implements the Telegram Bot API methods, long polling and a plain-HTTP webhook server (TLS via a reverse proxy).
+<p align="center">
+  A Delphi library for the <a href="https://core.telegram.org/bots/api">Telegram Bot API</a>.
+</p>
 
-Markdown documentation is in [Docs](Docs). The legacy CHM documentation is in [Doc](Doc).
-Version history is in [CHANGELOG.md](CHANGELOG.md).
+<p align="center">
+  <a href="https://www.embarcadero.com/products/delphi"><img src="https://img.shields.io/badge/Delphi-11%20Alexandria-red.svg" alt="Delphi 11 Alexandria"></a>
+  <a href="https://core.telegram.org/bots/api"><img src="https://img.shields.io/badge/Telegram%20Bot%20API-10.3-2CA5E0.svg" alt="Telegram Bot API 10.3"></a>
+  <a href="Docs/API.md"><img src="https://img.shields.io/badge/methods-185%2F185-brightgreen.svg" alt="185 of 185 methods"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+</p>
 
-## License
+## Overview
 
-fastTelega is distributed under the MIT License (see [LICENSE](LICENSE)).
-The installer and setup tooling include third-party components under their own
-licenses; see [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) and the
-[LICENSES](LICENSES) directory.
+fastTelega provides typed Bot API methods, a Telegram object model, an event
+dispatcher, long polling and a webhook server. It is written in Object Pascal
+and uses the Delphi RTL, REST components and Indy for webhooks.
 
-## Example 
+| Feature | Status |
+|---|---|
+| Bot API methods | 185 of 185 (Bot API 10.3) |
+| Long polling | `TftLongPoll` |
+| Webhook server | `TftWebhookServer`, `TftWebhookLocalServer`, `TftWebhookTCPServer` |
+| Webhook TLS | Terminated by a reverse proxy (nginx, Caddy, IIS) |
+| Event dispatcher | `OnUpdate` plus typed message, inline and callback events |
+| Object model | Core Telegram types and Bot API 10.3 additions |
+| File uploads | Single-file methods, media groups, profile photos and stories |
+| Packages | RTL and VCL packages for RAD Studio 11 Alexandria |
+| Installer | Inno Setup project in `Tools/Setup` |
 
-Example echo bot which sends everything it receives:
+## Requirements
 
-```pas
-program Echobot_Delphi;
+- Windows with RAD Studio 11 Alexandria (Delphi 11).
+- RTL and REST components (`RESTComponents`).
+- Indy (`IndyCore`, `IndyProtocols`) for the webhook server.
+- VCL only if you use the `TftTelegramBot` component.
+- A bot token from [@BotFather](https://t.me/BotFather).
+
+## Installation
+
+Open `Packages/RAD Studio 11 Alexandria/fastTelega.groupproj`, build
+`fastTelega.Package.RTL`, and add the package to the IDE library path.
+
+To use the sources directly, add these directories to the project search path:
+
+```
+Source
+Source/AvailableTypes
+Source/Events
+Source/Helpers
+Source/Net
+Source/Net/Server
+Source/Parser
+Source/Components/VCL
+```
+
+See [Installation](Docs/Installation.md) for package and search-path details.
+
+## Long polling example
+
+```pascal
+program EchoBot;
 
 {$APPTYPE CONSOLE}
 {$R *.res}
@@ -28,7 +73,6 @@ uses
   System.SysUtils,
   fastTelega.AvailableTypes,
   fastTelega.Bot,
-  fastTelega.Events.EventBroadcaster,
   fastTelega.Net.LongPoll;
 
 var
@@ -36,42 +80,127 @@ var
   LongPoll: TftLongPoll;
 
 begin
+  Bot := TftBot.Create('YOUR_BOT_TOKEN', 'https://api.telegram.org');
   try
-    Bot := TftBot.Create('BOT_TOKEN',
-      'https://api.telegram.org');
-    Bot.Events.OnCommand('start',
-      procedure(const FTMessage: TObject)
-      begin
-        Bot.API.sendMessage(TftMessage(FTMessage).Chat.id, 'Hi!');
-      end);
-    Bot.Events.OnAnyMessage(
-      procedure(const FTMessage: TObject)
-      begin
-        Writeln('User wrote ', TftMessage(FTMessage).text);
-        if Pos('/start', TftMessage(FTMessage).text) > 0 then
-          Exit;
-        Bot.API.sendMessage(TftMessage(FTMessage).Chat.id,
-          'Your message is: ' + TftMessage(FTMessage).text);
-      end);
-    try
-      Writeln('Bot username: ' + Bot.API.getMe.username);
-      Bot.API.deleteWebhook();
+    // A webhook and long polling cannot be active at the same time.
+    Bot.API.DeleteWebhook;
 
-      LongPoll := TftLongPoll.Create(Bot);
-      while (True) do
+    Bot.Events.OnAnyMessage(
+      procedure(const Obj: TObject)
+      var
+        Message: TftMessage;
       begin
-        Writeln('Long poll started\n');
-        LongPoll.start();
-      end
-    except
-      on E: Exception do
-         Writeln(E.ClassName, ': ', E.Message);
-    end;
+        Message := TftMessage(Obj);
+        if Message.Text <> '' then
+          Bot.API.SendMessage(Message.Chat.Id, 'Echo: ' + Message.Text).Free;
+      end);
+
+    LongPoll := TftLongPoll.Create(Bot);
+    while True do
+      LongPoll.Start;
   except
     on E: Exception do
       Writeln(E.ClassName, ': ', E.Message);
   end;
-
 end.
 ```
-All other examples  are located [here](Examples).
+
+## Webhook example
+
+```pascal
+var
+  Bot: TftBot;
+  Webhook: TftWebhookLocalServer;
+begin
+  Bot := TftBot.Create('YOUR_BOT_TOKEN', 'https://api.telegram.org');
+  Webhook := TftWebhookLocalServer.Create(Bot);
+  Webhook.Port := 8080;
+  Webhook.Path := '/telegram';
+  Webhook.SecretToken := 'change-me';
+  Webhook.Start;
+
+  Bot.API.SetWebhook('https://bot.example.com/telegram', nil, 40, nil, '',
+    False, 'change-me');
+end;
+```
+
+The built-in server speaks plain HTTP; terminate TLS in a reverse proxy. See
+[Webhooks](Docs/Webhooks.md) for an nginx configuration.
+
+## Architecture
+
+```
+Application
+  |-- TftBot
+        |-- TftAPI             Bot API methods
+        |-- TftHttpClient      HTTP transport
+        |-- TftTypeParser      JSON serialization
+        |-- TftEventBroadcaster listeners
+        |-- TftEventHandler    update routing
+  |-- TftLongPoll              getUpdates loop
+  |-- TftWebhookServer         webhook endpoint
+```
+
+`TftBot` owns the HTTP client, API client, event broadcaster and event handler.
+Returned Telegram objects and lists are owned by the caller; free them when
+done. See [Architecture](Docs/Architecture.md) for details and lifetime notes.
+
+## Documentation
+
+Full English documentation is in [Docs](Docs):
+
+| Document | Contents |
+|---|---|
+| [Installation](Docs/Installation.md) | Requirements, packages and search paths |
+| [Getting started](Docs/GettingStarted.md) | Minimal working bot |
+| [Architecture](Docs/Architecture.md) | Units, data flow, ownership |
+| [Events](Docs/Events.md) | Listeners, commands and routing |
+| [API reference](Docs/API.md) | Conventions and all 185 methods |
+| [Types](Docs/Types.md) | Telegram object model and lists |
+| [File uploads](Docs/FileUploads.md) | `TftInputFile`, multipart, media groups |
+| [Webhooks](Docs/Webhooks.md) | Indy server and reverse proxy setup |
+| [VCL component](Docs/VCLComponent.md) | `TftTelegramBot` component |
+| [Examples](Docs/Examples.md) | Included projects and snippets |
+| [Building](Docs/Building.md) | Packages, MSBuild and installer |
+| [Licensing](Docs/Licensing.md) | MIT and third-party licenses |
+| [Troubleshooting](Docs/Troubleshooting.md) | Errors and known limitations |
+
+The legacy CHM documentation is in [Doc](Doc). Version history is in
+[CHANGELOG.md](CHANGELOG.md).
+
+## Examples
+
+- `Examples/Console/Echobot_Delphi` — console echo bot
+- `Examples/Console/Inline_Keyboard_Delphi` — inline keyboard
+- `Examples/Console/Reply_Keyboard_Delphi` — reply keyboard
+- `Examples/VCL/Echobot_Delphi_VCL` — VCL echo bot
+- `Project/fastTelegaDesignerBotMVC` — DesignerBot MVC application
+- `Project/MenuBot` — menu editor
+
+Some older examples still use the pre-1.5 unit names; see
+[Examples](Docs/Examples.md) for corrected `uses` clauses.
+
+## Status and limitations
+
+All Bot API 10.3 methods are declared and implemented. Some advanced scenarios
+are still limited:
+
+- Typed rich-message blocks are not modeled; `TftInputRichMessage` accepts raw
+  JSON for `blocks` and `media`.
+- Some optional method parameters (for example `business_connection_id`,
+  `direct_messages_topic_id` and suggested-post parameters) are not exposed.
+- Typed events exist for messages, inline queries, chosen inline results and
+  callback queries; other update types are available through `OnUpdate`.
+- `SendMediaGroup` supports file uploads through `TftInputMedia.MediaFile`;
+  paid media and sticker attach uploads require manual attach names.
+- Webhook TLS must be terminated by a reverse proxy.
+- The VCL component is experimental.
+
+See [Troubleshooting](Docs/Troubleshooting.md) for a complete list.
+
+## License
+
+fastTelega is distributed under the MIT License (see [LICENSE](LICENSE)).
+The installer and setup tooling include third-party components under their own
+licenses; see [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) and the
+[LICENSES](LICENSES) directory.
