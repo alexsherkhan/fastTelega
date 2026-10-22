@@ -82,6 +82,38 @@ installer supports English and Brazilian Portuguese.
 Third-party license texts are installed under `{app}\LICENSES`; see
 [Licensing](Licensing.md).
 
+## Cross-platform Lazarus setup
+
+`Tools/Setup/Lazarus` contains a console installer written in Object Pascal.
+It works on Windows, Linux and macOS and does not require LCL:
+
+```bash
+cd Tools/Setup/Lazarus
+./build.sh
+./fastTelegaSetup --dest=$HOME/fastTelega
+```
+
+On Linux the default destination is `$XDG_DATA_HOME/fastTelega` or
+`~/.local/share/fastTelega`; on macOS it is
+`~/Library/Application Support/fastTelega`.
+
+It copies the sources, Lazarus package, docs, examples and licenses, and
+writes an `INSTALL.txt` manifest. See
+`Tools/Setup/Lazarus/README.md` for options and uninstall instructions.
+
+A GUI version using LCL is in `Tools/Setup/LazarusGUI`:
+
+```bash
+cd Tools/Setup/LazarusGUI
+./build.sh
+./lib/x86_64-linux/FastTelegaSetupGui
+```
+
+It provides source/destination pickers, component checkboxes, install and
+uninstall actions, and a log window. If `lazbuild` is detected, the installer
+registers the package and marks it installed automatically; restart Lazarus to
+load the component palette.
+
 ## Continuous integration
 
 No CI configuration is included. A minimal build check can run the two `msbuild`

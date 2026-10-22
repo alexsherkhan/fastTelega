@@ -102,3 +102,8 @@ modules/
 *.or
 Tests/TestRunner
 Lazarus/EchoBot
+Tools/Setup/Lazarus/fastTelegaSetup
+Tools/Setup/Lazarus/lib/
+Lazarus/lib/
+Tools/Setup/LazarusGUI/lib/
+Tools/Setup/LazarusGUI/FastTelegaSetupGui

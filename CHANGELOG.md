@@ -103,6 +103,17 @@
 - Verified types, parser, API, bot and long polling compile with FPC 3.2.2.
 - Added FPCUnit tests for JSON mapping, parser, bot creation, long polling and webhook POST handling.
 
+### Installer
+
+- Added a cross-platform console installer in `Tools/Setup/Lazarus`
+  (`fastTelegaSetup`) for sources, Lazarus package, docs and examples.
+- Added `--dest`, `--source`, `--no-docs`, `--no-examples`,
+  `--no-packages`, `--uninstall` and `--yes` options.
+- Verified install/uninstall and `lazbuild` of the installed package.
+- Added an LCL GUI installer in `Tools/Setup/LazarusGUI` as a classic wizard with a left step panel
+  (Welcome, Destination, Components, Install, Finish), source/destination
+  pickers, component selection, install/uninstall, progress and a log window.
+
 ### FMX support
 
 - Added `TftTelegramBotFMX` (unit `fastTelega.Fmx`) wrapping `TftBot`.

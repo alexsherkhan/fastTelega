@@ -7,7 +7,22 @@
     <Author Value="fastTelega Project"/>
     <License Value="MIT"/>
     <Description Value="fastTelega - Delphi/Free Pascal Telegram Bot API library"/>
-    <Files Count="96">
+    <CompilerOptions>
+      <Version Value="11"/>
+      <SearchPaths>
+        <OtherUnitFiles Value="../Source;../Source/AvailableTypes;../Source/Events;../Source/Net;../Source/Parser;../Source/Compat/FPC;../Source/Components/LCL"/>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+      <Other>
+        <CustomOptions Value="-Mdelphi"/>
+      </Other>
+    </CompilerOptions>
+    <Files Count="97">
+      <Item97>
+        <Filename Value="../Source/Components/LCL/fastTelega.Lcl.pas"/>
+        <UnitName Value="fastTelega.Lcl"/>
+        <IsPartOfPackage Value="True"/>
+      </Item97>
       <Item1>
         <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftAnimation.pas"/>
         <UnitName Value="fastTelega.AvailableTypes.ftAnimation"/>
@@ -414,88 +429,89 @@
         <IsPartOfPackage Value="True"/>
       </Item81>
       <Item82>
-        <Filename Value="../Source/Helpers/fastTelega.AvailableTypesHelpers.pas"/>
-        <UnitName Value="fastTelega.AvailableTypesHelpers"/>
-        <IsPartOfPackage Value="True"/>
-      </Item82>
-      <Item83>
         <Filename Value="../Source/Net/fastTelega.Net.HttpClient.pas"/>
         <UnitName Value="fastTelega.Net.HttpClient"/>
         <IsPartOfPackage Value="True"/>
-      </Item83>
-      <Item84>
+      </Item82>
+      <Item83>
         <Filename Value="../Source/Net/fastTelega.Net.LongPoll.pas"/>
         <UnitName Value="fastTelega.Net.LongPoll"/>
         <IsPartOfPackage Value="True"/>
-      </Item84>
-      <Item85>
+      </Item83>
+      <Item84>
         <Filename Value="../Source/Parser/fastTelega.Parser.TypeParser.pas"/>
         <UnitName Value="fastTelega.Parser.TypeParser"/>
         <IsPartOfPackage Value="True"/>
-      </Item85>
-      <Item86>
+      </Item84>
+      <Item85>
         <Filename Value="../Source/Compat/FPC/Rest.JSON.pas"/>
         <UnitName Value="Rest.JSON"/>
         <IsPartOfPackage Value="True"/>
-      </Item86>
-      <Item87>
+      </Item85>
+      <Item86>
         <Filename Value="../Source/Compat/FPC/System.JSON.pas"/>
         <UnitName Value="System.JSON"/>
         <IsPartOfPackage Value="True"/>
-      </Item87>
-      <Item88>
+      </Item86>
+      <Item87>
         <Filename Value="../Source/Compat/FPC/System.Net.HttpClientComponent.pas"/>
         <UnitName Value="System.Net.HttpClientComponent"/>
         <IsPartOfPackage Value="True"/>
-      </Item88>
-      <Item89>
+      </Item87>
+      <Item88>
         <Filename Value="../Source/Compat/FPC/System.Net.Mime.pas"/>
         <UnitName Value="System.Net.Mime"/>
         <IsPartOfPackage Value="True"/>
-      </Item89>
-      <Item90>
+      </Item88>
+      <Item89>
         <Filename Value="../Source/Compat/FPC/System.Net.URLClient.pas"/>
         <UnitName Value="System.Net.URLClient"/>
         <IsPartOfPackage Value="True"/>
-      </Item90>
-      <Item91>
+      </Item89>
+      <Item90>
         <Filename Value="../Source/Compat/FPC/fastTelega.JsonMapper.pas"/>
         <UnitName Value="fastTelega.JsonMapper"/>
         <IsPartOfPackage Value="True"/>
-      </Item91>
-      <Item92>
+      </Item90>
+      <Item91>
         <Filename Value="../Source/fastTelega.API.pas"/>
         <UnitName Value="fastTelega.API"/>
         <IsPartOfPackage Value="True"/>
-      </Item92>
-      <Item93>
+      </Item91>
+      <Item92>
         <Filename Value="../Source/fastTelega.Bot.pas"/>
         <UnitName Value="fastTelega.Bot"/>
         <IsPartOfPackage Value="True"/>
-      </Item93>
-      <Item94>
+      </Item92>
+      <Item93>
         <Filename Value="../Source/Compat/FPC/fastTelega.WebhookServer.pas"/>
         <UnitName Value="fastTelega.WebhookServer"/>
         <IsPartOfPackage Value="True"/>
-      </Item94>
-      <Item95>
+      </Item93>
+      <Item94>
         <Filename Value="../Source/Compat/FPC/fastTelega.WebhookLocalServer.pas"/>
         <UnitName Value="fastTelega.WebhookLocalServer"/>
         <IsPartOfPackage Value="True"/>
-      </Item95>
-      <Item96>
+      </Item94>
+      <Item95>
         <Filename Value="../Source/Compat/FPC/fastTelega.WebhookTCPServer.pas"/>
         <UnitName Value="fastTelega.WebhookTCPServer"/>
         <IsPartOfPackage Value="True"/>
-      </Item96>
+      </Item95>
     </Files>
-    <RequiredPkgs Count="1">
+    <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="FCL"/>
       </Item1>
+      <Item2>
+        <PackageName Value="LazUtils"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
     </RequiredPkgs>
     <UsageOptions>
-      <UnitPath Value="../Source;../Source/AvailableTypes;../Source/Events;../Source/Helpers;../Source/Net;../Source/Parser;../Source/Compat/FPC"/>
+      <UnitPath Value="../Source;../Source/AvailableTypes;../Source/Events;../Source/Net;../Source/Parser;../Source/Compat/FPC;../Source/Components/LCL"/>
     </UsageOptions>
   </Package>
 </CONFIG>

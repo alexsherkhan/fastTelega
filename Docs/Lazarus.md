@@ -12,6 +12,7 @@ original implementation; FPC uses compatibility shims under `Source/Compat/FPC`.
 | API | Compiles (`TftAPI`) |
 | Bot and long polling | Compiles |
 | Webhook server | `TInetServer` (plain HTTP, TLS via reverse proxy) |
+| LCL component | `TftTelegramBotLCL` in `Source/Components/LCL` |
 | VCL/FMX components | Not included |
 | Lazarus package | `Lazarus/fasttelega.lpk` |
 | Example | `Lazarus/EchoBot.lpr` |

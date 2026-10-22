@@ -33,7 +33,7 @@ fphttpclient and TInetServer.
 | Object model | Core Telegram types and Bot API 10.3 additions |
 | File uploads | Single-file methods, media groups, profile photos and stories |
 | Packages | RTL, VCL and FMX packages for RAD Studio 10.2-13 |
-| Installer | Inno Setup project in `Tools/Setup` |
+| Installer | Inno Setup (`Tools/Setup`), console setup (`Tools/Setup/Lazarus`) and LCL wizard setup (`Tools/Setup/LazarusGUI`) |
 | Components | VCL `TftTelegramBot` and FMX `TftTelegramBotFMX` |
 | Free Pascal / Lazarus | Core port, webhook server, Lazarus package, console example and FPCUnit tests |
 | Tests | FPCUnit suite (13 tests), all passing on FPC 3.2.2 |
@@ -196,6 +196,8 @@ The legacy CHM documentation is in [Doc](Doc). Version history is in
 - `Project/fastTelegaDesignerBotMVC` — DesignerBot MVC application
 - `Project/MenuBot` — menu editor
 - `Lazarus/EchoBot.lpr` — Free Pascal/Lazarus console bot
+- `Tools/Setup/Lazarus/fastTelegaSetup.lpr` — console source installer
+- `Tools/Setup/LazarusGUI/FastTelegaSetupGui.lpr` — LCL GUI installer
 - `Tests/TestRunner.lpr` — FPCUnit test runner
 
 Some older examples still use the pre-1.5 unit names; see
