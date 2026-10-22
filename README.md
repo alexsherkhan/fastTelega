@@ -1,12 +1,11 @@
-# fastTelega_alpha
+# fastTelega
 
 Delphi library for Telegram Bot API.
 
-This library is still under development and does not implement full functionality but you can already use it to create simple bots. 
+This library is under development. It implements the Telegram Bot API methods and long polling; webhook server support is not functional yet.
 
-And so far only the mechanism is available long polling.
-
-Documentation is located [here](Doc).
+Markdown documentation is in [Docs](Docs). The legacy CHM documentation is in [Doc](Doc).
+Version history is in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
@@ -29,8 +28,8 @@ uses
   System.SysUtils,
   fastTelega.AvailableTypes,
   fastTelega.Bot,
-  fastTelega.EventBroadcaster,
-  fastTelega.LongPoll;
+  fastTelega.Events.EventBroadcaster,
+  fastTelega.Net.LongPoll;
 
 var
   Bot: TftBot;
