@@ -1150,7 +1150,7 @@ begin
   begin
     AObj.Id := LValue.AsInt64;
   end;
-  LValue := AJSON.GetValue('type_chat');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeChat := TftChatType(GetEnumValue(TypeInfo(TftChatType), LValue.AsString));
@@ -2640,7 +2640,7 @@ var
   LI: Integer;
 begin
   if (AJSON = nil) or (AObj = nil) then Exit;
-  LValue := AJSON.GetValue('type_s');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeS := LValue.AsString;
@@ -3390,7 +3390,7 @@ var
   LI: Integer;
 begin
   if (AJSON = nil) or (AObj = nil) then Exit;
-  LValue := AJSON.GetValue('type_s');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeS := LValue.AsString;
@@ -4543,7 +4543,7 @@ var
   LArr_CaptionEntities: TftMessageEntityList;
 begin
   if (AJSON = nil) or (AObj = nil) then Exit;
-  LValue := AJSON.GetValue('type_s');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeS := LValue.AsString;
@@ -4768,7 +4768,7 @@ var
   LI: Integer;
 begin
   if (AJSON = nil) or (AObj = nil) then Exit;
-  LValue := AJSON.GetValue('type_message_content');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeMessageContent := LValue.AsString;
@@ -5546,7 +5546,7 @@ var
   LI: Integer;
 begin
   if (AJSON = nil) or (AObj = nil) then Exit;
-  LValue := AJSON.GetValue('type_s');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeS := LValue.AsString;
@@ -5834,7 +5834,7 @@ var
   LI: Integer;
 begin
   if (AJSON = nil) or (AObj = nil) then Exit;
-  LValue := AJSON.GetValue('type_s');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeS := LValue.AsString;
@@ -6800,7 +6800,7 @@ var
   LI: Integer;
 begin
   if (AJSON = nil) or (AObj = nil) then Exit;
-  LValue := AJSON.GetValue('type_message_entity');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeMessageEntity := TftMessageEntityType(GetEnumValue(TypeInfo(TftMessageEntityType), LValue.AsString));
@@ -7432,7 +7432,7 @@ begin
   begin
     AObj.Source := LValue.AsString;
   end;
-  LValue := AJSON.GetValue('type_s');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeS := LValue.AsString;
@@ -7753,7 +7753,7 @@ begin
   begin
     AObj.IsAnonymous := LValue.AsBoolean;
   end;
-  LValue := AJSON.GetValue('type_poll');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypePoll := LValue.AsString;
@@ -8936,7 +8936,7 @@ var
 begin
   if (AJSON = nil) or (AObj = nil) then Exit;
   if Assigned(AObj) then FillTftDocument(AJSON, TftDocument(AObj));
-  LValue := AJSON.GetValue('type_s');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeS := TftStickerType(GetEnumValue(TypeInfo(TftStickerType), LValue.AsString));
@@ -9019,7 +9019,7 @@ begin
   begin
     AObj.Title := LValue.AsString;
   end;
-  LValue := AJSON.GetValue('type_s');
+  LValue := AJSON.GetValue('type');
   if LValue <> nil then
   begin
     AObj.TypeS := TftStickerSetType(GetEnumValue(TypeInfo(TftStickerSetType), LValue.AsString));

@@ -7,7 +7,7 @@
     <Author Value="fastTelega Project"/>
     <License Value="MIT"/>
     <Description Value="fastTelega - Delphi/Free Pascal Telegram Bot API library"/>
-    <Files Count="93">
+    <Files Count="96">
       <Item1>
         <Filename Value="../Source/AvailableTypes/fastTelega.AvailableTypes.ftAnimation.pas"/>
         <UnitName Value="fastTelega.AvailableTypes.ftAnimation"/>
@@ -473,6 +473,21 @@
         <UnitName Value="fastTelega.Bot"/>
         <IsPartOfPackage Value="True"/>
       </Item93>
+      <Item94>
+        <Filename Value="../Source/Compat/FPC/fastTelega.WebhookServer.pas"/>
+        <UnitName Value="fastTelega.WebhookServer"/>
+        <IsPartOfPackage Value="True"/>
+      </Item94>
+      <Item95>
+        <Filename Value="../Source/Compat/FPC/fastTelega.WebhookLocalServer.pas"/>
+        <UnitName Value="fastTelega.WebhookLocalServer"/>
+        <IsPartOfPackage Value="True"/>
+      </Item95>
+      <Item96>
+        <Filename Value="../Source/Compat/FPC/fastTelega.WebhookTCPServer.pas"/>
+        <UnitName Value="fastTelega.WebhookTCPServer"/>
+        <IsPartOfPackage Value="True"/>
+      </Item96>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>

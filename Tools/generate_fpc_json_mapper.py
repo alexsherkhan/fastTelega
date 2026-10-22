@@ -96,6 +96,7 @@ def emit_fill(name, info, classes, enums, out):
     for pname,ptype in info['props']:
         key=snake(pname)
         if pname == 'UserName': key='username'
+        elif pname.startswith('Type'): key='type'
         # skip unsupported
         p=ptype
         is_arr, inner = split_generic(p)
