@@ -33,7 +33,7 @@ and uses the Delphi RTL, REST components and Indy for webhooks.
 | Packages | RTL, VCL and FMX packages for RAD Studio 10.2-13 |
 | Installer | Inno Setup project in `Tools/Setup` |
 | Components | VCL `TftTelegramBot` and FMX `TftTelegramBotFMX` |
-| Free Pascal / Lazarus | Core port, Lazarus package and console example |
+| Free Pascal / Lazarus | Core port, Lazarus package, console example and FPCUnit tests |
 
 ## Requirements
 

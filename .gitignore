@@ -94,3 +94,11 @@ __recovery/
 
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
+
+# Free Pascal / Lazarus build artifacts
+*.o
+*.ppu
+*.a
+*.or
+Tests/TestRunner
+Lazarus/EchoBot

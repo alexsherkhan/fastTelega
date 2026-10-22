@@ -61,6 +61,17 @@ compatibility units. The FMX/VCL components and webhook server are excluded.
 - `TArray<T>` and `TList<T>` handling is generated per property type.
 - The FPC JSON shim exposes only the subset used by the library.
 
+## Tests
+
+```bash
+cd Tests
+./build.sh
+./TestRunner --all --format=plain
+```
+
+The FPCUnit suite covers the JSON mapper, parser, bot creation and long-poll
+lifetime. See `Tests/README.md`.
+
 ## Regenerating the mapper
 
 ```bash
