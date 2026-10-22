@@ -7,10 +7,15 @@ unit fastTelega.Bot;
 interface
 
 uses
-  System.SysUtils, System.Classes,
-  System.JSON, Rest.JSON, Rest.JSON.Types, System.Generics.Collections,
-  fastTelega.HttpClient, fastTelega.API, fastTelega.EventBroadcaster,
-  fastTelega.EventHandler;
+  {Delphi}
+  System.SysUtils,
+  System.Classes,
+
+  {fastTelega}
+  fastTelega.Net.HttpClient,
+  fastTelega.API,
+  fastTelega.Events.EventBroadcaster,
+  fastTelega.Events.EventHandler;
 
 type
   /// <summary>
@@ -27,6 +32,7 @@ type
     function GetToken: String;
     function GetEventBroadcaster: TftEventBroadcaster;
     function GetEventHandler: TftEventHandler;
+    procedure SetToken(const Value: String);
   public
     constructor Create(AToken: String; AURL: String);
     destructor Destroy; override;
@@ -34,7 +40,7 @@ type
     /// <summary>
     /// Token for accessing api.
     /// </summary>
-    property Token: String read GetToken;
+    property Token: String read GetToken write SetToken;
     /// <summary>
     /// Object which can execute Telegram Bot API methods.
     /// </summary>
@@ -90,7 +96,13 @@ end;
 
 function TftBot.GetToken: String;
 begin
-  Result := Token;
+  Result := FToken;
+end;
+
+procedure TftBot.SetToken(const Value: String);
+begin
+  FToken := Value;
+  FAPI.Token := Value;
 end;
 
 end.

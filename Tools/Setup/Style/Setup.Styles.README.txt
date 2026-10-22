@@ -1,0 +1,22 @@
+Setup.Styles.dll
+================
+
+This binary is built from the source files in:
+
+  Tools/Setup/Style/vcl-styles-plugins/InnoSetup plugin/
+
+Copyright (C) 2013-2021 Rodrigo Ruz V.
+
+The source code and the binary are distributed under the Mozilla Public
+License 1.1 (MPL 1.1). The complete corresponding source code is included
+in this repository. A copy of the license is in LICENSES/MPL-1.1.txt.
+
+The source version of this binary is available from the fastTelega repository:
+
+  https://github.com/alexsherkhan/fastTelega
+
+It will remain available for at least twelve months after each distribution
+of the binary, as required by MPL 1.1 section 3.2.
+
+The binary is taken unmodified from the Skia4Delphi distribution:
+https://github.com/skia4delphi/skia4delphi (MIT License, see SKIA-LICENSE).

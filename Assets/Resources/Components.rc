@@ -1,0 +1,8 @@
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+TftTelegramBot BITMAP "TftTelegramBot\TftTelegramBot.bmp"
+TftTelegramBot16 BITMAP "TftTelegramBot\TftTelegramBot16.bmp"
+TftTelegramBot32 BITMAP "TftTelegramBot\TftTelegramBot32.bmp"
+TftTelegramBot_PNG RCDATA "TftTelegramBot\TftTelegramBot.png"
+TftTelegramBot16_PNG RCDATA "TftTelegramBot\TftTelegramBot16.png"
+TftTelegramBot32_PNG RCDATA "TftTelegramBot\TftTelegramBot32.png"
+TftTelegramBot128_PNG RCDATA "TftTelegramBot\TftTelegramBot128.png"

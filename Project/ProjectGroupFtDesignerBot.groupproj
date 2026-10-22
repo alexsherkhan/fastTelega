@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{3C0BFAA5-9B81-4C42-8A0B-1B5F94D7C0ED}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="fastTelegaDesignerBotMVC\fastTelegaDesignerBotMVC.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="fastTelegaDesignerBotMVC\Plugins\FtPlugin.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\..\..\Documents\Embarcadero\Studio\Projects\Project2.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="fastTelegaDesignerBotMVC">
+        <MSBuild Projects="fastTelegaDesignerBotMVC\fastTelegaDesignerBotMVC.dproj"/>
+    </Target>
+    <Target Name="fastTelegaDesignerBotMVC:Clean">
+        <MSBuild Projects="fastTelegaDesignerBotMVC\fastTelegaDesignerBotMVC.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="fastTelegaDesignerBotMVC:Make">
+        <MSBuild Projects="fastTelegaDesignerBotMVC\fastTelegaDesignerBotMVC.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FtPlugin">
+        <MSBuild Projects="fastTelegaDesignerBotMVC\Plugins\FtPlugin.dproj"/>
+    </Target>
+    <Target Name="FtPlugin:Clean">
+        <MSBuild Projects="fastTelegaDesignerBotMVC\Plugins\FtPlugin.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FtPlugin:Make">
+        <MSBuild Projects="fastTelegaDesignerBotMVC\Plugins\FtPlugin.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Project2">
+        <MSBuild Projects="..\..\..\..\Documents\Embarcadero\Studio\Projects\Project2.dproj"/>
+    </Target>
+    <Target Name="Project2:Clean">
+        <MSBuild Projects="..\..\..\..\Documents\Embarcadero\Studio\Projects\Project2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project2:Make">
+        <MSBuild Projects="..\..\..\..\Documents\Embarcadero\Studio\Projects\Project2.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="fastTelegaDesignerBotMVC;FtPlugin;Project2"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="fastTelegaDesignerBotMVC:Clean;FtPlugin:Clean;Project2:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="fastTelegaDesignerBotMVC:Make;FtPlugin:Make;Project2:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

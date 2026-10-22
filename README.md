@@ -1,4 +1,4 @@
-# fastTelega
+# fastTelega_alpha
 
 Delphi library for Telegram Bot API.
 
@@ -6,9 +6,14 @@ This library is still under development and does not implement full functionalit
 
 And so far only the mechanism is available long polling.
 
-## Documentation
-- Documentation (*.chm) is located [here](Doc).
-- The deepwiki documentation is more detailed and deep-searchable using AI [here](https://deepwiki.com/alexsherkhan/fastTelega).
+Documentation is located [here](Doc).
+
+## License
+
+fastTelega is distributed under the MIT License (see [LICENSE](LICENSE)).
+The installer and setup tooling include third-party components under their own
+licenses; see [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) and the
+[LICENSES](LICENSES) directory.
 
 ## Example 
 

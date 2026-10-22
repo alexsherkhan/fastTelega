@@ -1,0 +1,77 @@
+fastTelega - Third-Party Notices
+================================
+
+fastTelega itself is distributed under the MIT License (see LICENSE).
+
+This distribution also contains the following third-party components.
+They are NOT licensed under the fastTelega MIT License; each remains under
+its own license. The original copyright and license notices in the source
+files are retained.
+
+1. VCL Styles Utils
+   Files:    Tools/Setup/Style/vcl-styles-plugins/Common/
+   Copyright (C) 2012-2021 Rodrigo Ruz V.
+   License:  Mozilla Public License 1.1 (LICENSES/MPL-1.1.txt)
+   Source:   https://github.com/RRUZ/vcl-styles-utils
+
+2. Delphi Detours Library
+   Files:    Tools/Setup/Style/vcl-styles-plugins/Common/delphi-detours-library/
+   Copyright (C) 2013-2015 Mahdi Safsafi [SMP3]
+   License:  Mozilla Public License 1.1 (LICENSES/MPL-1.1.txt)
+   Source:   https://code.google.com/p/delphi-detours-library/
+
+3. VCL Styles for Inno Setup
+   Files:    Tools/Setup/Style/vcl-styles-plugins/InnoSetup plugin/
+   Copyright (C) 2013-2021 Rodrigo Ruz V.
+   License:  Mozilla Public License 1.1 (LICENSES/MPL-1.1.txt)
+   Source:   https://github.com/RRUZ/vcl-styles-plugins
+
+   Tools/Setup/Style/Setup.Styles.dll is a binary build of the source files
+   in "Tools/Setup/Style/vcl-styles-plugins/InnoSetup plugin". The complete
+   corresponding source code is included in this repository at that path and
+   is available under MPL 1.1. The binary is distributed under MPL 1.1 as
+   well; see LICENSES/MPL-1.1.txt. The source version is available from the
+   same repository (https://github.com/alexsherkhan/fastTelega) for at least
+   twelve months after distribution of this binary.
+
+4. Font Awesome 4.3.0
+   Files:    Tools/Setup/Style/vcl-styles-plugins/Common/AwesomeFont.RES,
+             Tools/Setup/Style/vcl-styles-plugins/Common/AwesomeFont_zip.RES
+   Copyright (C) 2015 Dave Gandy / Fort Awesome
+   Font license: SIL Open Font License 1.1 (LICENSES/OFL-1.1.txt)
+   Attribution:  "Font Awesome by Dave Gandy - http://fontawesome.io"
+   The documentation and icon attribution were published under CC BY 3.0:
+   https://creativecommons.org/licenses/by/3.0/
+   The embedded font is unmodified.
+
+5. Inno Setup
+   Files:    Tools/Setup/Languages/Default.isl,
+             Tools/Setup/Languages/BrazilianPortuguese.isl,
+             and the installer produced from Tools/Setup/Setup.iss
+   Copyright (C) 1997-2026 Jordan Russell.
+   Portions Copyright (C) 2000-2026 Martijn Laan.
+   License:  Inno Setup License (LICENSES/Inno-Setup-License.txt)
+   https://jrsoftware.org/
+   The language files are modified copies of the Inno Setup messages and are
+   plainly marked as modified in their headers.
+
+6. Skia4Delphi setup scripts and installer assets
+   Files:    Tools/Setup/Setup.iss, Tools/Setup/Source/*.inc,
+             Tools/Setup/Scripts/, Tools/Setup/Style/Setup.Styles.dll,
+             Tools/Setup/Style/Windows11.Dark.vsf
+   Copyright (c) 2021-2026 Skia4Delphi
+   License:  MIT License (SKIA-LICENSE and LICENSES/Skia4Delphi-MIT.txt)
+   Source:   https://github.com/skia4delphi/skia4delphi
+
+   The setup scripts, the prebuilt Setup.Styles.dll and Windows11.Dark.vsf
+   are taken from the Skia4Delphi distribution. Their original notices are
+   retained where present.
+
+7. Inno Setup translations
+   Files:    Tools/Setup/Languages/BrazilianPortuguese.LICENSE
+   Copyright (c) 2021-2022 Skia4Delphi Project
+   License:  MIT License (LICENSES/Skia4Delphi-MIT.txt)
+
+All third-party source files keep their original copyright and license
+headers. Nothing in this repository relicenses those files under the
+fastTelega MIT License.

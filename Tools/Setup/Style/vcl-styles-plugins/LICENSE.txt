@@ -1,0 +1,28 @@
+VCL Styles Plugins - Licensing
+==============================
+
+Unless a file says otherwise, the source files in this directory are
+distributed under the Mozilla Public License 1.1 (MPL 1.1). The full license
+text is included in this repository at:
+
+  ../../../../LICENSES/MPL-1.1.txt
+
+Copyright notices:
+  Copyright (C) 2012-2021 Rodrigo Ruz V. (VCL Styles Utils, Inno Setup plugin)
+  Copyright (C) 2013-2015 Mahdi Safsafi [SMP3] (Delphi Detours Library)
+
+Original projects:
+  https://github.com/RRUZ/vcl-styles-utils
+  https://github.com/RRUZ/vcl-styles-plugins
+  https://code.google.com/p/delphi-detours-library/
+
+The MPL 1.1 applies only to the files in this directory; the rest of
+fastTelega remains under the MIT License (see ../../../../LICENSE).
+
+Font Awesome resources in Common/ are licensed under the SIL Open Font
+License 1.1 (../../../../LICENSES/OFL-1.1.txt); see Common/AwesomeFont.NOTICE.txt.
+
+This directory and its binary products are redistributed as part of the
+fastTelega installer. Their complete source code is available in this
+repository, and the source remains available under MPL 1.1 for at least
+twelve months after each distribution of the installer.

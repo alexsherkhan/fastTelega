@@ -1,0 +1,135 @@
+{************************************************************************}
+{                                                                        }
+{                              fastTelega                                }
+{                                                                        }
+{                                                                        }
+{ Copyright (c) 2021-2022 fastTelega Project.                            }
+{                                                                        }
+{ Use of this source code is governed by a MIT license that can be       }
+{ found in the LICENSE file.                                             }
+{                                                                        }
+{************************************************************************}
+package fastTelega.Package.RTL;
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'fastTelega RTL package'}
+{$LIBSUFFIX AUTO}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  RESTComponents;
+
+contains
+  fastTelega.API in '..\..\Source\fastTelega.API.pas',
+  fastTelega.Bot in '..\..\Source\fastTelega.Bot.pas',
+  fastTelega.Parser.TypeParser in '..\..\Source\Parser\fastTelega.Parser.TypeParser.pas',
+  fastTelega.Events.EventBroadcaster in '..\..\Source\Events\fastTelega.Events.EventBroadcaster.pas',
+  fastTelega.Events.EventHandler in '..\..\Source\Events\fastTelega.Events.EventHandler.pas',
+  fastTelega.Net.HttpClient in '..\..\Source\Net\fastTelega.Net.HttpClient.pas',
+  fastTelega.Net.LongPoll in '..\..\Source\Net\fastTelega.Net.LongPoll.pas',
+  fastTelega.AvailableTypes.ftAnimation in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftAnimation.pas',
+  fastTelega.AvailableTypes.ftAudio in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftAudio.pas',
+  fastTelega.AvailableTypes.ftBotCommand in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftBotCommand.pas',
+  fastTelega.AvailableTypes.ftCallbackGame in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftCallbackGame.pas',
+  fastTelega.AvailableTypes.ftChatPhoto in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftChatPhoto.pas',
+  fastTelega.AvailableTypes.ftContact in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftContact.pas',
+  fastTelega.AvailableTypes.ftDice in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftDice.pas',
+  fastTelega.AvailableTypes.ftDocument in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftDocument.pas',
+  fastTelega.AvailableTypes.ftInlineKeyboardButton in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInlineKeyboardButton.pas',
+  fastTelega.AvailableTypes.ftInputInvoiceMessageContent in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInputInvoiceMessageContent.pas',
+  fastTelega.AvailableTypes.ftInputMedia in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInputMedia.pas',
+  fastTelega.AvailableTypes.ftInputMediaAnimation in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInputMediaAnimation.pas',
+  fastTelega.AvailableTypes.ftInputMediaAudio in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInputMediaAudio.pas',
+  fastTelega.AvailableTypes.ftInputMediaDocument in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInputMediaDocument.pas',
+  fastTelega.AvailableTypes.ftInputMediaPhoto in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInputMediaPhoto.pas',
+  fastTelega.AvailableTypes.ftInputMediaVideo in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInputMediaVideo.pas',
+  fastTelega.AvailableTypes.ftInputMessageContent in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInputMessageContent.pas',
+  fastTelega.AvailableTypes.ftInvoice in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInvoice.pas',
+  fastTelega.AvailableTypes.ftLocation in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftLocation.pas',
+  fastTelega.AvailableTypes.ftLoginUrl in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftLoginUrl.pas',
+  fastTelega.AvailableTypes.ftMenuButton in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftMenuButton.pas',
+  fastTelega.AvailableTypes.ftMessageAutoDeleteTimerChanged in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftMessageAutoDeleteTimerChanged.pas',
+  fastTelega.AvailableTypes.ftMessageId in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftMessageId.pas',
+  fastTelega.AvailableTypes.ftPhotoSize in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPhotoSize.pas',
+  fastTelega.AvailableTypes.ftPollOption in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPollOption.pas',
+  fastTelega.AvailableTypes.ftReplyBase in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftReplyBase.pas',
+  fastTelega.AvailableTypes.ftResponseParameters in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftResponseParameters.pas',
+  fastTelega.AvailableTypes.ftVenue in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftVenue.pas',
+  fastTelega.AvailableTypes.ftVideo in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftVideo.pas',
+  fastTelega.AvailableTypes.ftWebAppData in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftWebAppData.pas',
+  fastTelega.AvailableTypes.ftWebAppInfo in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftWebAppInfo.pas',
+  fastTelega.AvailableTypes.ftWebhookInfo in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftWebhookInfo.pas',
+  fastTelega.AvailableTypes.ftShippingAddress in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftShippingAddress.pas',
+  fastTelega.AvailableTypes.ftLabeledPrice in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftLabeledPrice.pas',
+  fastTelega.AvailableTypes.ftShippingOption in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftShippingOption.pas',
+  fastTelega.AvailableTypes.ftSuccessfulPayment in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftSuccessfulPayment.pas',
+  fastTelega.AvailableTypes.ftInlineQueryResult in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInlineQueryResult.pas',
+  fastTelega.AvailableTypes.ftChatPermissions in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftChatPermissions.pas',
+  fastTelega.AvailableTypes.ftChatLocation in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftChatLocation.pas',
+  fastTelega.AvailableTypes.ftInlineKeyboardMarkup in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftInlineKeyboardMarkup.pas',
+  fastTelega.AvailableTypes.ftForceReply in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftForceReply.pas',
+  fastTelega.AvailableTypes.ftReplyKeyboardMarkup in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftReplyKeyboardMarkup.pas',
+  fastTelega.AvailableTypes.ftReplyKeyboardRemove in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftReplyKeyboardRemove.pas',
+  fastTelega.AvailableTypes.ftFile in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftFile.pas',
+  fastTelega.AvailableTypes.ftVoice in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftVoice.pas',
+  fastTelega.AvailableTypes.ftMaskPosition in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftMaskPosition.pas',
+  fastTelega.AvailableTypes.ftSticker in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftSticker.pas',
+  fastTelega.AvailableTypes in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.pas',
+  fastTelega.AvailableTypes.ftPassportData in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportData.pas',
+  fastTelega.AvailableTypes.ftEncryptedCredentials in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftEncryptedCredentials.pas',
+  fastTelega.AvailableTypes.ftEncryptedPassportElement in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftEncryptedPassportElement.pas',
+  fastTelega.AvailableTypes.ftPassportFile in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportFile.pas',
+  fastTelega.AvailableTypes.ftChatAdministratorRights in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftChatAdministratorRights.pas',
+  fastTelega.AvailableTypes.ftOrderInfo in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftOrderInfo.pas',
+  fastTelega.AvailableTypes.ftStickerSet in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftStickerSet.pas',
+  fastTelega.AvailableTypes.ftSentWebAppMessage in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftSentWebAppMessage.pas',
+  fastTelega.AvailableTypes.ftKeyboardButton in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftKeyboardButton.pas',
+  fastTelega.AvailableTypes.ftKeyboardButtonPollType in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftKeyboardButtonPollType.pas',
+  fastTelega.AvailableTypes.ftPassportElementError in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportElementError.pas',
+  fastTelega.AvailableTypes.ftPassportElementErrorDataField in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportElementErrorDataField.pas',
+  fastTelega.AvailableTypes.ftPassportElementErrorFile in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportElementErrorFile.pas',
+  fastTelega.AvailableTypes.ftPassportElementErrorFiles in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportElementErrorFiles.pas',
+  fastTelega.AvailableTypes.ftPassportElementErrorFrontSide in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportElementErrorFrontSide.pas',
+  fastTelega.AvailableTypes.ftPassportElementErrorReverseSide in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportElementErrorReverseSide.pas',
+  fastTelega.AvailableTypes.ftPassportElementErrorSelfie in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportElementErrorSelfie.pas',
+  fastTelega.AvailableTypes.ftPassportElementErrorTranslationFile in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportElementErrorTranslationFile.pas',
+  fastTelega.AvailableTypes.ftPassportElementErrorTranslationFiles in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportElementErrorTranslationFiles.pas',
+  fastTelega.AvailableTypes.ftPassportElementErrorUnspecified in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftPassportElementErrorUnspecified.pas',
+  fastTelega.AvailableTypes.ftMenuButtonCommands in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftMenuButtonCommands.pas',
+  fastTelega.AvailableTypes.ftMenuButtonDefault in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftMenuButtonDefault.pas',
+  fastTelega.AvailableTypes.ftMenuButtonWebApp in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftMenuButtonWebApp.pas',
+  fastTelega.AvailableTypes.ftForumTopic in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftForumTopic.pas',
+  fastTelega.AvailableTypes.ftForumTopicClosed in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftForumTopicClosed.pas',
+  fastTelega.AvailableTypes.ftForumTopicCreated in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftForumTopicCreated.pas',
+  fastTelega.AvailableTypes.ftForumTopicReopened in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftForumTopicReopened.pas',
+  fastTelega.AvailableTypes.ftForumTopicEdited in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftForumTopicEdited.pas',
+  fastTelega.AvailableTypes.ftGeneralForumTopicHidden in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftGeneralForumTopicHidden.pas',
+  fastTelega.AvailableTypes.ftGeneralForumTopicUnhidden in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftGeneralForumTopicUnhidden.pas',
+  fastTelega.AvailableTypes.ftWriteAccessAllowed in '..\..\Source\AvailableTypes\fastTelega.AvailableTypes.ftWriteAccessAllowed.pas';
+
+end.
