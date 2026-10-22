@@ -19,14 +19,15 @@
 ## Overview
 
 fastTelega provides typed Bot API methods, a Telegram object model, an event
-dispatcher, long polling and a webhook server. It is written in Object Pascal
-and uses the Delphi RTL, REST components and Indy for webhooks.
+dispatcher, long polling and a webhook server. Delphi builds use the RTL,
+REST components and Indy; the Free Pascal build uses the RTL/FCL, fpjson,
+fphttpclient and TInetServer.
 
 | Feature | Status |
 |---|---|
 | Bot API methods | 185 of 185 (Bot API 10.3) |
 | Long polling | `TftLongPoll` |
-| Webhook server | `TftWebhookServer`, `TftWebhookLocalServer`, `TftWebhookTCPServer` |
+| Webhook server | Delphi: Indy; FPC: `TInetServer` (`TftWebhookServer`, `TftWebhookLocalServer`, `TftWebhookTCPServer`) |
 | Webhook TLS | Terminated by a reverse proxy (nginx, Caddy, IIS) |
 | Event dispatcher | `OnUpdate` plus typed message, inline and callback events |
 | Object model | Core Telegram types and Bot API 10.3 additions |
@@ -34,13 +35,13 @@ and uses the Delphi RTL, REST components and Indy for webhooks.
 | Packages | RTL, VCL and FMX packages for RAD Studio 10.2-13 |
 | Installer | Inno Setup project in `Tools/Setup` |
 | Components | VCL `TftTelegramBot` and FMX `TftTelegramBotFMX` |
-| Free Pascal / Lazarus | Core port, Lazarus package, console example and FPCUnit tests |
+| Free Pascal / Lazarus | Core port, webhook server, Lazarus package, console example and FPCUnit tests |
 | Tests | FPCUnit suite (13 tests), all passing on FPC 3.2.2 |
 
 ## Requirements
 
 - Delphi: Windows with RAD Studio 10.2 Tokyo through 13 Florence.
-- Free Pascal: FPC 3.2.2+ and Lazarus (core library, no VCL/FMX/webhooks).
+- Free Pascal: FPC 3.2.2+ and Lazarus (core library and webhook server; no VCL/FMX components).
 - RTL, REST components and Indy (`IndyCore`, `IndyProtocols`) for the Delphi
   webhook server.
 - VCL or FMX only if you use the corresponding component.
@@ -140,7 +141,8 @@ end;
 ```
 
 The built-in server speaks plain HTTP; terminate TLS in a reverse proxy. See
-[Webhooks](Docs/Webhooks.md) for an nginx configuration.
+[Webhooks](Docs/Webhooks.md) for an nginx configuration. On Free Pascal, add
+`cthreads` before other units and use the FPC webhook units.
 
 ## Architecture
 
@@ -201,8 +203,8 @@ Some older examples still use the pre-1.5 unit names; see
 
 ## Tests
 
-FPCUnit tests cover the JSON mapper, parser, bot creation, event registration
-and long-poll lifetime:
+FPCUnit tests cover the JSON mapper, parser, bot creation, event registration,
+long-poll lifetime and an end-to-end webhook POST:
 
 ```bash
 cd Tests
@@ -228,12 +230,14 @@ are still limited:
   callback queries; other update types are available through `OnUpdate`.
 - `SendMediaGroup` supports file uploads through `TftInputMedia.MediaFile`;
   paid media and sticker attach uploads require manual attach names.
-- Webhook TLS must be terminated by a reverse proxy.
+- Webhook TLS must be terminated by a reverse proxy for both backends.
 - The VCL and FMX components are new and have not been compiler-verified in
   this repository.
 - Under FPC, listeners are plain procedure pointers because FPC does not
   support Delphi anonymous methods; use ordinary procedures in Lazarus code.
-- The FPC port excludes the VCL/FMX components and the Indy webhook server.
+- The FPC port excludes the VCL/FMX components.
+- The FPC webhook server speaks plain HTTP; terminate TLS in a reverse proxy.
+  Applications using it must include `cthreads` before threaded units.
 
 See [Troubleshooting](Docs/Troubleshooting.md) for a complete list.
 
