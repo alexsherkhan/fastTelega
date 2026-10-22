@@ -2319,7 +2319,8 @@ type
     function SendVoice(AChatId: Variant; AVoice: TftInputFile;
       const ACaption: String; ADuration: Integer; AReplyToMessageId: Integer;
       AReplyMarkup: TftReplyBase; const AParseMode: String;
-      ADisableNotification: Boolean; const ACaptionEntities;
+      ADisableNotification: Boolean;
+      const ACaptionEntities: TftMessageEntityList;
       AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
       AMessageThreadId: Integer): TftMessage;
 
@@ -2733,6 +2734,548 @@ type
     /// </returns>
     function UploadStickerFile(AUserId: Int64;
       APngSticker: TftInputFile): Boolean;
+
+    { Bot API 10.3 additions }
+
+    /// <summary>
+    /// Use this method to forward multiple messages of any kind.
+    /// </summary>
+    /// <returns>
+    /// Returns an Array of MessageId of the sent messages.
+    /// </returns>
+    function ForwardMessages(AChatId, AFromChatId: Variant;
+      AMessageIds: TArray<Integer>; AMessageThreadId: Integer = 0;
+      ADirectMessagesTopicId: Integer = 0;
+      ADisableNotification: Boolean = false;
+      AProtectContent: Boolean = false): TList<TftMessageId>;
+
+    /// <summary>
+    /// Use this method to copy messages of any kind.
+    /// </summary>
+    /// <returns>
+    /// Returns an Array of MessageId of the sent messages.
+    /// </returns>
+    function CopyMessages(AChatId, AFromChatId: Variant;
+      AMessageIds: TArray<Integer>; AMessageThreadId: Integer = 0;
+      ADirectMessagesTopicId: Integer = 0;
+      ADisableNotification: Boolean = false; AProtectContent: Boolean = false;
+      ARemoveCaption: Boolean = false): TList<TftMessageId>;
+
+    /// <summary>
+    /// Use this method to delete multiple messages simultaneously.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function DeleteMessages(AChatId: Variant;
+      AMessageIds: TArray<Integer>): Boolean;
+
+    /// <summary>
+    /// Use this method to clear the list of pinned messages in a General forum topic.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function UnpinAllGeneralForumTopicMessages(AChatId: Variant): Boolean;
+
+    /// <summary>
+    /// Use this method to change the bot's name.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetMyName(const AName: String;
+      const ALanguageCode: String = ''): Boolean;
+
+    /// <summary>
+    /// Use this method to get the current bot name for the given user language.
+    /// </summary>
+    /// <returns>
+    /// Returns BotName on success.
+    /// </returns>
+    function GetMyName(const ALanguageCode: String = ''): TftBotName;
+
+    /// <summary>
+    /// Use this method to change the bot's description.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetMyDescription(const ADescription: String;
+      const ALanguageCode: String = ''): Boolean;
+
+    /// <summary>
+    /// Use this method to get the current bot description for the given user language.
+    /// </summary>
+    /// <returns>
+    /// Returns BotDescription on success.
+    /// </returns>
+    function GetMyDescription(const ALanguageCode: String = ''): TftBotDescription;
+
+    /// <summary>
+    /// Use this method to change the bot's short description.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetMyShortDescription(const AShortDescription: String;
+      const ALanguageCode: String = ''): Boolean;
+
+    /// <summary>
+    /// Use this method to get the current bot short description for the given user language.
+    /// </summary>
+    /// <returns>
+    /// Returns BotShortDescription on success.
+    /// </returns>
+    function GetMyShortDescription(const ALanguageCode: String = '')
+      : TftBotShortDescription;
+
+    /// <summary>
+    /// Use this method to set a tag for a regular member in a group or a supergroup.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetChatMemberTag(AChatId: Variant; AUserId: Int64;
+      const ATag: String = ''): Boolean;
+
+    /// <summary>
+    /// Changes the emoji status for a given user that previously allowed the bot to manage their emoji status.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetUserEmojiStatus(AUserId: Int64;
+      const AEmojiStatusCustomEmojiId: String = '';
+      AEmojiStatusExpirationDate: Integer = 0): Boolean;
+
+    /// <summary>
+    /// Use this method to create a subscription invite link for a channel chat.
+    /// </summary>
+    /// <returns>
+    /// Returns the new invite link as a ChatInviteLink object.
+    /// </returns>
+    function CreateChatSubscriptionInviteLink(AChatId: Variant;
+      ASubscriptionPeriod, ASubscriptionPrice: Integer;
+      const AName: String = ''): TftChatInviteLink;
+
+    /// <summary>
+    /// Use this method to edit a subscription invite link created by the bot.
+    /// </summary>
+    /// <returns>
+    /// Returns the edited invite link as a ChatInviteLink object.
+    /// </returns>
+    function EditChatSubscriptionInviteLink(AChatId: Variant;
+      const AInviteLink: String; const AName: String = ''): TftChatInviteLink;
+
+    /// <summary>
+    /// Verifies a user on behalf of the organization which is represented by the bot.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function VerifyUser(AUserId: Int64;
+      const ACustomDescription: String = ''): Boolean;
+
+    /// <summary>
+    /// Verifies a chat on behalf of the organization which is represented by the bot.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function VerifyChat(AChatId: Variant;
+      const ACustomDescription: String = ''): Boolean;
+
+    /// <summary>
+    /// Removes verification from a user who is currently verified on behalf of the organization represented by the bot.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function RemoveUserVerification(AUserId: Int64): Boolean;
+
+    /// <summary>
+    /// Removes verification from a chat that is currently verified on behalf of the organization represented by the bot.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function RemoveChatVerification(AChatId: Variant): Boolean;
+
+    /// <summary>
+    /// Marks an incoming message as read on behalf of a business account.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function ReadBusinessMessage(const ABusinessConnectionId: String;
+      AChatId: Int64; AMessageId: Integer): Boolean;
+
+    /// <summary>
+    /// Deletes messages on behalf of a business account.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function DeleteBusinessMessages(const ABusinessConnectionId: String;
+      AMessageIds: TArray<Integer>): Boolean;
+
+    /// <summary>
+    /// Changes the first and last name of a managed business account.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetBusinessAccountName(const ABusinessConnectionId,
+      AFirstName: String; const ALastName: String = ''): Boolean;
+
+    /// <summary>
+    /// Changes the username of a managed business account.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetBusinessAccountUsername(const ABusinessConnectionId,
+      AUsername: String): Boolean;
+
+    /// <summary>
+    /// Changes the bio of a managed business account.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetBusinessAccountBio(const ABusinessConnectionId,
+      ABio: String): Boolean;
+
+    /// <summary>
+    /// Removes the current profile photo of a managed business account.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function RemoveBusinessAccountProfilePhoto(
+      const ABusinessConnectionId: String; AIsPublic: Boolean = false): Boolean;
+
+    /// <summary>
+    /// Transfers Telegram Stars from the business account balance to the bot's balance.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function TransferBusinessAccountStars(const ABusinessConnectionId: String;
+      AStarCount: Integer): Boolean;
+
+    /// <summary>
+    /// Converts a given regular gift to Telegram Stars.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function ConvertGiftToStars(const ABusinessConnectionId,
+      AOwnedGiftId: String): Boolean;
+
+    /// <summary>
+    /// Upgrades a given regular gift to a unique gift.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function UpgradeGift(const ABusinessConnectionId, AOwnedGiftId: String;
+      AKeepOriginalDetails: Boolean = false; AStarCount: Integer = 0): Boolean;
+
+    /// <summary>
+    /// Transfers an owned unique gift to another user.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function TransferGift(const ABusinessConnectionId, AOwnedGiftId: String;
+      ANewOwnerChatId: Int64; AStarCount: Integer = 0): Boolean;
+
+    /// <summary>
+    /// Use this method to remove a reaction from a message in a group or a supergroup chat.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function DeleteMessageReaction(AChatId: Variant; AMessageId: Integer;
+      AUserId: Int64 = 0; AActorChatId: Int64 = 0): Boolean;
+
+    /// <summary>
+    /// Use this method to remove up to 10000 recent reactions in a group or a supergroup chat added by a given user or chat.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function DeleteAllMessageReactions(AChatId: Variant;
+      AUserId: Int64 = 0; AActorChatId: Int64 = 0): Boolean;
+
+    /// <summary>
+    /// Use this method to get information about custom emoji stickers by their identifiers.
+    /// </summary>
+    /// <returns>
+    /// Returns an Array of Sticker objects.
+    /// </returns>
+    function GetCustomEmojiStickers(ACustomEmojiIds: TArray<String>)
+      : TList<TftSticker>;
+
+    /// <summary>
+    /// Use this method to change the list of emoji assigned to a regular or custom emoji sticker.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetStickerEmojiList(const ASticker: String;
+      AEmojiList: TArray<String>): Boolean;
+
+    /// <summary>
+    /// Use this method to change search keywords assigned to a regular or custom emoji sticker.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetStickerKeywords(const ASticker: String;
+      AKeywords: TArray<String>): Boolean;
+
+    /// <summary>
+    /// Use this method to change the mask position of a mask sticker.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetStickerMaskPosition(const ASticker: String;
+      AMaskPosition: TftMaskPosition = nil): Boolean;
+
+    /// <summary>
+    /// Use this method to set the title of a created sticker set.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetStickerSetTitle(const AName, ATitle: String): Boolean;
+
+    /// <summary>
+    /// Use this method to set the thumbnail of a regular or mask sticker set.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetStickerSetThumbnail(const AName: String; AUserId: Int64;
+      const AFormat: String; AThumbnail: TftInputFile = nil): Boolean;
+
+    /// <summary>
+    /// Use this method to set the thumbnail of a custom emoji sticker set.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetCustomEmojiStickerSetThumbnail(const AName: String;
+      const ACustomEmojiId: String = ''): Boolean;
+
+    /// <summary>
+    /// Use this method to delete a sticker set that was created by the bot.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function DeleteStickerSet(const AName: String): Boolean;
+
+    /// <summary>
+    /// Refunds a successful payment in Telegram Stars.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function RefundStarPayment(AUserId: Int64;
+      const ATelegramPaymentChargeId: String): Boolean;
+
+    /// <summary>
+    /// Allows the bot to cancel or re-enable extension of a subscription paid in Telegram Stars.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function EditUserStarSubscription(AUserId: Int64;
+      const ATelegramPaymentChargeId: String; AIsCanceled: Boolean): Boolean;
+
+    /// <summary>
+    /// A method to get the current Telegram Stars balance of the bot.
+    /// </summary>
+    /// <returns>
+    /// Returns StarAmount on success.
+    /// </returns>
+    function GetMyStarBalance(): TftStarAmount;
+
+    /// <summary>
+    /// Use this method to get a list of profile audios for a user.
+    /// </summary>
+    /// <returns>
+    /// Returns a UserProfileAudios object.
+    /// </returns>
+    function GetUserProfileAudios(AUserId: Int64; AOffset: Integer = 0;
+      ALimit: Integer = 100): TftUserProfileAudios;
+
+    /// <summary>
+    /// Use this method to stream a partial message to a user while the message is being generated.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SendMessageDraft(AChatId: Int64; ADraftId: Integer;
+      const AText, AParseMode: String;
+      AEntities: TftMessageEntityList = nil; AMessageThreadId: Integer = 0;
+      ACanStop: Boolean = false; AKeepOnStop: Boolean = false): Boolean;
+
+    /// <summary>
+    /// Use this method to approve a suggested post in a direct messages chat.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function ApproveSuggestedPost(AChatId: Int64; AMessageId: Integer;
+      ASendDate: Integer = 0): Boolean;
+
+    /// <summary>
+    /// Use this method to decline a suggested post in a direct messages chat.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function DeclineSuggestedPost(AChatId: Int64; AMessageId: Integer;
+      const AComment: String = ''): Boolean;
+
+    /// <summary>
+    /// Gifts a Telegram Premium subscription to the given user.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function GiftPremiumSubscription(AUserId: Int64;
+      AMonthCount, AStarCount: Integer; const AText: String;
+      const ATextParseMode: String = '';
+      ATextEntities: TftMessageEntityList = nil): Boolean;
+
+    /// <summary>
+    /// Sends a gift to the given user or channel chat.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SendGift(AUserId: Int64; AChatId: Variant; const AGiftId: String;
+      APayForUpgrade: Boolean = false; const AText: String = '';
+      const ATextParseMode: String = '';
+      ATextEntities: TftMessageEntityList = nil): Boolean;
+
+    /// <summary>
+    /// Use this method to get the token of a managed bot.
+    /// </summary>
+    /// <returns>
+    /// Returns the token as String on success.
+    /// </returns>
+    function GetManagedBotToken(AUserId: Int64): String;
+
+    /// <summary>
+    /// Use this method to revoke the current token of a managed bot and generate a new one.
+    /// </summary>
+    /// <returns>
+    /// Returns the new token as String on success.
+    /// </returns>
+    function ReplaceManagedBotToken(AUserId: Int64): String;
+
+    /// <summary>
+    /// Use this method to get information about the connection of the bot with a business account.
+    /// </summary>
+    /// <returns>
+    /// Returns a BusinessConnection object on success.
+    /// </returns>
+    function GetBusinessConnection(const ABusinessConnectionId: String)
+      : TftBusinessConnection;
+
+    /// <summary>
+    /// Use this method to get the last messages from the personal chat of a given user.
+    /// </summary>
+    /// <returns>
+    /// Returns an Array of Message objects.
+    /// </returns>
+    function GetUserPersonalChatMessages(AUserId: Int64; ALimit: Integer)
+      : TList<TftMessage>;
+
+    /// <summary>
+    /// Use this method to process a received chat join request query.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function AnswerChatJoinRequestQuery(const AChatJoinRequestQueryId,
+      AResult: String): Boolean;
+
+    /// <summary>
+    /// Use this method to process a received chat join request query by showing a Mini App to the user.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SendChatJoinRequestWebApp(const AChatJoinRequestQueryId,
+      AWebAppUrl: String): Boolean;
+
+    /// <summary>
+    /// Stores a message that can be sent by a user of a Mini App.
+    /// </summary>
+    /// <returns>
+    /// Returns a PreparedInlineMessage object.
+    /// </returns>
+    function SavePreparedInlineMessage(AUserId: Int64;
+      AResult: TftInlineQueryResult; AAllowUserChats: Boolean = false;
+      AAllowBotChats: Boolean = false; AAllowGroupChats: Boolean = false;
+      AAllowChannelChats: Boolean = false): TftPreparedInlineMessage;
+
+    /// <summary>
+    /// Stores a keyboard button that can be used by a user within a Mini App.
+    /// </summary>
+    /// <returns>
+    /// Returns a PreparedKeyboardButton object.
+    /// </returns>
+    function SavePreparedKeyboardButton(AUserId: Int64;
+      AButton: TftKeyboardButton): TftPreparedKeyboardButton;
+
+    /// <summary>
+    /// Use this method to change the chosen reactions on a message.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function SetMessageReaction(AChatId: Variant; AMessageId: Integer;
+      AReaction: TList<TftReactionType>; AIsBig: Boolean = false): Boolean;
+
+    /// <summary>
+    /// Use this method to send live photos.
+    /// </summary>
+    /// <returns>
+    /// On success, the sent Message is returned.
+    /// </returns>
+    function SendLivePhoto(AChatId: Variant; ALivePhoto, APhoto: TftInputFile;
+      const ACaption: String = ''; const AParseMode: String = '';
+      ACaptionEntities: TftMessageEntityList = nil;
+      ADisableNotification: Boolean = false; AProtectContent: Boolean = false;
+      AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil;
+      AMessageThreadId: Integer = 0): TftMessage;
+
+    /// <summary>
+    /// Removes the profile photo of the bot.
+    /// </summary>
+    /// <returns>
+    /// Returns True on success.
+    /// </returns>
+    function RemoveMyProfilePhoto(): Boolean;
+
+    /// <summary>
+    /// Returns the amount of Telegram Stars owned by a managed business account.
+    /// </summary>
+    /// <returns>
+    /// Returns StarAmount on success.
+    /// </returns>
+    function GetBusinessAccountStarBalance(const ABusinessConnectionId: String)
+      : TftStarAmount;
 
   end;
 
@@ -3827,7 +4370,7 @@ begin
   end;
 
   Result := FTypeParser.ParseJsonAndGetChatAdministratorRights
-    (SendRequest('for_channels', LArgs));
+    (SendRequest('getMyDefaultAdministratorRights', LArgs));
 end;
 
 function TftAPI.GetStickerSet(const AName: String): TftStickerSet;
@@ -4558,8 +5101,89 @@ function TftAPI.SendInvoice(AChatId: Variant; const ATitle, ADescription,
   ASendPhoneNumberToProvider, ASendEmailToProvider, AIsFlexible: Boolean;
   AReplyToMessageId: Integer; AReplyMarkup: TftReplyBase;
   ADisableNotification: Boolean): TftMessage;
+var
+  LArgs: TStringList;
 begin
-  // TODO
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('title', ATitle);
+  LArgs.AddPair('description', ADescription);
+  LArgs.AddPair('payload', APayload);
+  LArgs.AddPair('provider_token', AProviderToken);
+  if (AStartParameter <> '') then
+  begin
+    LArgs.AddPair('start_parameter', AStartParameter);
+  end;
+  LArgs.AddPair('currency', ACurrency);
+  LArgs.AddPair('prices', APrices);
+  if (AProviderData <> '') then
+  begin
+    LArgs.AddPair('provider_data', AProviderData);
+  end;
+  if (APhotoUrl <> '') then
+  begin
+    LArgs.AddPair('photo_url', APhotoUrl);
+  end;
+  if (APhotoSize <> 0) then
+  begin
+    LArgs.AddPair('photo_size', IntToStr(APhotoSize));
+  end;
+  if (APhotoWidth <> 0) then
+  begin
+    LArgs.AddPair('photo_width', IntToStr(APhotoWidth));
+  end;
+  if (APhotoHeight <> 0) then
+  begin
+    LArgs.AddPair('photo_height', IntToStr(APhotoHeight));
+  end;
+  if (ANeedName) then
+  begin
+    LArgs.AddPair('need_name', BoolToStr(ANeedName, true));
+  end;
+  if (ANeedPhoneNumber) then
+  begin
+    LArgs.AddPair('need_phone_number', BoolToStr(ANeedPhoneNumber, true));
+  end;
+  if (ANeedEmail) then
+  begin
+    LArgs.AddPair('need_email', BoolToStr(ANeedEmail, true));
+  end;
+  if (ANeedShippingAddress) then
+  begin
+    LArgs.AddPair('need_shipping_address',
+      BoolToStr(ANeedShippingAddress, true));
+  end;
+  if (ASendPhoneNumberToProvider) then
+  begin
+    LArgs.AddPair('send_phone_number_to_provider',
+      BoolToStr(ASendPhoneNumberToProvider, true));
+  end;
+  if (ASendEmailToProvider) then
+  begin
+    LArgs.AddPair('send_email_to_provider',
+      BoolToStr(ASendEmailToProvider, true));
+  end;
+  if (AIsFlexible) then
+  begin
+    LArgs.AddPair('is_flexible', BoolToStr(AIsFlexible, true));
+  end;
+  if (AReplyToMessageId <> 0) then
+  begin
+    LArgs.AddPair('reply_to_message_id', IntToStr(AReplyToMessageId));
+  end;
+  if Assigned(AReplyMarkup) then
+  begin
+    LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase((AReplyMarkup)));
+  end;
+  if (ADisableNotification) then
+  begin
+    LArgs.AddPair('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  end;
+
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendInvoice',
+    LArgs, 'POST'));
 end;
 
 function TftAPI.SendLocation(AChatId: Variant; ALatitude: Double;
@@ -4626,7 +5250,7 @@ begin
     LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase((AReplyMarkup)));
   end;
 
-  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendGame',
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendLocation',
     LArgs, 'POST'));
 end;
 
@@ -4774,7 +5398,7 @@ begin
     LArgs.AddField('disable_notification',
       BoolToStr(ADisableNotification, true));
 
-  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendDocument',
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendPhoto',
     LArgs, 'POST'));
 end;
 
@@ -4825,8 +5449,32 @@ end;
 function TftAPI.SendSticker(AChatId: Variant; ASticker: TftInputFile;
   AReplyToMessageId: Integer; AReplyMarkup: TftReplyBase;
   ADisableNotification: Boolean): TftMessage;
+var
+  LArgs: TMultipartFormData;
 begin
-  // TODO
+  FHttpClient.ContentType := 'multipart/form-data';
+  LArgs := TMultipartFormData.Create;
+  LArgs.AddField('chat_id', VarToStr(AChatId));
+  if Assigned(ASticker) then
+  begin
+    LArgs.AddFile('sticker', ASticker.filePath);
+  end;
+  if (ADisableNotification) then
+  begin
+    LArgs.AddField('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  end;
+  if (AReplyToMessageId <> 0) then
+  begin
+    LArgs.AddField('reply_to_message_id', IntToStr(AReplyToMessageId));
+  end;
+  if Assigned(AReplyMarkup) then
+  begin
+    LArgs.AddField('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+  end;
+
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendSticker',
+    LArgs, 'POST'));
 end;
 
 function TftAPI.SendVenue(AChatId: Variant; ALatitude: Double;
@@ -4836,8 +5484,61 @@ function TftAPI.SendVenue(AChatId: Variant; ALatitude: Double;
   AReplyMarkup: TftReplyBase; const AGooglePlaceId: String;
   const AGooglePlaceType: String; AAllowSendingWithoutReply: Boolean;
   AProtectContent: Boolean; AMessageThreadId: Integer): TftMessage;
+var
+  LArgs: TStringList;
 begin
-  // TODO
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  if (AMessageThreadId <> 0) then
+  begin
+    LArgs.AddPair('message_thread_id', IntToStr(AMessageThreadId));
+  end;
+  LArgs.AddPair('latitude', VarToStr(ALatitude));
+  LArgs.AddPair('longitude', VarToStr(ALongitude));
+  LArgs.AddPair('title', ATitle);
+  LArgs.AddPair('address', AAddress);
+  if (ASoursquareId <> '') then
+  begin
+    LArgs.AddPair('foursquare_id', ASoursquareId);
+  end;
+  if (AFoursquareType <> '') then
+  begin
+    LArgs.AddPair('foursquare_type', AFoursquareType);
+  end;
+  if (AGooglePlaceId <> '') then
+  begin
+    LArgs.AddPair('google_place_id', AGooglePlaceId);
+  end;
+  if (AGooglePlaceType <> '') then
+  begin
+    LArgs.AddPair('google_place_type', AGooglePlaceType);
+  end;
+  if (ADisableNotification) then
+  begin
+    LArgs.AddPair('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  end;
+  if (AProtectContent) then
+  begin
+    LArgs.AddPair('protect_content', BoolToStr(AProtectContent, true));
+  end;
+  if (AReplyToMessageId <> 0) then
+  begin
+    LArgs.AddPair('reply_to_message_id', IntToStr(AReplyToMessageId));
+  end;
+  if (AAllowSendingWithoutReply) then
+  begin
+    LArgs.AddPair('allow_sending_without_reply',
+      BoolToStr(AAllowSendingWithoutReply, true));
+  end;
+  if Assigned(AReplyMarkup) then
+  begin
+    LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase((AReplyMarkup)));
+  end;
+
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendVenue',
+    LArgs, 'POST'));
 end;
 
 function TftAPI.SendVideo(AChatId: Variant; AVideo: TftInputFile;
@@ -4848,8 +5549,82 @@ function TftAPI.SendVideo(AChatId: Variant; AVideo: TftInputFile;
   const ACaptionEntities: TftMessageEntityList;
   AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
   AMessageThreadId: Integer; AHasSpoiler: Boolean): TftMessage;
+var
+  LArgs: TMultipartFormData;
 begin
-  // TODO
+  FHttpClient.ContentType := 'multipart/form-data';
+  LArgs := TMultipartFormData.Create;
+  LArgs.AddField('chat_id', VarToStr(AChatId));
+  if (AMessageThreadId <> 0) then
+  begin
+    LArgs.AddField('message_thread_id', IntToStr(AMessageThreadId));
+  end;
+  if Assigned(AVideo) then
+  begin
+    LArgs.AddFile('video', AVideo.filePath);
+  end;
+  if (ADuration <> 0) then
+  begin
+    LArgs.AddField('duration', IntToStr(ADuration));
+  end;
+  if (AWidth <> 0) then
+  begin
+    LArgs.AddField('width', IntToStr(AWidth));
+  end;
+  if (AHeight <> 0) then
+  begin
+    LArgs.AddField('height', IntToStr(AHeight));
+  end;
+  if Assigned(AThumb) then
+  begin
+    LArgs.AddFile('thumb', AThumb.filePath);
+  end;
+  if (ACaption <> '') then
+  begin
+    LArgs.AddField('caption', ACaption);
+  end;
+  if (AParseMode <> '') then
+  begin
+    LArgs.AddField('parse_mode', AParseMode);
+  end;
+  if Assigned(ACaptionEntities) then
+  begin
+    LArgs.AddField('caption_entities',
+      FTypeParser.ParseList(TList(ACaptionEntities)));
+  end;
+  if (ASupportsStreaming) then
+  begin
+    LArgs.AddField('supports_streaming', BoolToStr(ASupportsStreaming, true));
+  end;
+  if (AHasSpoiler) then
+  begin
+    LArgs.AddField('has_spoiler', BoolToStr(AHasSpoiler, true));
+  end;
+  if (ADisableNotification) then
+  begin
+    LArgs.AddField('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  end;
+  if (AProtectContent) then
+  begin
+    LArgs.AddField('protect_content', BoolToStr(AProtectContent, true));
+  end;
+  if (AReplyToMessageId <> 0) then
+  begin
+    LArgs.AddField('reply_to_message_id', IntToStr(AReplyToMessageId));
+  end;
+  if (AAllowSendingWithoutReply) then
+  begin
+    LArgs.AddField('allow_sending_without_reply',
+      BoolToStr(AAllowSendingWithoutReply, true));
+  end;
+  if Assigned(AReplyMarkup) then
+  begin
+    LArgs.AddField('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+  end;
+
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendVideo',
+    LArgs, 'POST'));
 end;
 
 function TftAPI.SendVideoNote(AChatId: Variant; AVideoNote: TftInputFile;
@@ -4857,18 +5632,122 @@ function TftAPI.SendVideoNote(AChatId: Variant; AVideoNote: TftInputFile;
   Alength: Integer; AThumb: TftInputFile; AReplyMarkup: TftReplyBase;
   AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
   AMessageThreadId: Integer): TftMessage;
+var
+  LArgs: TMultipartFormData;
 begin
-  // TODO
+  FHttpClient.ContentType := 'multipart/form-data';
+  LArgs := TMultipartFormData.Create;
+  LArgs.AddField('chat_id', VarToStr(AChatId));
+  if (AMessageThreadId <> 0) then
+  begin
+    LArgs.AddField('message_thread_id', IntToStr(AMessageThreadId));
+  end;
+  if Assigned(AVideoNote) then
+  begin
+    LArgs.AddFile('video_note', AVideoNote.filePath);
+  end;
+  if (ADuration <> 0) then
+  begin
+    LArgs.AddField('duration', IntToStr(ADuration));
+  end;
+  if (Alength <> 0) then
+  begin
+    LArgs.AddField('length', IntToStr(Alength));
+  end;
+  if Assigned(AThumb) then
+  begin
+    LArgs.AddFile('thumb', AThumb.filePath);
+  end;
+  if (ADisableNotification) then
+  begin
+    LArgs.AddField('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  end;
+  if (AProtectContent) then
+  begin
+    LArgs.AddField('protect_content', BoolToStr(AProtectContent, true));
+  end;
+  if (AReplyToMessageId <> 0) then
+  begin
+    LArgs.AddField('reply_to_message_id', IntToStr(AReplyToMessageId));
+  end;
+  if (AAllowSendingWithoutReply) then
+  begin
+    LArgs.AddField('allow_sending_without_reply',
+      BoolToStr(AAllowSendingWithoutReply, true));
+  end;
+  if Assigned(AReplyMarkup) then
+  begin
+    LArgs.AddField('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+  end;
+
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendVideoNote',
+    LArgs, 'POST'));
 end;
 
 function TftAPI.SendVoice(AChatId: Variant; AVoice: TftInputFile;
   const ACaption: String; ADuration: Integer; AReplyToMessageId: Integer;
   AReplyMarkup: TftReplyBase; const AParseMode: String;
-  ADisableNotification: Boolean; const ACaptionEntities;
+  ADisableNotification: Boolean;
+  const ACaptionEntities: TftMessageEntityList;
   AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
   AMessageThreadId: Integer): TftMessage;
+var
+  LArgs: TMultipartFormData;
 begin
-  // TODO
+  FHttpClient.ContentType := 'multipart/form-data';
+  LArgs := TMultipartFormData.Create;
+  LArgs.AddField('chat_id', VarToStr(AChatId));
+  if (AMessageThreadId <> 0) then
+  begin
+    LArgs.AddField('message_thread_id', IntToStr(AMessageThreadId));
+  end;
+  if Assigned(AVoice) then
+  begin
+    LArgs.AddFile('voice', AVoice.filePath);
+  end;
+  if (ACaption <> '') then
+  begin
+    LArgs.AddField('caption', ACaption);
+  end;
+  if (AParseMode <> '') then
+  begin
+    LArgs.AddField('parse_mode', AParseMode);
+  end;
+  if Assigned(ACaptionEntities) then
+  begin
+    LArgs.AddField('caption_entities',
+      FTypeParser.ParseList(TList(ACaptionEntities)));
+  end;
+  if (ADuration <> 0) then
+  begin
+    LArgs.AddField('duration', IntToStr(ADuration));
+  end;
+  if (ADisableNotification) then
+  begin
+    LArgs.AddField('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  end;
+  if (AProtectContent) then
+  begin
+    LArgs.AddField('protect_content', BoolToStr(AProtectContent, true));
+  end;
+  if (AReplyToMessageId <> 0) then
+  begin
+    LArgs.AddField('reply_to_message_id', IntToStr(AReplyToMessageId));
+  end;
+  if (AAllowSendingWithoutReply) then
+  begin
+    LArgs.AddField('allow_sending_without_reply',
+      BoolToStr(AAllowSendingWithoutReply, true));
+  end;
+  if Assigned(AReplyMarkup) then
+  begin
+    LArgs.AddField('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+  end;
+
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendVoice',
+    LArgs, 'POST'));
 end;
 
 function TftAPI.SetChatAdministratorCustomTitle(AChatId: Variant;
@@ -5299,6 +6178,1112 @@ begin
   LURL := LURL + AFilePath;
 
   Result := FHttpClient.MakeRequest(LURL, AArgs, 'GET');
+end;
+
+{ Bot API 10.3 additions }
+
+function ParseFunJSONArrayTftMessageId(JSONArray: TJSONArray;
+  Index: Integer): TObject;
+begin
+  Result := TJSON.JsonToObject<TftMessageId>(JSONArray.Items[Index].ToJSON);
+end;
+
+function TftAPI.ForwardMessages(AChatId, AFromChatId: Variant;
+  AMessageIds: TArray<Integer>; AMessageThreadId, ADirectMessagesTopicId: Integer;
+  ADisableNotification, AProtectContent: Boolean): TList<TftMessageId>;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('from_chat_id', VarToStr(AFromChatId));
+  LArgs.AddPair('message_ids', FTypeParser.ParseIntegers(AMessageIds));
+  if (AMessageThreadId <> 0) then
+  begin
+    LArgs.AddPair('message_thread_id', IntToStr(AMessageThreadId));
+  end;
+  if (ADirectMessagesTopicId <> 0) then
+  begin
+    LArgs.AddPair('direct_messages_topic_id',
+      IntToStr(ADirectMessagesTopicId));
+  end;
+  if (ADisableNotification) then
+  begin
+    LArgs.AddPair('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  end;
+  if (AProtectContent) then
+  begin
+    LArgs.AddPair('protect_content', BoolToStr(AProtectContent, true));
+  end;
+
+  Result := TList<TftMessageId>(FTypeParser.ParseJsonAndGetList
+    (ParseFunJSONArrayTftMessageId, SendRequest('forwardMessages', LArgs,
+    'POST')));
+end;
+
+function TftAPI.CopyMessages(AChatId, AFromChatId: Variant;
+  AMessageIds: TArray<Integer>; AMessageThreadId, ADirectMessagesTopicId: Integer;
+  ADisableNotification, AProtectContent, ARemoveCaption: Boolean)
+  : TList<TftMessageId>;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('from_chat_id', VarToStr(AFromChatId));
+  LArgs.AddPair('message_ids', FTypeParser.ParseIntegers(AMessageIds));
+  if (AMessageThreadId <> 0) then
+  begin
+    LArgs.AddPair('message_thread_id', IntToStr(AMessageThreadId));
+  end;
+  if (ADirectMessagesTopicId <> 0) then
+  begin
+    LArgs.AddPair('direct_messages_topic_id',
+      IntToStr(ADirectMessagesTopicId));
+  end;
+  if (ADisableNotification) then
+  begin
+    LArgs.AddPair('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  end;
+  if (AProtectContent) then
+  begin
+    LArgs.AddPair('protect_content', BoolToStr(AProtectContent, true));
+  end;
+  if (ARemoveCaption) then
+  begin
+    LArgs.AddPair('remove_caption', BoolToStr(ARemoveCaption, true));
+  end;
+
+  Result := TList<TftMessageId>(FTypeParser.ParseJsonAndGetList
+    (ParseFunJSONArrayTftMessageId, SendRequest('copyMessages', LArgs, 'POST')));
+end;
+
+function TftAPI.DeleteMessages(AChatId: Variant;
+  AMessageIds: TArray<Integer>): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('message_ids', FTypeParser.ParseIntegers(AMessageIds));
+
+  Result := Boolean(SendRequest('deleteMessages', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.UnpinAllGeneralForumTopicMessages(AChatId: Variant): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+
+  Result := Boolean(SendRequest('unpinAllGeneralForumTopicMessages', LArgs,
+    'POST').GetValue('result'));
+end;
+
+function TftAPI.SetMyName(const AName, ALanguageCode: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  if (AName <> '') then
+  begin
+    LArgs.AddPair('name', AName);
+  end;
+  if (ALanguageCode <> '') then
+  begin
+    LArgs.AddPair('language_code', ALanguageCode);
+  end;
+
+  Result := Boolean(SendRequest('setMyName', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.GetMyName(const ALanguageCode: String): TftBotName;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  if (ALanguageCode <> '') then
+  begin
+    LArgs.AddPair('language_code', ALanguageCode);
+  end;
+
+  Result := FTypeParser.ParseJsonAndGetBotName(SendRequest('getMyName',
+    LArgs));
+end;
+
+function TftAPI.SetMyDescription(const ADescription,
+  ALanguageCode: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  if (ADescription <> '') then
+  begin
+    LArgs.AddPair('description', ADescription);
+  end;
+  if (ALanguageCode <> '') then
+  begin
+    LArgs.AddPair('language_code', ALanguageCode);
+  end;
+
+  Result := Boolean(SendRequest('setMyDescription', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.GetMyDescription(const ALanguageCode: String)
+  : TftBotDescription;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  if (ALanguageCode <> '') then
+  begin
+    LArgs.AddPair('language_code', ALanguageCode);
+  end;
+
+  Result := FTypeParser.ParseJsonAndGetBotDescription
+    (SendRequest('getMyDescription', LArgs));
+end;
+
+function TftAPI.SetMyShortDescription(const AShortDescription,
+  ALanguageCode: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  if (AShortDescription <> '') then
+  begin
+    LArgs.AddPair('short_description', AShortDescription);
+  end;
+  if (ALanguageCode <> '') then
+  begin
+    LArgs.AddPair('language_code', ALanguageCode);
+  end;
+
+  Result := Boolean(SendRequest('setMyShortDescription', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.GetMyShortDescription(const ALanguageCode: String)
+  : TftBotShortDescription;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  if (ALanguageCode <> '') then
+  begin
+    LArgs.AddPair('language_code', ALanguageCode);
+  end;
+
+  Result := FTypeParser.ParseJsonAndGetBotShortDescription
+    (SendRequest('getMyShortDescription', LArgs));
+end;
+
+function TftAPI.SetChatMemberTag(AChatId: Variant; AUserId: Int64;
+  const ATag: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  if (ATag <> '') then
+  begin
+    LArgs.AddPair('tag', ATag);
+  end;
+
+  Result := Boolean(SendRequest('setChatMemberTag', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SetUserEmojiStatus(AUserId: Int64;
+  const AEmojiStatusCustomEmojiId: String;
+  AEmojiStatusExpirationDate: Integer): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  if (AEmojiStatusCustomEmojiId <> '') then
+  begin
+    LArgs.AddPair('emoji_status_custom_emoji_id', AEmojiStatusCustomEmojiId);
+  end;
+  if (AEmojiStatusExpirationDate <> 0) then
+  begin
+    LArgs.AddPair('emoji_status_expiration_date',
+      IntToStr(AEmojiStatusExpirationDate));
+  end;
+
+  Result := Boolean(SendRequest('setUserEmojiStatus', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.CreateChatSubscriptionInviteLink(AChatId: Variant;
+  ASubscriptionPeriod, ASubscriptionPrice: Integer; const AName: String)
+  : TftChatInviteLink;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('subscription_period', IntToStr(ASubscriptionPeriod));
+  LArgs.AddPair('subscription_price', IntToStr(ASubscriptionPrice));
+  if (AName <> '') then
+  begin
+    LArgs.AddPair('name', AName);
+  end;
+
+  Result := FTypeParser.ParseJsonAndGetChatInviteLink
+    (SendRequest('createChatSubscriptionInviteLink', LArgs, 'POST'));
+end;
+
+function TftAPI.EditChatSubscriptionInviteLink(AChatId: Variant;
+  const AInviteLink, AName: String): TftChatInviteLink;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('invite_link', AInviteLink);
+  if (AName <> '') then
+  begin
+    LArgs.AddPair('name', AName);
+  end;
+
+  Result := FTypeParser.ParseJsonAndGetChatInviteLink
+    (SendRequest('editChatSubscriptionInviteLink', LArgs, 'POST'));
+end;
+
+function TftAPI.VerifyUser(AUserId: Int64;
+  const ACustomDescription: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  if (ACustomDescription <> '') then
+  begin
+    LArgs.AddPair('custom_description', ACustomDescription);
+  end;
+
+  Result := Boolean(SendRequest('verifyUser', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.VerifyChat(AChatId: Variant;
+  const ACustomDescription: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  if (ACustomDescription <> '') then
+  begin
+    LArgs.AddPair('custom_description', ACustomDescription);
+  end;
+
+  Result := Boolean(SendRequest('verifyChat', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.RemoveUserVerification(AUserId: Int64): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+
+  Result := Boolean(SendRequest('removeUserVerification', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.RemoveChatVerification(AChatId: Variant): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+
+  Result := Boolean(SendRequest('removeChatVerification', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.ReadBusinessMessage(const ABusinessConnectionId: String;
+  AChatId: Int64; AMessageId: Integer): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('chat_id', IntToStr(AChatId));
+  LArgs.AddPair('message_id', IntToStr(AMessageId));
+
+  Result := Boolean(SendRequest('readBusinessMessage', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.DeleteBusinessMessages(const ABusinessConnectionId: String;
+  AMessageIds: TArray<Integer>): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('message_ids', FTypeParser.ParseIntegers(AMessageIds));
+
+  Result := Boolean(SendRequest('deleteBusinessMessages', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SetBusinessAccountName(const ABusinessConnectionId,
+  AFirstName, ALastName: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('first_name', AFirstName);
+  if (ALastName <> '') then
+  begin
+    LArgs.AddPair('last_name', ALastName);
+  end;
+
+  Result := Boolean(SendRequest('setBusinessAccountName', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SetBusinessAccountUsername(const ABusinessConnectionId,
+  AUsername: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  if (AUsername <> '') then
+  begin
+    LArgs.AddPair('username', AUsername);
+  end;
+
+  Result := Boolean(SendRequest('setBusinessAccountUsername', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SetBusinessAccountBio(const ABusinessConnectionId,
+  ABio: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  if (ABio <> '') then
+  begin
+    LArgs.AddPair('bio', ABio);
+  end;
+
+  Result := Boolean(SendRequest('setBusinessAccountBio', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.RemoveBusinessAccountProfilePhoto(
+  const ABusinessConnectionId: String; AIsPublic: Boolean): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  if (AIsPublic) then
+  begin
+    LArgs.AddPair('is_public', BoolToStr(AIsPublic, true));
+  end;
+
+  Result := Boolean(SendRequest('removeBusinessAccountProfilePhoto', LArgs,
+    'POST').GetValue('result'));
+end;
+
+function TftAPI.TransferBusinessAccountStars(
+  const ABusinessConnectionId: String; AStarCount: Integer): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('star_count', IntToStr(AStarCount));
+
+  Result := Boolean(SendRequest('transferBusinessAccountStars', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.ConvertGiftToStars(const ABusinessConnectionId,
+  AOwnedGiftId: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('owned_gift_id', AOwnedGiftId);
+
+  Result := Boolean(SendRequest('convertGiftToStars', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.UpgradeGift(const ABusinessConnectionId, AOwnedGiftId: String;
+  AKeepOriginalDetails: Boolean; AStarCount: Integer): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('owned_gift_id', AOwnedGiftId);
+  if (AKeepOriginalDetails) then
+  begin
+    LArgs.AddPair('keep_original_details',
+      BoolToStr(AKeepOriginalDetails, true));
+  end;
+  if (AStarCount <> 0) then
+  begin
+    LArgs.AddPair('star_count', IntToStr(AStarCount));
+  end;
+
+  Result := Boolean(SendRequest('upgradeGift', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.TransferGift(const ABusinessConnectionId, AOwnedGiftId: String;
+  ANewOwnerChatId: Int64; AStarCount: Integer): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('owned_gift_id', AOwnedGiftId);
+  LArgs.AddPair('new_owner_chat_id', IntToStr(ANewOwnerChatId));
+  if (AStarCount <> 0) then
+  begin
+    LArgs.AddPair('star_count', IntToStr(AStarCount));
+  end;
+
+  Result := Boolean(SendRequest('transferGift', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.DeleteMessageReaction(AChatId: Variant; AMessageId: Integer;
+  AUserId, AActorChatId: Int64): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('message_id', IntToStr(AMessageId));
+  if (AUserId <> 0) then
+  begin
+    LArgs.AddPair('user_id', IntToStr(AUserId));
+  end;
+  if (AActorChatId <> 0) then
+  begin
+    LArgs.AddPair('actor_chat_id', IntToStr(AActorChatId));
+  end;
+
+  Result := Boolean(SendRequest('deleteMessageReaction', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.DeleteAllMessageReactions(AChatId: Variant;
+  AUserId, AActorChatId: Int64): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  if (AUserId <> 0) then
+  begin
+    LArgs.AddPair('user_id', IntToStr(AUserId));
+  end;
+  if (AActorChatId <> 0) then
+  begin
+    LArgs.AddPair('actor_chat_id', IntToStr(AActorChatId));
+  end;
+
+  Result := Boolean(SendRequest('deleteAllMessageReactions', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.GetCustomEmojiStickers(ACustomEmojiIds: TArray<String>)
+  : TList<TftSticker>;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('custom_emoji_ids',
+    FTypeParser.ParseStringArray(ACustomEmojiIds));
+
+  Result := TList<TftSticker>(FTypeParser.ParseJsonAndGetList
+    (ParseFunJSONArrayTftSticker, SendRequest('getCustomEmojiStickers', LArgs,
+    'POST')));
+end;
+
+function TftAPI.SetStickerEmojiList(const ASticker: String;
+  AEmojiList: TArray<String>): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('sticker', ASticker);
+  LArgs.AddPair('emoji_list', FTypeParser.ParseStringArray(AEmojiList));
+
+  Result := Boolean(SendRequest('setStickerEmojiList', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SetStickerKeywords(const ASticker: String;
+  AKeywords: TArray<String>): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('sticker', ASticker);
+  LArgs.AddPair('keywords', FTypeParser.ParseStringArray(AKeywords));
+
+  Result := Boolean(SendRequest('setStickerKeywords', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SetStickerMaskPosition(const ASticker: String;
+  AMaskPosition: TftMaskPosition): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('sticker', ASticker);
+  if Assigned(AMaskPosition) then
+  begin
+    LArgs.AddPair('mask_position', FTypeParser.ParseMaskPosition(AMaskPosition));
+  end;
+
+  Result := Boolean(SendRequest('setStickerMaskPosition', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SetStickerSetTitle(const AName, ATitle: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('name', AName);
+  LArgs.AddPair('title', ATitle);
+
+  Result := Boolean(SendRequest('setStickerSetTitle', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SetStickerSetThumbnail(const AName: String; AUserId: Int64;
+  const AFormat: String; AThumbnail: TftInputFile): Boolean;
+var
+  LArgs: TMultipartFormData;
+begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  LArgs := TMultipartFormData.Create;
+  LArgs.AddField('name', AName);
+  LArgs.AddField('user_id', IntToStr(AUserId));
+  LArgs.AddField('format', AFormat);
+  if Assigned(AThumbnail) then
+  begin
+    LArgs.AddFile('thumbnail', AThumbnail.filePath);
+  end;
+
+  Result := Boolean(SendRequest('setStickerSetThumbnail', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SetCustomEmojiStickerSetThumbnail(const AName,
+  ACustomEmojiId: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('name', AName);
+  if (ACustomEmojiId <> '') then
+  begin
+    LArgs.AddPair('custom_emoji_id', ACustomEmojiId);
+  end;
+
+  Result := Boolean(SendRequest('setCustomEmojiStickerSetThumbnail', LArgs,
+    'POST').GetValue('result'));
+end;
+
+function TftAPI.DeleteStickerSet(const AName: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('name', AName);
+
+  Result := Boolean(SendRequest('deleteStickerSet', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.RefundStarPayment(AUserId: Int64;
+  const ATelegramPaymentChargeId: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  LArgs.AddPair('telegram_payment_charge_id', ATelegramPaymentChargeId);
+
+  Result := Boolean(SendRequest('refundStarPayment', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.EditUserStarSubscription(AUserId: Int64;
+  const ATelegramPaymentChargeId: String; AIsCanceled: Boolean): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  LArgs.AddPair('telegram_payment_charge_id', ATelegramPaymentChargeId);
+  LArgs.AddPair('is_canceled', BoolToStr(AIsCanceled, true));
+
+  Result := Boolean(SendRequest('editUserStarSubscription', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.GetMyStarBalance: TftStarAmount;
+begin
+  Result := FTypeParser.ParseJsonAndGetStarAmount
+    (SendRequest('getMyStarBalance'));
+end;
+
+function TftAPI.GetUserProfileAudios(AUserId: Int64; AOffset,
+  ALimit: Integer): TftUserProfileAudios;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  if (AOffset <> 0) then
+  begin
+    LArgs.AddPair('offset', IntToStr(AOffset));
+  end;
+  if (ALimit <> 100) then
+  begin
+    LArgs.AddPair('limit', IntToStr(Max(1, Min(100, ALimit))));
+  end;
+
+  Result := FTypeParser.ParseJsonAndGetUserProfileAudios
+    (SendRequest('getUserProfileAudios', LArgs));
+end;
+
+function TftAPI.SendMessageDraft(AChatId: Int64; ADraftId: Integer;
+  const AText, AParseMode: String; AEntities: TftMessageEntityList;
+  AMessageThreadId: Integer; ACanStop, AKeepOnStop: Boolean): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', IntToStr(AChatId));
+  LArgs.AddPair('draft_id', IntToStr(ADraftId));
+  if (AMessageThreadId <> 0) then
+  begin
+    LArgs.AddPair('message_thread_id', IntToStr(AMessageThreadId));
+  end;
+  if (AText <> '') then
+  begin
+    LArgs.AddPair('text', AText);
+  end;
+  if (AParseMode <> '') then
+  begin
+    LArgs.AddPair('parse_mode', AParseMode);
+  end;
+  if Assigned(AEntities) then
+  begin
+    LArgs.AddPair('entities', FTypeParser.ParseList(TList(AEntities)));
+  end;
+  if (ACanStop) then
+  begin
+    LArgs.AddPair('can_stop', BoolToStr(ACanStop, true));
+  end;
+  if (AKeepOnStop) then
+  begin
+    LArgs.AddPair('keep_on_stop', BoolToStr(AKeepOnStop, true));
+  end;
+
+  Result := Boolean(SendRequest('sendMessageDraft', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.ApproveSuggestedPost(AChatId: Int64; AMessageId,
+  ASendDate: Integer): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', IntToStr(AChatId));
+  LArgs.AddPair('message_id', IntToStr(AMessageId));
+  if (ASendDate <> 0) then
+  begin
+    LArgs.AddPair('send_date', IntToStr(ASendDate));
+  end;
+
+  Result := Boolean(SendRequest('approveSuggestedPost', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.DeclineSuggestedPost(AChatId: Int64; AMessageId: Integer;
+  const AComment: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', IntToStr(AChatId));
+  LArgs.AddPair('message_id', IntToStr(AMessageId));
+  if (AComment <> '') then
+  begin
+    LArgs.AddPair('comment', AComment);
+  end;
+
+  Result := Boolean(SendRequest('declineSuggestedPost', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.GiftPremiumSubscription(AUserId: Int64;
+  AMonthCount, AStarCount: Integer; const AText, ATextParseMode: String;
+  ATextEntities: TftMessageEntityList): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  LArgs.AddPair('month_count', IntToStr(AMonthCount));
+  LArgs.AddPair('star_count', IntToStr(AStarCount));
+  if (AText <> '') then
+  begin
+    LArgs.AddPair('text', AText);
+  end;
+  if (ATextParseMode <> '') then
+  begin
+    LArgs.AddPair('text_parse_mode', ATextParseMode);
+  end;
+  if Assigned(ATextEntities) then
+  begin
+    LArgs.AddPair('text_entities',
+      FTypeParser.ParseList(TList(ATextEntities)));
+  end;
+
+  Result := Boolean(SendRequest('giftPremiumSubscription', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SendGift(AUserId: Int64; AChatId: Variant;
+  const AGiftId: String; APayForUpgrade: Boolean; const AText,
+  ATextParseMode: String; ATextEntities: TftMessageEntityList): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  if (AUserId <> 0) then
+  begin
+    LArgs.AddPair('user_id', IntToStr(AUserId));
+  end;
+  if not(VarIsNull(AChatId)) and (VarToStr(AChatId) <> '') then
+  begin
+    LArgs.AddPair('chat_id', VarToStr(AChatId));
+  end;
+  LArgs.AddPair('gift_id', AGiftId);
+  if (APayForUpgrade) then
+  begin
+    LArgs.AddPair('pay_for_upgrade', BoolToStr(APayForUpgrade, true));
+  end;
+  if (AText <> '') then
+  begin
+    LArgs.AddPair('text', AText);
+  end;
+  if (ATextParseMode <> '') then
+  begin
+    LArgs.AddPair('text_parse_mode', ATextParseMode);
+  end;
+  if Assigned(ATextEntities) then
+  begin
+    LArgs.AddPair('text_entities',
+      FTypeParser.ParseList(TList(ATextEntities)));
+  end;
+
+  Result := Boolean(SendRequest('sendGift', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.GetManagedBotToken(AUserId: Int64): String;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+
+  Result := String(SendRequest('getManagedBotToken', LArgs)
+    .GetValue('result'));
+end;
+
+function TftAPI.ReplaceManagedBotToken(AUserId: Int64): String;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+
+  Result := String(SendRequest('replaceManagedBotToken', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.GetBusinessConnection(const ABusinessConnectionId: String)
+  : TftBusinessConnection;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+
+  Result := FTypeParser.ParseJsonAndGetBusinessConnection
+    (SendRequest('getBusinessConnection', LArgs));
+end;
+
+function TftAPI.GetUserPersonalChatMessages(AUserId: Int64; ALimit: Integer)
+  : TList<TftMessage>;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  LArgs.AddPair('limit', IntToStr(ALimit));
+
+  Result := TList<TftMessage>(FTypeParser.ParseJsonAndGetList
+    (ParseFunJSONArrayTftMessage, SendRequest('getUserPersonalChatMessages',
+    LArgs)));
+end;
+
+function TftAPI.AnswerChatJoinRequestQuery(const AChatJoinRequestQueryId,
+  AResult: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_join_request_query_id', AChatJoinRequestQueryId);
+  LArgs.AddPair('result', AResult);
+
+  Result := Boolean(SendRequest('answerChatJoinRequestQuery', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SendChatJoinRequestWebApp(const AChatJoinRequestQueryId,
+  AWebAppUrl: String): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_join_request_query_id', AChatJoinRequestQueryId);
+  LArgs.AddPair('web_app_url', AWebAppUrl);
+
+  Result := Boolean(SendRequest('sendChatJoinRequestWebApp', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SavePreparedInlineMessage(AUserId: Int64;
+  AResult: TftInlineQueryResult; AAllowUserChats, AAllowBotChats,
+  AAllowGroupChats, AAllowChannelChats: Boolean): TftPreparedInlineMessage;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  LArgs.AddPair('result', FTypeParser.ParseInlineQueryResult(AResult));
+  if (AAllowUserChats) then
+  begin
+    LArgs.AddPair('allow_user_chats', BoolToStr(AAllowUserChats, true));
+  end;
+  if (AAllowBotChats) then
+  begin
+    LArgs.AddPair('allow_bot_chats', BoolToStr(AAllowBotChats, true));
+  end;
+  if (AAllowGroupChats) then
+  begin
+    LArgs.AddPair('allow_group_chats', BoolToStr(AAllowGroupChats, true));
+  end;
+  if (AAllowChannelChats) then
+  begin
+    LArgs.AddPair('allow_channel_chats', BoolToStr(AAllowChannelChats, true));
+  end;
+
+  Result := FTypeParser.ParseJsonAndGetPreparedInlineMessage
+    (SendRequest('savePreparedInlineMessage', LArgs, 'POST'));
+end;
+
+function TftAPI.SavePreparedKeyboardButton(AUserId: Int64;
+  AButton: TftKeyboardButton): TftPreparedKeyboardButton;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  LArgs.AddPair('button', FTypeParser.ParseKeyboardButton(AButton));
+
+  Result := FTypeParser.ParseJsonAndGetPreparedKeyboardButton
+    (SendRequest('savePreparedKeyboardButton', LArgs, 'POST'));
+end;
+
+function TftAPI.SetMessageReaction(AChatId: Variant; AMessageId: Integer;
+  AReaction: TList<TftReactionType>; AIsBig: Boolean): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('message_id', IntToStr(AMessageId));
+  if Assigned(AReaction) then
+  begin
+    LArgs.AddPair('reaction', FTypeParser.ParseReactionTypes(AReaction));
+  end;
+  if (AIsBig) then
+  begin
+    LArgs.AddPair('is_big', BoolToStr(AIsBig, true));
+  end;
+
+  Result := Boolean(SendRequest('setMessageReaction', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SendLivePhoto(AChatId: Variant;
+  ALivePhoto, APhoto: TftInputFile; const ACaption, AParseMode: String;
+  ACaptionEntities: TftMessageEntityList; ADisableNotification,
+  AProtectContent: Boolean; AReplyToMessageId: Integer;
+  AReplyMarkup: TftReplyBase; AMessageThreadId: Integer): TftMessage;
+var
+  LArgs: TMultipartFormData;
+begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  LArgs := TMultipartFormData.Create;
+  LArgs.AddField('chat_id', VarToStr(AChatId));
+  if Assigned(ALivePhoto) then
+  begin
+    LArgs.AddFile('live_photo', ALivePhoto.filePath);
+  end;
+  if Assigned(APhoto) then
+  begin
+    LArgs.AddFile('photo', APhoto.filePath);
+  end;
+  if (ACaption <> '') then
+  begin
+    LArgs.AddField('caption', ACaption);
+  end;
+  if (AParseMode <> '') then
+  begin
+    LArgs.AddField('parse_mode', AParseMode);
+  end;
+  if Assigned(ACaptionEntities) then
+  begin
+    LArgs.AddField('caption_entities',
+      FTypeParser.ParseList(TList(ACaptionEntities)));
+  end;
+  if (AMessageThreadId <> 0) then
+  begin
+    LArgs.AddField('message_thread_id', IntToStr(AMessageThreadId));
+  end;
+  if (ADisableNotification) then
+  begin
+    LArgs.AddField('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  end;
+  if (AProtectContent) then
+  begin
+    LArgs.AddField('protect_content', BoolToStr(AProtectContent, true));
+  end;
+  if (AReplyToMessageId <> 0) then
+  begin
+    LArgs.AddField('reply_to_message_id', IntToStr(AReplyToMessageId));
+  end;
+  if Assigned(AReplyMarkup) then
+  begin
+    LArgs.AddField('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+  end;
+
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendLivePhoto',
+    LArgs, 'POST'));
+end;
+
+function TftAPI.RemoveMyProfilePhoto: Boolean;
+begin
+  Result := Boolean(SendRequest('removeMyProfilePhoto')
+    .GetValue('result'));
+end;
+
+function TftAPI.GetBusinessAccountStarBalance(
+  const ABusinessConnectionId: String): TftStarAmount;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+
+  Result := FTypeParser.ParseJsonAndGetStarAmount
+    (SendRequest('getBusinessAccountStarBalance', LArgs));
 end;
 
 end.

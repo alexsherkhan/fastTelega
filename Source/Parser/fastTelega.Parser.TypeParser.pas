@@ -11,6 +11,7 @@ uses
   System.SysUtils,
   System.Classes,
   System.Variants,
+  System.Generics.Collections,
   System.JSON,
   Rest.JSON,
 
@@ -551,6 +552,24 @@ type
       : TftWebhookInfo;
     function ParseJsonAndGetWriteAccessAllowed(const AData: TJSONObject)
       : TftWriteAccessAllowed;
+    function ParseJsonAndGetBotName(const AData: TJSONObject): TftBotName;
+    function ParseJsonAndGetBotDescription(const AData: TJSONObject)
+      : TftBotDescription;
+    function ParseJsonAndGetBotShortDescription(const AData: TJSONObject)
+      : TftBotShortDescription;
+    function ParseJsonAndGetStarAmount(const AData: TJSONObject): TftStarAmount;
+    function ParseJsonAndGetUserProfileAudios(const AData: TJSONObject)
+      : TftUserProfileAudios;
+    function ParseJsonAndGetPreparedInlineMessage(const AData: TJSONObject)
+      : TftPreparedInlineMessage;
+    function ParseJsonAndGetPreparedKeyboardButton(const AData: TJSONObject)
+      : TftPreparedKeyboardButton;
+    function ParseJsonAndGetBusinessConnection(const AData: TJSONObject)
+      : TftBusinessConnection;
+    function ParseIntegers(const AValues: TArray<Integer>): String;
+    function ParseStringArray(const AValues: TArray<String>): String;
+    function ParseReactionType(const AObj: TftReactionType): String;
+    function ParseReactionTypes(const AReaction: TList<TftReactionType>): String;
   end;
 
 implementation
@@ -4685,6 +4704,150 @@ begin
   end;
   Result := Result + '{';
   Result := Result + '}';
+end;
+
+function TftTypeParser.ParseJsonAndGetBotName(const AData: TJSONObject)
+  : TftBotName;
+begin
+  Result := TftBotName.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftBotName>((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetBotDescription(const AData: TJSONObject)
+  : TftBotDescription;
+begin
+  Result := TftBotDescription.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftBotDescription>((AData.GetValue('result')
+      ).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetBotShortDescription
+  (const AData: TJSONObject): TftBotShortDescription;
+begin
+  Result := TftBotShortDescription.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftBotShortDescription>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetStarAmount(const AData: TJSONObject)
+  : TftStarAmount;
+begin
+  Result := TftStarAmount.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftStarAmount>((AData.GetValue('result')
+      ).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetUserProfileAudios
+  (const AData: TJSONObject): TftUserProfileAudios;
+begin
+  Result := TftUserProfileAudios.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftUserProfileAudios>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetPreparedInlineMessage
+  (const AData: TJSONObject): TftPreparedInlineMessage;
+begin
+  Result := TftPreparedInlineMessage.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftPreparedInlineMessage>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetPreparedKeyboardButton
+  (const AData: TJSONObject): TftPreparedKeyboardButton;
+begin
+  Result := TftPreparedKeyboardButton.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftPreparedKeyboardButton>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetBusinessConnection
+  (const AData: TJSONObject): TftBusinessConnection;
+begin
+  Result := TftBusinessConnection.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftBusinessConnection>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseIntegers(const AValues: TArray<Integer>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  for I := 0 to High(AValues) do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + IntToStr(AValues[I]);
+  end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseStringArray(const AValues: TArray<String>): String;
+var
+  I: Integer;
+  LValue: String;
+begin
+  Result := '[';
+  for I := 0 to High(AValues) do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    LValue := StringReplace(AValues[I], '\', '\\', [rfReplaceAll]);
+    LValue := StringReplace(LValue, '"', '\"', [rfReplaceAll]);
+    Result := Result + '"' + LValue + '"';
+  end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseReactionType(const AObj: TftReactionType): String;
+begin
+  Result := '';
+  if (AObj = nil) then
+  begin
+    Result := '';
+    Exit;
+  end;
+  Result := Result + '{';
+  AppendToJson(Result, 'type', AObj.Type_S);
+  if (AObj.Type_S = 'emoji') then
+  begin
+    AppendToJson(Result, 'emoji', AObj.Emoji);
+  end
+  else if (AObj.Type_S = 'custom_emoji') then
+  begin
+    AppendToJson(Result, 'custom_emoji_id', AObj.CustomEmojiId);
+  end;
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseReactionTypes
+  (const AReaction: TList<TftReactionType>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  if (AReaction = nil) then
+  begin
+    Result := Result + ']';
+    Exit;
+  end;
+  for I := 0 to AReaction.Count - 1 do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + ParseReactionType(AReaction[I]);
+  end;
+  Result := Result + ']';
 end;
 
 procedure TftTypeParser.RemoveLastComma(var AInput: String);

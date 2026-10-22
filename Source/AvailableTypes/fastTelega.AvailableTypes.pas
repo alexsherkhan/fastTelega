@@ -2051,6 +2051,186 @@ type
     property Distance: Integer read FDistance write FDistance;
   end;
 
+  /// <summary>
+  /// This object represents a bot name.
+  /// https://core.telegram.org/bots/api#botname
+  /// </summary>
+  TftBotName = class
+  private
+    FName: String;
+  public
+    /// <summary>
+    /// The bot name.
+    /// </summary>
+    property Name: String read FName write FName;
+  end;
+
+  /// <summary>
+  /// This object represents a bot description.
+  /// https://core.telegram.org/bots/api#botdescription
+  /// </summary>
+  TftBotDescription = class
+  private
+    FDescription: String;
+  public
+    /// <summary>
+    /// The bot description.
+    /// </summary>
+    property Description: String read FDescription write FDescription;
+  end;
+
+  /// <summary>
+  /// This object represents a bot short description.
+  /// https://core.telegram.org/bots/api#botshortdescription
+  /// </summary>
+  TftBotShortDescription = class
+  private
+    FShortDescription: String;
+  public
+    /// <summary>
+    /// The bot short description.
+    /// </summary>
+    property ShortDescription: String read FShortDescription
+      write FShortDescription;
+  end;
+
+  /// <summary>
+  /// This object represents an amount of Telegram Stars.
+  /// https://core.telegram.org/bots/api#staramount
+  /// </summary>
+  TftStarAmount = class
+  private
+    FAmount: Int64;
+    FNanostarAmount: Integer;
+  public
+    /// <summary>
+    /// The amount of Telegram Stars.
+    /// </summary>
+    property Amount: Int64 read FAmount write FAmount;
+    /// <summary>
+    /// Optional. The number of Telegram Stars in a fraction of a Star.
+    /// </summary>
+    property NanostarAmount: Integer read FNanostarAmount
+      write FNanostarAmount;
+  end;
+
+  /// <summary>
+  /// This object represents a list of profile audios for a user.
+  /// https://core.telegram.org/bots/api#userprofileaudios
+  /// </summary>
+  TftUserProfileAudios = class
+  private
+    FTotalCount: Integer;
+    FAudios: TArray<TftAudio>;
+  public
+    /// <summary>
+    /// Total number of profile audios the target user has.
+    /// </summary>
+    property TotalCount: Integer read FTotalCount write FTotalCount;
+    /// <summary>
+    /// Requested profile audios.
+    /// </summary>
+    property Audios: TArray<TftAudio> read FAudios write FAudios;
+  end;
+
+  /// <summary>
+  /// This object contains information about a prepared inline message.
+  /// https://core.telegram.org/bots/api#preparedinlinemessage
+  /// </summary>
+  TftPreparedInlineMessage = class
+  private
+    FId: String;
+    FExpirationDate: Integer;
+  public
+    /// <summary>
+    /// Unique identifier of the prepared message.
+    /// </summary>
+    property Id: String read FId write FId;
+    /// <summary>
+    /// Expiration date of the prepared message as a Unix timestamp.
+    /// </summary>
+    property ExpirationDate: Integer read FExpirationDate
+      write FExpirationDate;
+  end;
+
+  /// <summary>
+  /// This object contains information about a prepared keyboard button.
+  /// https://core.telegram.org/bots/api#preparedkeyboardbutton
+  /// </summary>
+  TftPreparedKeyboardButton = class
+  private
+    FId: String;
+  public
+    /// <summary>
+    /// Unique identifier of the prepared button.
+    /// </summary>
+    property Id: String read FId write FId;
+  end;
+
+  /// <summary>
+  /// This object describes the connection of the bot with a business account.
+  /// https://core.telegram.org/bots/api#businessconnection
+  /// </summary>
+  TftBusinessConnection = class
+  private
+    FId: String;
+    FUser: TftUser;
+    FUserChatId: Int64;
+    FDate: Integer;
+    FCanReply: Boolean;
+    FIsEnabled: Boolean;
+  public
+    /// <summary>
+    /// Unique identifier of the business connection.
+    /// </summary>
+    property Id: String read FId write FId;
+    /// <summary>
+    /// Business account user that created the connection.
+    /// </summary>
+    property User: TftUser read FUser write FUser;
+    /// <summary>
+    /// Identifier of the private chat with the user.
+    /// </summary>
+    property UserChatId: Int64 read FUserChatId write FUserChatId;
+    /// <summary>
+    /// Date the connection was established as a Unix timestamp.
+    /// </summary>
+    property Date: Integer read FDate write FDate;
+    /// <summary>
+    /// True, if the bot can reply to messages in the connection.
+    /// </summary>
+    property CanReply: Boolean read FCanReply write FCanReply;
+    /// <summary>
+    /// True, if the connection is active.
+    /// </summary>
+    property IsEnabled: Boolean read FIsEnabled write FIsEnabled;
+  end;
+
+  /// <summary>
+  /// This object describes the type of a reaction.
+  /// https://core.telegram.org/bots/api#reactiontype
+  /// </summary>
+  TftReactionType = class
+  private
+    FType: String;
+    FEmoji: String;
+    FCustomEmojiId: String;
+  public
+    /// <summary>
+    /// Type of the reaction: emoji, custom_emoji or paid.
+    /// </summary>
+    property Type_S: String read FType write FType;
+    /// <summary>
+    /// Optional. Reaction emoji for reactions of type emoji.
+    /// </summary>
+    property Emoji: String read FEmoji write FEmoji;
+    /// <summary>
+    /// Optional. Custom emoji identifier for reactions of type custom_emoji.
+    /// </summary>
+    property CustomEmojiId: String read FCustomEmojiId
+      write FCustomEmojiId;
+  end;
+
 implementation
 
 { TftMessageEntity }
