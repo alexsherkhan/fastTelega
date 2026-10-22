@@ -188,8 +188,10 @@ are still limited:
 - Rich messages have a typed model (`TftInputRichBlock`, `TftRichText`,
   `TftRichMessageButton`, `TftRichBlockCaption`, media blocks); raw
   `BlocksJson`/`MediaJson` remain available as a fallback.
-- Some optional method parameters (for example `business_connection_id`,
-  `direct_messages_topic_id` and suggested-post parameters) are not exposed.
+- `SendMessage` exposes `business_connection_id`, `direct_messages_topic_id`,
+  `message_effect_id`, link preview, reply parameters, paid broadcast and
+  suggested-post parameters. Some other send methods still omit equivalent
+  optional parameters.
 - Typed events exist for messages, inline queries, chosen inline results and
   callback queries; other update types are available through `OnUpdate`.
 - `SendMediaGroup` supports file uploads through `TftInputMedia.MediaFile`;

@@ -67,6 +67,11 @@ The following model groups were added for the current Bot API:
   `TftMessageReactionCountUpdated`, `TftChatBoostUpdated`,
   `TftChatBoostRemoved`, `TftPaidMediaPurchased`, `TftManagedBotUpdated`,
   `TftBotSubscriptionUpdated`, `TftMessageGenerationStopped`
+- Message content: `TftDirectMessagesTopic`, `TftLivePhoto`,
+  `TftPaidMediaInfo`, `TftPaidMedia*`, `TftChecklist`, `TftChecklistTask`,
+  `TftRichMessage`, `TftGiftInfo`, `TftUniqueGiftInfo`, `TftRefundedPayment`,
+  `TftChatBoostAdded`, `TftSuggestedPostInfo`, `TftSuggestedPostPrice`,
+  `TftSuggestedPostParameters`, `TftSuggestedPost*` service messages
 - Bots and business: `TftBotName`, `TftBotDescription`,
   `TftBotShortDescription`, `TftBotAccessSettings`, `TftBusinessConnection`,
   `TftPreparedInlineMessage`, `TftPreparedKeyboardButton`,

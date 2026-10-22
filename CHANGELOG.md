@@ -34,6 +34,22 @@
 - Added a generic `OnUpdate` listener and routed edited, channel, business and
   guest messages through the existing message handler.
 
+### Message fields and optional parameters
+
+- Extended `TftMessage` with paid media, live photos, checklists, rich
+  messages, stories, gifts, unique gifts, refunded payments, boosts, direct
+  message settings, checklist task updates, poll option updates, suggested
+  post fields and chat owner changes.
+- Added `TftDirectMessagesTopic`, `TftLivePhoto`, `TftPaidMediaInfo`,
+  `TftPaidMedia*`, `TftChecklist`, `TftChecklistTask`, `TftRichMessage`,
+  `TftGiftInfo`, `TftUniqueGiftInfo`, `TftRefundedPayment`,
+  `TftChatBoostAdded`, `TftSuggestedPost*`, `TftChatOwnerLeft`,
+  `TftChatOwnerChanged`, `TftReplyParameters` and related types.
+- Added `business_connection_id`, `direct_messages_topic_id`,
+  `message_effect_id`, `allow_paid_broadcast`, `link_preview_options`,
+  `reply_parameters` and `suggested_post_parameters` to `SendMessage`.
+- Fixed `SendMessage` sending message entities as `caption_entities`.
+
 ### Rich messages
 
 - Added a typed rich-message model: `TftRichText`, `TftInputRichBlock`,

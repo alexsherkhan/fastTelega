@@ -200,6 +200,31 @@ type
   TftManagedBotUpdated = class;
   TftBotSubscriptionUpdated = class;
   TftMessageGenerationStopped = class;
+  TftDirectMessagesTopic = class;
+  TftLivePhoto = class;
+  TftPaidMediaInfo = class;
+  TftChecklist = class;
+  TftRichMessage = class;
+  TftStory = class;
+  TftGiftInfo = class;
+  TftUniqueGiftInfo = class;
+  TftRefundedPayment = class;
+  TftChatBoostAdded = class;
+  TftChecklistTasksDone = class;
+  TftChecklistTasksAdded = class;
+  TftDirectMessagePriceChanged = class;
+  TftPaidMessagePriceChanged = class;
+  TftPollOptionAdded = class;
+  TftPollOptionDeleted = class;
+  TftSuggestedPostInfo = class;
+  TftSuggestedPostApproved = class;
+  TftSuggestedPostApprovalFailed = class;
+  TftSuggestedPostDeclined = class;
+  TftSuggestedPostPaid = class;
+  TftSuggestedPostRefunded = class;
+  TftChatOwnerLeft = class;
+  TftChatOwnerChanged = class;
+  TftLinkPreviewOptions = class;
   TftUpdate = class;
   TftUser = class;
   TftUserProfilePhotos = class;
@@ -719,6 +744,48 @@ type
     FVideoChatParticipantsInvited: TftVideoChatParticipantsInvited;
     FWebAppData: TftWebAppData;
     FReplyMarkup: TftInlineKeyboardMarkup;
+    FDirectMessagesTopic: TftDirectMessagesTopic;
+    FSenderBoostCount: Integer;
+    FSenderBusinessBot: TftUser;
+    FSenderTag: String;
+    FReceiverUser: TftUser;
+    FEphemeralMessageId: Integer;
+    FGuestQueryId: String;
+    FBusinessConnectionId: String;
+    FGuestBotCallerUser: TftUser;
+    FGuestBotCallerChat: TftChat;
+    FIsFromOffline: Boolean;
+    FIsPaidPost: Boolean;
+    FPaidStarCount: Integer;
+    FLinkPreviewOptions: TftLinkPreviewOptions;
+    FShowCaptionAboveMedia: Boolean;
+    FReplyToChecklistTaskId: Integer;
+    FReplyToPollOptionId: String;
+    FEffectId: String;
+    FPaidMedia: TftPaidMediaInfo;
+    FLivePhoto: TftLivePhoto;
+    FChecklist: TftChecklist;
+    FRichMessage: TftRichMessage;
+    FStory: TftStory;
+    FGift: TftGiftInfo;
+    FUniqueGift: TftUniqueGiftInfo;
+    FGiftUpgradeSent: TftGiftInfo;
+    FRefundedPayment: TftRefundedPayment;
+    FBoostAdded: TftChatBoostAdded;
+    FChecklistTasksDone: TftChecklistTasksDone;
+    FChecklistTasksAdded: TftChecklistTasksAdded;
+    FDirectMessagePriceChanged: TftDirectMessagePriceChanged;
+    FPaidMessagePriceChanged: TftPaidMessagePriceChanged;
+    FPollOptionAdded: TftPollOptionAdded;
+    FPollOptionDeleted: TftPollOptionDeleted;
+    FSuggestedPostInfo: TftSuggestedPostInfo;
+    FSuggestedPostApproved: TftSuggestedPostApproved;
+    FSuggestedPostApprovalFailed: TftSuggestedPostApprovalFailed;
+    FSuggestedPostDeclined: TftSuggestedPostDeclined;
+    FSuggestedPostPaid: TftSuggestedPostPaid;
+    FSuggestedPostRefunded: TftSuggestedPostRefunded;
+    FChatOwnerLeft: TftChatOwnerLeft;
+    FChatOwnerChanged: TftChatOwnerChanged;
   public
     constructor Create;
     destructor Destroy; override;
@@ -1035,6 +1102,75 @@ type
     /// </summary>
     property ReplyMarkup: TftInlineKeyboardMarkup read FReplyMarkup
       write FReplyMarkup;
+    property DirectMessagesTopic: TftDirectMessagesTopic
+      read FDirectMessagesTopic write FDirectMessagesTopic;
+    property SenderBoostCount: Integer read FSenderBoostCount
+      write FSenderBoostCount;
+    property SenderBusinessBot: TftUser read FSenderBusinessBot
+      write FSenderBusinessBot;
+    property SenderTag: String read FSenderTag write FSenderTag;
+    property ReceiverUser: TftUser read FReceiverUser write FReceiverUser;
+    property EphemeralMessageId: Integer read FEphemeralMessageId
+      write FEphemeralMessageId;
+    property GuestQueryId: String read FGuestQueryId write FGuestQueryId;
+    property BusinessConnectionId: String read FBusinessConnectionId
+      write FBusinessConnectionId;
+    property GuestBotCallerUser: TftUser read FGuestBotCallerUser
+      write FGuestBotCallerUser;
+    property GuestBotCallerChat: TftChat read FGuestBotCallerChat
+      write FGuestBotCallerChat;
+    property IsFromOffline: Boolean read FIsFromOffline write FIsFromOffline;
+    property IsPaidPost: Boolean read FIsPaidPost write FIsPaidPost;
+    property PaidStarCount: Integer read FPaidStarCount write FPaidStarCount;
+    property LinkPreviewOptions: TftLinkPreviewOptions read FLinkPreviewOptions
+      write FLinkPreviewOptions;
+    property ShowCaptionAboveMedia: Boolean read FShowCaptionAboveMedia
+      write FShowCaptionAboveMedia;
+    property ReplyToChecklistTaskId: Integer read FReplyToChecklistTaskId
+      write FReplyToChecklistTaskId;
+    property ReplyToPollOptionId: String read FReplyToPollOptionId
+      write FReplyToPollOptionId;
+    property EffectId: String read FEffectId write FEffectId;
+    property PaidMedia: TftPaidMediaInfo read FPaidMedia write FPaidMedia;
+    property LivePhoto: TftLivePhoto read FLivePhoto write FLivePhoto;
+    property Checklist: TftChecklist read FChecklist write FChecklist;
+    property RichMessage: TftRichMessage read FRichMessage write FRichMessage;
+    property Story: TftStory read FStory write FStory;
+    property Gift: TftGiftInfo read FGift write FGift;
+    property UniqueGift: TftUniqueGiftInfo read FUniqueGift write FUniqueGift;
+    property GiftUpgradeSent: TftGiftInfo read FGiftUpgradeSent
+      write FGiftUpgradeSent;
+    property RefundedPayment: TftRefundedPayment read FRefundedPayment
+      write FRefundedPayment;
+    property BoostAdded: TftChatBoostAdded read FBoostAdded write FBoostAdded;
+    property ChecklistTasksDone: TftChecklistTasksDone read FChecklistTasksDone
+      write FChecklistTasksDone;
+    property ChecklistTasksAdded: TftChecklistTasksAdded
+      read FChecklistTasksAdded write FChecklistTasksAdded;
+    property DirectMessagePriceChanged: TftDirectMessagePriceChanged
+      read FDirectMessagePriceChanged write FDirectMessagePriceChanged;
+    property PaidMessagePriceChanged: TftPaidMessagePriceChanged
+      read FPaidMessagePriceChanged write FPaidMessagePriceChanged;
+    property PollOptionAdded: TftPollOptionAdded read FPollOptionAdded
+      write FPollOptionAdded;
+    property PollOptionDeleted: TftPollOptionDeleted read FPollOptionDeleted
+      write FPollOptionDeleted;
+    property SuggestedPostInfo: TftSuggestedPostInfo read FSuggestedPostInfo
+      write FSuggestedPostInfo;
+    property SuggestedPostApproved: TftSuggestedPostApproved
+      read FSuggestedPostApproved write FSuggestedPostApproved;
+    property SuggestedPostApprovalFailed: TftSuggestedPostApprovalFailed
+      read FSuggestedPostApprovalFailed write FSuggestedPostApprovalFailed;
+    property SuggestedPostDeclined: TftSuggestedPostDeclined
+      read FSuggestedPostDeclined write FSuggestedPostDeclined;
+    property SuggestedPostPaid: TftSuggestedPostPaid read FSuggestedPostPaid
+      write FSuggestedPostPaid;
+    property SuggestedPostRefunded: TftSuggestedPostRefunded
+      read FSuggestedPostRefunded write FSuggestedPostRefunded;
+    property ChatOwnerLeft: TftChatOwnerLeft read FChatOwnerLeft
+      write FChatOwnerLeft;
+    property ChatOwnerChanged: TftChatOwnerChanged read FChatOwnerChanged
+      write FChatOwnerChanged;
   end;
 
   /// <summary>
@@ -3144,6 +3280,402 @@ type
     property MessageThreadId: Integer read FMessageThreadId
       write FMessageThreadId;
     property DraftId: Integer read FDraftId write FDraftId;
+  end;
+
+  TftDirectMessagesTopic = class
+  private
+    FTopicId: Int64;
+    FUser: TftUser;
+  public
+    property TopicId: Int64 read FTopicId write FTopicId;
+    property User: TftUser read FUser write FUser;
+  end;
+
+  TftLivePhoto = class
+  private
+    FPhoto: TftPhotoSizeList;
+    FFileId: String;
+    FFileUniqueId: String;
+    FWidth: Integer;
+    FHeight: Integer;
+    FDuration: Integer;
+    FMimeType: String;
+    FFileSize: Int64;
+  public
+    property Photo: TftPhotoSizeList read FPhoto write FPhoto;
+    property FileId: String read FFileId write FFileId;
+    property FileUniqueId: String read FFileUniqueId write FFileUniqueId;
+    property Width: Integer read FWidth write FWidth;
+    property Height: Integer read FHeight write FHeight;
+    property Duration: Integer read FDuration write FDuration;
+    property MimeType: String read FMimeType write FMimeType;
+    property FileSize: Int64 read FFileSize write FFileSize;
+  end;
+
+  TftPaidMedia = class
+  private
+    FType: String;
+  public
+    property Type_S: String read FType write FType;
+  end;
+
+  TftPaidMediaPhoto = class(TftPaidMedia)
+  private
+    FPhoto: TftPhotoSizeList;
+  public
+    property Photo: TftPhotoSizeList read FPhoto write FPhoto;
+  end;
+
+  TftPaidMediaVideo = class(TftPaidMedia)
+  private
+    FVideo: TftVideo;
+  public
+    property Video: TftVideo read FVideo write FVideo;
+  end;
+
+  TftPaidMediaLivePhoto = class(TftPaidMedia)
+  private
+    FLivePhoto: TftLivePhoto;
+  public
+    property LivePhoto: TftLivePhoto read FLivePhoto write FLivePhoto;
+  end;
+
+  TftPaidMediaInfo = class
+  private
+    FStarCount: Integer;
+    FPaidMedia: TArray<TftPaidMedia>;
+  public
+    property StarCount: Integer read FStarCount write FStarCount;
+    property PaidMedia: TArray<TftPaidMedia> read FPaidMedia write FPaidMedia;
+  end;
+
+  TftChecklistTask = class
+  private
+    FId: Integer;
+    FText: String;
+    FTextEntities: TftMessageEntityList;
+    FCompletedByUser: TftUser;
+    FCompletedByChat: TftChat;
+    FCompletionDate: Integer;
+  public
+    property Id: Integer read FId write FId;
+    property Text: String read FText write FText;
+    property TextEntities: TftMessageEntityList read FTextEntities
+      write FTextEntities;
+    property CompletedByUser: TftUser read FCompletedByUser
+      write FCompletedByUser;
+    property CompletedByChat: TftChat read FCompletedByChat
+      write FCompletedByChat;
+    property CompletionDate: Integer read FCompletionDate
+      write FCompletionDate;
+  end;
+
+  TftChecklist = class
+  private
+    FTitle: String;
+    FTitleEntities: TftMessageEntityList;
+    FTasks: TArray<TftChecklistTask>;
+    FOthersCanAddTasks: Boolean;
+    FOthersCanMarkTasksAsDone: Boolean;
+  public
+    property Title: String read FTitle write FTitle;
+    property TitleEntities: TftMessageEntityList read FTitleEntities
+      write FTitleEntities;
+    property Tasks: TArray<TftChecklistTask> read FTasks write FTasks;
+    property OthersCanAddTasks: Boolean read FOthersCanAddTasks
+      write FOthersCanAddTasks;
+    property OthersCanMarkTasksAsDone: Boolean read FOthersCanMarkTasksAsDone
+      write FOthersCanMarkTasksAsDone;
+  end;
+
+  TftGiftInfo = class
+  private
+    FGift: TftGift;
+    FOwnedGiftId: String;
+    FConvertStarCount: Integer;
+    FPrepaidUpgradeStarCount: Integer;
+    FIsUpgradeSeparate: Boolean;
+    FCanBeUpgraded: Boolean;
+    FText: String;
+    FEntities: TftMessageEntityList;
+    FIsPrivate: Boolean;
+    FUniqueGiftNumber: Integer;
+  public
+    property Gift: TftGift read FGift write FGift;
+    property OwnedGiftId: String read FOwnedGiftId write FOwnedGiftId;
+    property ConvertStarCount: Integer read FConvertStarCount
+      write FConvertStarCount;
+    property PrepaidUpgradeStarCount: Integer read FPrepaidUpgradeStarCount
+      write FPrepaidUpgradeStarCount;
+    property IsUpgradeSeparate: Boolean read FIsUpgradeSeparate
+      write FIsUpgradeSeparate;
+    property CanBeUpgraded: Boolean read FCanBeUpgraded write FCanBeUpgraded;
+    property Text: String read FText write FText;
+    property Entities: TftMessageEntityList read FEntities write FEntities;
+    property IsPrivate: Boolean read FIsPrivate write FIsPrivate;
+    property UniqueGiftNumber: Integer read FUniqueGiftNumber
+      write FUniqueGiftNumber;
+  end;
+
+  TftUniqueGiftInfo = class
+  private
+    FGift: TftUniqueGift;
+    FOrigin: String;
+    FText: String;
+    FEntities: TftMessageEntityList;
+    FIsPrivate: Boolean;
+    FLastResaleCurrency: String;
+    FLastResaleAmount: Integer;
+    FOwnedGiftId: String;
+    FTransferStarCount: Integer;
+    FNextTransferDate: Integer;
+  public
+    property Gift: TftUniqueGift read FGift write FGift;
+    property Origin: String read FOrigin write FOrigin;
+    property Text: String read FText write FText;
+    property Entities: TftMessageEntityList read FEntities write FEntities;
+    property IsPrivate: Boolean read FIsPrivate write FIsPrivate;
+    property LastResaleCurrency: String read FLastResaleCurrency
+      write FLastResaleCurrency;
+    property LastResaleAmount: Integer read FLastResaleAmount
+      write FLastResaleAmount;
+    property OwnedGiftId: String read FOwnedGiftId write FOwnedGiftId;
+    property TransferStarCount: Integer read FTransferStarCount
+      write FTransferStarCount;
+    property NextTransferDate: Integer read FNextTransferDate
+      write FNextTransferDate;
+  end;
+
+  TftSuggestedPostPrice = class
+  private
+    FCurrency: String;
+    FAmount: Integer;
+  public
+    property Currency: String read FCurrency write FCurrency;
+    property Amount: Integer read FAmount write FAmount;
+  end;
+
+  TftSuggestedPostInfo = class
+  private
+    FState: String;
+    FPrice: TftSuggestedPostPrice;
+    FSendDate: Integer;
+  public
+    property State: String read FState write FState;
+    property Price: TftSuggestedPostPrice read FPrice write FPrice;
+    property SendDate: Integer read FSendDate write FSendDate;
+  end;
+
+  TftSuggestedPostParameters = class
+  private
+    FPrice: TftSuggestedPostPrice;
+    FSendDate: Integer;
+  public
+    property Price: TftSuggestedPostPrice read FPrice write FPrice;
+    property SendDate: Integer read FSendDate write FSendDate;
+  end;
+
+  TftRefundedPayment = class
+  private
+    FCurrency: String;
+    FTotalAmount: Integer;
+    FInvoicePayload: String;
+    FTelegramPaymentChargeId: String;
+    FProviderPaymentChargeId: String;
+  public
+    property Currency: String read FCurrency write FCurrency;
+    property TotalAmount: Integer read FTotalAmount write FTotalAmount;
+    property InvoicePayload: String read FInvoicePayload write FInvoicePayload;
+    property TelegramPaymentChargeId: String read FTelegramPaymentChargeId
+      write FTelegramPaymentChargeId;
+    property ProviderPaymentChargeId: String read FProviderPaymentChargeId
+      write FProviderPaymentChargeId;
+  end;
+
+  TftChatBoostAdded = class
+  private
+    FBoostCount: Integer;
+  public
+    property BoostCount: Integer read FBoostCount write FBoostCount;
+  end;
+
+  TftChatOwnerLeft = class
+  private
+    FNewOwner: TftUser;
+  public
+    property NewOwner: TftUser read FNewOwner write FNewOwner;
+  end;
+
+  TftChatOwnerChanged = class
+  private
+    FNewOwner: TftUser;
+  public
+    property NewOwner: TftUser read FNewOwner write FNewOwner;
+  end;
+
+  TftDirectMessagePriceChanged = class
+  private
+    FAreDirectMessagesEnabled: Boolean;
+    FDirectMessageStarCount: Integer;
+  public
+    property AreDirectMessagesEnabled: Boolean read FAreDirectMessagesEnabled
+      write FAreDirectMessagesEnabled;
+    property DirectMessageStarCount: Integer read FDirectMessageStarCount
+      write FDirectMessageStarCount;
+  end;
+
+  TftPaidMessagePriceChanged = class
+  private
+    FPaidMessageStarCount: Integer;
+  public
+    property PaidMessageStarCount: Integer read FPaidMessageStarCount
+      write FPaidMessageStarCount;
+  end;
+
+  TftChecklistTasksDone = class
+  private
+    FChecklistMessage: TftMessage;
+    FMarkedAsDoneTaskIds: TArray<Integer>;
+    FMarkedAsNotDoneTaskIds: TArray<Integer>;
+  public
+    property ChecklistMessage: TftMessage read FChecklistMessage
+      write FChecklistMessage;
+    property MarkedAsDoneTaskIds: TArray<Integer> read FMarkedAsDoneTaskIds
+      write FMarkedAsDoneTaskIds;
+    property MarkedAsNotDoneTaskIds: TArray<Integer>
+      read FMarkedAsNotDoneTaskIds write FMarkedAsNotDoneTaskIds;
+  end;
+
+  TftChecklistTasksAdded = class
+  private
+    FChecklistMessage: TftMessage;
+    FTasks: TArray<TftChecklistTask>;
+  public
+    property ChecklistMessage: TftMessage read FChecklistMessage
+      write FChecklistMessage;
+    property Tasks: TArray<TftChecklistTask> read FTasks write FTasks;
+  end;
+
+  TftPollOptionAdded = class
+  private
+    FPollMessage: TftMessage;
+    FOptionPersistentId: String;
+    FOptionText: String;
+    FOptionTextEntities: TftMessageEntityList;
+  public
+    property PollMessage: TftMessage read FPollMessage write FPollMessage;
+    property OptionPersistentId: String read FOptionPersistentId
+      write FOptionPersistentId;
+    property OptionText: String read FOptionText write FOptionText;
+    property OptionTextEntities: TftMessageEntityList read FOptionTextEntities
+      write FOptionTextEntities;
+  end;
+
+  TftPollOptionDeleted = class
+  private
+    FPollMessage: TftMessage;
+    FOptionPersistentId: String;
+    FOptionText: String;
+    FOptionTextEntities: TftMessageEntityList;
+  public
+    property PollMessage: TftMessage read FPollMessage write FPollMessage;
+    property OptionPersistentId: String read FOptionPersistentId
+      write FOptionPersistentId;
+    property OptionText: String read FOptionText write FOptionText;
+    property OptionTextEntities: TftMessageEntityList read FOptionTextEntities
+      write FOptionTextEntities;
+  end;
+
+  TftRichMessage = class
+  private
+    FBlocks: TList<TftInputRichBlock>;
+    FIsRtl: Boolean;
+  public
+    property Blocks: TList<TftInputRichBlock> read FBlocks write FBlocks;
+    property IsRtl: Boolean read FIsRtl write FIsRtl;
+  end;
+
+  TftReplyParameters = class
+  private
+    FMessageId: Integer;
+    FChatId: Int64;
+    FAllowSendingWithoutReply: Boolean;
+    FQuote: String;
+    FQuoteParseMode: String;
+    FQuoteEntities: TftMessageEntityList;
+    FQuotePosition: Integer;
+    FChecklistTaskId: Integer;
+    FPollOptionId: String;
+  public
+    property MessageId: Integer read FMessageId write FMessageId;
+    property ChatId: Int64 read FChatId write FChatId;
+    property AllowSendingWithoutReply: Boolean read FAllowSendingWithoutReply
+      write FAllowSendingWithoutReply;
+    property Quote: String read FQuote write FQuote;
+    property QuoteParseMode: String read FQuoteParseMode
+      write FQuoteParseMode;
+    property QuoteEntities: TftMessageEntityList read FQuoteEntities
+      write FQuoteEntities;
+    property QuotePosition: Integer read FQuotePosition write FQuotePosition;
+    property ChecklistTaskId: Integer read FChecklistTaskId
+      write FChecklistTaskId;
+    property PollOptionId: String read FPollOptionId write FPollOptionId;
+  end;
+
+  TftSuggestedPostApproved = class
+  private
+    FSuggestedPostMessage: TftMessage;
+    FPrice: TftSuggestedPostPrice;
+    FSendDate: Integer;
+  public
+    property SuggestedPostMessage: TftMessage read FSuggestedPostMessage
+      write FSuggestedPostMessage;
+    property Price: TftSuggestedPostPrice read FPrice write FPrice;
+    property SendDate: Integer read FSendDate write FSendDate;
+  end;
+
+  TftSuggestedPostApprovalFailed = class
+  private
+    FSuggestedPostMessage: TftMessage;
+    FPrice: TftSuggestedPostPrice;
+  public
+    property SuggestedPostMessage: TftMessage read FSuggestedPostMessage
+      write FSuggestedPostMessage;
+    property Price: TftSuggestedPostPrice read FPrice write FPrice;
+  end;
+
+  TftSuggestedPostDeclined = class
+  private
+    FSuggestedPostMessage: TftMessage;
+    FComment: String;
+  public
+    property SuggestedPostMessage: TftMessage read FSuggestedPostMessage
+      write FSuggestedPostMessage;
+    property Comment: String read FComment write FComment;
+  end;
+
+  TftSuggestedPostPaid = class
+  private
+    FSuggestedPostMessage: TftMessage;
+    FCurrency: String;
+    FAmount: Integer;
+    FStarAmount: TftStarAmount;
+  public
+    property SuggestedPostMessage: TftMessage read FSuggestedPostMessage
+      write FSuggestedPostMessage;
+    property Currency: String read FCurrency write FCurrency;
+    property Amount: Integer read FAmount write FAmount;
+    property StarAmount: TftStarAmount read FStarAmount write FStarAmount;
+  end;
+
+  TftSuggestedPostRefunded = class
+  private
+    FSuggestedPostMessage: TftMessage;
+    FReason: String;
+  public
+    property SuggestedPostMessage: TftMessage read FSuggestedPostMessage
+      write FSuggestedPostMessage;
+    property Reason: String read FReason write FReason;
   end;
 
 implementation

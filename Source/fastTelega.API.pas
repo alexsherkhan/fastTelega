@@ -1958,7 +1958,14 @@ type
       ADisableNotification: Boolean = false;
       const AEntities: TftMessageEntityList = nil;
       AAllowSendingWithoutReply: Boolean = false;
-      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0)
+      AProtectContent: Boolean = false; AMessageThreadId: Integer = 0;
+      const ABusinessConnectionId: String = '';
+      ADirectMessagesTopicId: Integer = 0;
+      const AMessageEffectId: String = '';
+      AAllowPaidBroadcast: Boolean = false;
+      ALinkPreviewOptions: TftLinkPreviewOptions = nil;
+      AReplyParameters: TftReplyParameters = nil;
+      ASuggestedPostParameters: TftSuggestedPostParameters = nil)
       : TftMessage; overload;
 
     /// <summary>
@@ -5555,7 +5562,11 @@ function TftAPI.SendMessage(AChatId: Variant; const AText: String;
   AReplyMarkup: TftReplyBase; const AParseMode: String;
   ADisableNotification: Boolean; const AEntities: TftMessageEntityList;
   AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
-  AMessageThreadId: Integer): TftMessage;
+  AMessageThreadId: Integer; const ABusinessConnectionId: String;
+  ADirectMessagesTopicId: Integer; const AMessageEffectId: String;
+  AAllowPaidBroadcast: Boolean; ALinkPreviewOptions: TftLinkPreviewOptions;
+  AReplyParameters: TftReplyParameters;
+  ASuggestedPostParameters: TftSuggestedPostParameters): TftMessage;
 var
   LArgs: TStringList;
 begin
@@ -5564,9 +5575,41 @@ begin
   LArgs := TStringList.Create;
   LArgs.AddPair('chat_id', VarToStr(AChatId));
 
+  if (ABusinessConnectionId <> '') then
+  begin
+    LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  end;
   if (AMessageThreadId <> 0) then
   begin
     LArgs.AddPair('message_thread_id', IntToStr(AMessageThreadId));
+  end;
+  if (ADirectMessagesTopicId <> 0) then
+  begin
+    LArgs.AddPair('direct_messages_topic_id',
+      IntToStr(ADirectMessagesTopicId));
+  end;
+  if (AMessageEffectId <> '') then
+  begin
+    LArgs.AddPair('message_effect_id', AMessageEffectId);
+  end;
+  if Assigned(ALinkPreviewOptions) then
+  begin
+    LArgs.AddPair('link_preview_options',
+      FTypeParser.ParseLinkPreviewOptions(ALinkPreviewOptions));
+  end;
+  if Assigned(AReplyParameters) then
+  begin
+    LArgs.AddPair('reply_parameters',
+      FTypeParser.ParseReplyParameters(AReplyParameters));
+  end;
+  if Assigned(ASuggestedPostParameters) then
+  begin
+    LArgs.AddPair('suggested_post_parameters',
+      FTypeParser.ParseSuggestedPostParameters(ASuggestedPostParameters));
+  end;
+  if (AAllowPaidBroadcast) then
+  begin
+    LArgs.AddPair('allow_paid_broadcast', BoolToStr(AAllowPaidBroadcast, true));
   end;
   LArgs.AddPair('text', AText);
   if (AParseMode <> '') then
@@ -5576,7 +5619,7 @@ begin
 
   if (Assigned(AEntities)) then
   begin
-    LArgs.AddPair('caption_entities', FTypeParser.ParseMessageEntities(AEntities));
+    LArgs.AddPair('entities', FTypeParser.ParseMessageEntities(AEntities));
   end;
   if (ADisableWebPagePreview) then
   begin

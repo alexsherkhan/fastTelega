@@ -584,6 +584,10 @@ type
     function ParseInputProfilePhoto(const AObj: TftInputProfilePhoto): String;
     function ParseInputStoryContent(const AObj: TftInputStoryContent): String;
     function ParseLinkPreviewOptions(const AObj: TftLinkPreviewOptions): String;
+    function ParseSuggestedPostPrice(const AObj: TftSuggestedPostPrice): String;
+    function ParseSuggestedPostParameters
+      (const AObj: TftSuggestedPostParameters): String;
+    function ParseReplyParameters(const AObj: TftReplyParameters): String;
     function ParseInputRichMessage(const AObj: TftInputRichMessage): String;
     function ParseRichText(const AText: TftRichText): String;
     function ParseRichTexts(const ATexts: TList<TftRichText>): String;
@@ -5181,6 +5185,59 @@ begin
   AppendToJson(Result, 'prefer_small_media', AObj.PreferSmallMedia);
   AppendToJson(Result, 'prefer_large_media', AObj.PreferLargeMedia);
   AppendToJson(Result, 'show_above_text', AObj.ShowAboveText);
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseSuggestedPostPrice
+  (const AObj: TftSuggestedPostPrice): String;
+begin
+  Result := '{}';
+  if (AObj = nil) then
+    Exit;
+  Result := '{';
+  AppendToJson(Result, 'currency', AObj.Currency);
+  AppendToJson(Result, 'amount', AObj.Amount);
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseSuggestedPostParameters
+  (const AObj: TftSuggestedPostParameters): String;
+begin
+  Result := '{}';
+  if (AObj = nil) then
+    Exit;
+  Result := '{';
+  if Assigned(AObj.Price) then
+    AppendToJson(Result, 'price', ParseSuggestedPostPrice(AObj.Price));
+  if (AObj.SendDate <> 0) then
+    AppendToJson(Result, 'send_date', AObj.SendDate);
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseReplyParameters(const AObj: TftReplyParameters): String;
+begin
+  Result := '{}';
+  if (AObj = nil) then
+    Exit;
+  Result := '{';
+  AppendToJson(Result, 'message_id', AObj.MessageId);
+  if (AObj.ChatId <> 0) then
+    AppendToJson(Result, 'chat_id', AObj.ChatId);
+  if (AObj.AllowSendingWithoutReply) then
+    AppendToJson(Result, 'allow_sending_without_reply', True);
+  AppendToJson(Result, 'quote', AObj.Quote);
+  AppendToJson(Result, 'quote_parse_mode', AObj.QuoteParseMode);
+  if Assigned(AObj.QuoteEntities) then
+    AppendToJson(Result, 'quote_entities',
+      ParseMessageEntities(AObj.QuoteEntities));
+  if (AObj.QuotePosition <> 0) then
+    AppendToJson(Result, 'quote_position', AObj.QuotePosition);
+  if (AObj.ChecklistTaskId <> 0) then
+    AppendToJson(Result, 'checklist_task_id', AObj.ChecklistTaskId);
+  AppendToJson(Result, 'poll_option_id', AObj.PollOptionId);
   RemoveLastComma(Result);
   Result := Result + '}';
 end;
