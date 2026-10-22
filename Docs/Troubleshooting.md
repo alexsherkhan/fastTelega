@@ -36,46 +36,19 @@ Workarounds:
 - raise `ResponseTimeout` in `TftHttpClient` before polling, or
 - add a timeout setter/property to `TftHttpClient` and set it from the API.
 
-## Double free on shutdown
+## Shutdown ownership
 
-The current ownership model is inconsistent:
+`TftBot` owns the HTTP client, API client, event broadcaster and event handler.
+`TftLongPoll` and the webhook servers only borrow the API and handler.
 
-- `TftBot` owns `TftHttpClient`, `TftAPI`, `TftEventBroadcaster` and
-  `TftEventHandler`.
-- `TftAPI.Destroy` also frees the HTTP client.
-- `TftLongPoll.Destroy` frees the API and event handler, which it only borrows.
-
-Destroying a `TftLongPoll` and then the bot can therefore free the same objects
-twice. For now:
-
-- keep the long-poll object alive for the process lifetime, or
-- remove the `FreeAndNil` calls for borrowed objects in
-  `TftLongPoll.Destroy` and remove the HTTP client free in `TftAPI.Destroy`.
-
-## Command parsing includes delimiter
-
-`TftEventHandler.HandleMessage` calculates the command length with
-`Copy(Text, 2, LSplitPosition)`. For `/start@MyBot` or `/start payload`, the
-result still contains the `@` or space character, so the command does not match
-the registered name.
-
-Until the handler is fixed, register commands without arguments and without the
-bot username suffix, or patch `Source/Events/fastTelega.Events.EventHandler.pas`:
+Safe order:
 
 ```pascal
-if (LSpacePosition = 0) and (LAtSymbolPosition = 0) then
-  LCommand := Copy(Atmessage.Text, 2, Length(Atmessage.Text) - 1)
-else
-begin
-  if LSpacePosition = 0 then
-    LSplitPosition := LAtSymbolPosition
-  else if LAtSymbolPosition = 0 then
-    LSplitPosition := LSpacePosition
-  else
-    LSplitPosition := Min(LSpacePosition, LAtSymbolPosition);
-  LCommand := Copy(Atmessage.Text, 2, LSplitPosition - 2);
-end;
+LongPoll.Free;
+Bot.Free;
 ```
+
+Do not free `Bot.API`, `Bot.Events` or `Bot.EventHandler` separately.
 
 ## Duplicate command listener
 

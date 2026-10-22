@@ -4283,7 +4283,7 @@ end;
 
 destructor TftAPI.Destroy;
 begin
-  FreeAndNil(FHttpClient);
+  // The HTTP client is owned by TftBot.
   FreeAndNil(FTypeParser);
   inherited;
 end;

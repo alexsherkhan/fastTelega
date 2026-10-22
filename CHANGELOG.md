@@ -85,6 +85,19 @@
 - Documented installation, architecture, events, API index, types, uploads,
   webhooks, VCL status, examples, building, licensing and known limitations.
 
+### Ownership
+
+- Fixed double-free shutdown: `TftAPI` no longer frees the borrowed HTTP
+  client, `TftBot` frees owned objects in the correct order, and
+  `TftLongPoll` no longer frees the borrowed API and event handler.
+- `TftLongPoll` now frees the allowed-updates list it creates.
+
+### FMX support
+
+- Added `TftTelegramBotFMX` (unit `fastTelega.Fmx`) wrapping `TftBot`.
+- Added FMX packages for all supported RAD Studio versions.
+- Added FMX package to the shared build script and package groups.
+
 ### Compiler support
 
 - Added package groups for RAD Studio 10.2 Tokyo, 10.3 Rio, 10.4 Sydney,

@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega LongPoll
 /// Alexander Syrykh
 /// </summary>
@@ -29,6 +29,7 @@ type
     FLimit: Integer;
     FTimeout: Integer;
     FAllowUpdates: TStringList;
+    FOwnsAllowUpdates: Boolean;
     FFistInit: Boolean;
   public
     constructor Create(AAPI: TftAPI; AEventHandler: TftEventHandler;
@@ -52,6 +53,7 @@ begin
   FLastUpdateId := 0;
   FLimit := ALimit;
   FTimeout := ATimeout;
+  FOwnsAllowUpdates := AAllowUpdates = nil;
   if AAllowUpdates = nil then
     FAllowUpdates := TStringList.Create
   else
@@ -67,6 +69,7 @@ begin
   FLastUpdateId := 0;
   FLimit := ALimit;
   FTimeout := ATimeout;
+  FOwnsAllowUpdates := AAllowUpdates = nil;
   if AAllowUpdates = nil then
     FAllowUpdates := TStringList.Create()
   else
@@ -76,8 +79,9 @@ end;
 
 destructor TftLongPoll.Destroy;
 begin
-  FreeAndNil(FAPI);
-  FreeAndNil(FEventHandler);
+  // FAPI and FEventHandler are owned by TftBot.
+  if FOwnsAllowUpdates then
+    FreeAndNil(FAllowUpdates);
   inherited;
 end;
 

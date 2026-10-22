@@ -9,6 +9,9 @@
         <Projects Include="fastTelega.Package.VCL.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="fastTelega.Package.FMX.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="fastTelega_Package_VCL:Make">
         <MSBuild Projects="fastTelega.Package.VCL.dproj" Targets="Make"/>
     </Target>
+    <Target Name="fastTelega_Package_FMX">
+        <MSBuild Projects="fastTelega.Package.FMX.dproj"/>
+    </Target>
+    <Target Name="fastTelega_Package_FMX:Clean">
+        <MSBuild Projects="fastTelega.Package.FMX.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="fastTelega_Package_FMX:Make">
+        <MSBuild Projects="fastTelega.Package.FMX.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="fastTelega_Package_RTL;fastTelega_Package_VCL"/>
+        <CallTarget Targets="fastTelega_Package_RTL;fastTelega_Package_VCL;fastTelega_Package_FMX"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="fastTelega_Package_RTL:Clean;fastTelega_Package_VCL:Clean"/>
+        <CallTarget Targets="fastTelega_Package_RTL:Clean;fastTelega_Package_VCL:Clean;fastTelega_Package_FMX:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="fastTelega_Package_RTL:Make;fastTelega_Package_VCL:Make"/>
+        <CallTarget Targets="fastTelega_Package_RTL:Make;fastTelega_Package_VCL:Make;fastTelega_Package_FMX:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='ALL'">

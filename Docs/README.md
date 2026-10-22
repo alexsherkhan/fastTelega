@@ -23,6 +23,7 @@ runtime dependencies beyond the Delphi RTL/REST components.
 | [File uploads](FileUploads.md) | `TftInputFile`, multipart requests and attach references |
 | [Webhooks](Webhooks.md) | Webhook server, reverse proxy and TLS setup |
 | [VCL component](VCLComponent.md) | `TftTelegramBot` component |
+| [FMX component](FMXComponent.md) | `TftTelegramBotFMX` component |
 | [Examples](Examples.md) | Included examples and corrected snippets |
 | [Building](Building.md) | Packages, build script and installer |
 | [Troubleshooting](Troubleshooting.md) | Common errors and known limitations |
@@ -38,7 +39,7 @@ runtime dependencies beyond the Delphi RTL/REST components.
 | Telegram object types | Core types plus Bot API 10.3 additions |
 | File uploads | Supported for single-file methods, profile photos and stories |
 | VCL component | Experimental; see [VCL component](VCLComponent.md) |
-| FMX components | Package script references FMX packages that are not present |
+| FMX components | Supported via `TftTelegramBotFMX` |
 
 ## Repository layout
 
@@ -50,9 +51,10 @@ Source/
   Events/                     Listener registry and update dispatcher
   Helpers/                    Class helpers
   Net/                        HTTP client and long polling
-  Net/Server/                 Webhook/HTTP server scaffolding
+  Net/Server/                 Indy webhook server and HTTP scaffolding
   Parser/                     JSON serializer/deserializer
   Components/VCL/             VCL component
+  Components/FMX/             FMX component
 Examples/                     Console and VCL examples
 Packages/                     Delphi packages and build scripts
 Project/                      DesignerBot sample application

@@ -109,10 +109,9 @@ Bot.Events.OnCallbackQuery(
 
 ## 5. Stop and restart safely
 
-Long polling is a blocking loop. On shutdown, stop calling `Start` and destroy
-the bot. See [Known limitations](Troubleshooting.md#troubleshooting-and-known-limitations) before
-freeing `TftLongPoll`: its current destructor releases objects borrowed from
-`TftBot`.
+Long polling is a blocking loop. On shutdown, stop calling `Start`, free the
+`TftLongPoll` object, then free `TftBot`. The long-poll object borrows the API
+and event handler and does not free them.
 
 ## Next steps
 

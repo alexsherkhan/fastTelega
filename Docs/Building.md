@@ -22,9 +22,11 @@ REST.JSON and Indy, which are included with these versions.
 |---|---|
 | `Packages/RAD Studio 11 Alexandria/fastTelega.Package.RTL.dpk` | Runtime package: API, bot, parser, events, networking, types |
 | `Packages/RAD Studio 11 Alexandria/fastTelega.Package.VCL.dpk` | VCL component package (`TftTelegramBot`) |
+| `Packages/RAD Studio 11 Alexandria/fastTelega.Package.FMX.dpk` | FMX component package (`TftTelegramBotFMX`) |
 
 The RTL package requires `rtl`, `RESTComponents`, `IndyCore` and
-`IndyProtocols`. The VCL package requires `rtl`, `vcl` and the RTL package.
+`IndyProtocols`. The VCL package requires `rtl`, `vcl` and the RTL package. The FMX package
+requires `rtl`, `fmx` and the RTL package.
 
 Open the `fastTelega.groupproj` from the folder matching your compiler to
 build both visible projects.
@@ -35,7 +37,7 @@ build both visible projects.
 
 1. Calls `..\Common\fastTelega.Build.Delphi.bat <BDS version>`.
 2. Locates `rsvars.bat` for the requested BDS version.
-3. Builds RTL and VCL with `MSBuild` for Win32/Release.
+3. Builds RTL, VCL and FMX with `MSBuild` for Win32/Release.
 
 Build logs are written next to the projects as `Build.RTL.log` and
 `Build.VCL.log`.

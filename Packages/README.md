@@ -2,7 +2,7 @@
 
 Package groups are provided per RAD Studio version. Open the folder that
 matches your compiler and build `fastTelega.Package.RTL` first, then
-`fastTelega.Package.VCL`.
+`fastTelega.Package.VCL` and/or `fastTelega.Package.FMX`.
 
 | RAD Studio | BDS | Folder |
 |---|---|---|
@@ -18,10 +18,12 @@ Each folder contains:
 - `fastTelega.groupproj`
 - `fastTelega.Package.RTL.dpk/.dproj`
 - `fastTelega.Package.VCL.dpk/.dproj`
+- `fastTelega.Package.FMX.dpk/.dproj`
 - `Build.bat` (calls `Common/fastTelega.Build.Delphi.bat` with the BDS version)
 
 The RTL package requires `rtl`, `RESTComponents`, `IndyCore` and
 `IndyProtocols`. The VCL package requires `rtl`, `vcl` and the RTL package.
+The FMX package requires `rtl`, `fmx` and the RTL package.
 
 Delphi 10.3 or newer is recommended; Delphi 10.2 is the oldest provided group
 and may require minor source adjustments.

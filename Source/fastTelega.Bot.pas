@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega Bot
 /// Alexander Syrykh
 /// </summary>
@@ -72,10 +72,10 @@ end;
 
 destructor TftBot.Destroy;
 begin
-  FreeAndNil(FHttpClient);
-  FreeAndNil(FAPI);
-  FreeAndNil(FEventBroadcaster);
   FreeAndNil(FEventHandler);
+  FreeAndNil(FAPI);
+  FreeAndNil(FHttpClient);
+  FreeAndNil(FEventBroadcaster);
   inherited;
 end;
 

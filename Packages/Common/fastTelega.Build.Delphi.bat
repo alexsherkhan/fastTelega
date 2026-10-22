@@ -40,6 +40,9 @@ MSBuild fastTelega.Package.RTL.dproj /p:Config=Release /p:Platform=Win32 >Build.
 echo Building VCL package for BDS %1...
 MSBuild fastTelega.Package.VCL.dproj /p:Config=Release /p:Platform=Win32 >Build.VCL.log 2>&1 || goto :BUILD_ERROR
 
+echo Building FMX package for BDS %1...
+MSBuild fastTelega.Package.FMX.dproj /p:Config=Release /p:Platform=Win32 >Build.FMX.log 2>&1 || goto :BUILD_ERROR
+
 echo Finished.
 goto :EOF
 

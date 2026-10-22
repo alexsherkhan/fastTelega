@@ -73,16 +73,16 @@ for that bot.
 
 | Object | Owner | Notes |
 |---|---|---|
-| `TftHttpClient` | `TftBot` | `TftAPI` borrows the client but its current destructor also frees it; do not free the client yourself. |
-| `TftAPI` | `TftBot` | `TftLongPoll` borrows it and currently also frees it in `Destroy`. |
+| `TftHttpClient` | `TftBot` | `TftAPI` borrows the client. |
+| `TftAPI` | `TftBot` | `TftLongPoll` borrows it. |
 | `TftEventBroadcaster` | `TftBot` | Reference passed to the handler. |
-| `TftEventHandler` | `TftBot` | `TftLongPoll` borrows it and currently also frees it. |
+| `TftEventHandler` | `TftBot` | `TftLongPoll` and webhook servers borrow it. |
 | Returned Telegram objects | Caller | Free objects returned by API methods when done. |
 | `TList<T>` returned by API | Caller | The list does not own its elements; free elements separately. |
 | `TftUpdateList` | Caller | `TObjectList<TftUpdate>`, owns updates; freed by the long-poll loop. |
 
-See [Known limitations](Troubleshooting.md#troubleshooting-and-known-limitations) for the
-double-free issue caused by the current destructors.
+Destroy `TftLongPoll` and webhook servers before `TftBot`; they only borrow
+the API and event handler.
 
 ## Serialization
 

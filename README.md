@@ -30,15 +30,16 @@ and uses the Delphi RTL, REST components and Indy for webhooks.
 | Event dispatcher | `OnUpdate` plus typed message, inline and callback events |
 | Object model | Core Telegram types and Bot API 10.3 additions |
 | File uploads | Single-file methods, media groups, profile photos and stories |
-| Packages | RTL and VCL packages for RAD Studio 11 Alexandria |
+| Packages | RTL, VCL and FMX packages for RAD Studio 10.2-13 |
 | Installer | Inno Setup project in `Tools/Setup` |
+| Components | VCL `TftTelegramBot` and FMX `TftTelegramBotFMX` |
 
 ## Requirements
 
-- Windows with RAD Studio 11 Alexandria (Delphi 11).
+- Windows with RAD Studio 10.2 Tokyo through 13 Florence (Delphi 10.2-13).
 - RTL and REST components (`RESTComponents`).
 - Indy (`IndyCore`, `IndyProtocols`) for the webhook server.
-- VCL only if you use the `TftTelegramBot` component.
+- VCL or FMX only if you use the corresponding component.
 - A bot token from [@BotFather](https://t.me/BotFather).
 
 ## Installation
@@ -161,6 +162,7 @@ Full English documentation is in [Docs](Docs):
 | [File uploads](Docs/FileUploads.md) | `TftInputFile`, multipart, media groups |
 | [Webhooks](Docs/Webhooks.md) | Indy server and reverse proxy setup |
 | [VCL component](Docs/VCLComponent.md) | `TftTelegramBot` component |
+| [FMX component](Docs/FMXComponent.md) | `TftTelegramBotFMX` component |
 | [Examples](Docs/Examples.md) | Included projects and snippets |
 | [Building](Docs/Building.md) | Packages, MSBuild and installer |
 | [Licensing](Docs/Licensing.md) | MIT and third-party licenses |
@@ -198,7 +200,8 @@ are still limited:
 - `SendMediaGroup` supports file uploads through `TftInputMedia.MediaFile`;
   paid media and sticker attach uploads require manual attach names.
 - Webhook TLS must be terminated by a reverse proxy.
-- The VCL component is experimental.
+- The VCL and FMX components are new and have not been compiler-verified in
+  this repository.
 
 See [Troubleshooting](Docs/Troubleshooting.md) for a complete list.
 
