@@ -585,6 +585,25 @@ type
     function ParseInputStoryContent(const AObj: TftInputStoryContent): String;
     function ParseLinkPreviewOptions(const AObj: TftLinkPreviewOptions): String;
     function ParseInputRichMessage(const AObj: TftInputRichMessage): String;
+    function ParseRichText(const AText: TftRichText): String;
+    function ParseRichTexts(const ATexts: TList<TftRichText>): String;
+    function ParseRichMessageButton(const AButton: TftRichMessageButton): String;
+    function ParseRichMessageButtons
+      (const AButtons: TList<TftRichMessageButton>): String;
+    function ParseRichBlockCaption(const ACaption: TftRichBlockCaption): String;
+    function ParseRichBlockTableCell(const ACell: TftRichBlockTableCell): String;
+    function ParseRichBlockTableCells
+      (const ACells: TList<TList<TftRichBlockTableCell>>): String;
+    function ParseInputRichBlock(const ABlock: TftInputRichBlock): String;
+    function ParseInputRichBlocks(const ABlocks: TList<TftInputRichBlock>): String;
+    function ParseInputRichBlockItems
+      (const AItems: TList<TftInputRichBlockListItem>): String;
+    function ParseRichInputMedia(const AMedia: TftRichInputMedia): String;
+    function ParseInputRichMessageMedia
+      (const AMedia: TftInputRichMessageMedia): String;
+    function ParseInputRichMessageMedias
+      (const AMedia: TList<TftInputRichMessageMedia>): String;
+    function JsonEscape(const AValue: String): String;
     function ParseAcceptedGiftTypes(const AObj: TftAcceptedGiftTypes): String;
     function ParseJsonAndGetSentGuestMessage(const AData: TJSONObject)
       : TftSentGuestMessage;
@@ -5178,14 +5197,14 @@ begin
   Result := Result + '{';
   AppendToJson(Result, 'html', AObj.Html);
   AppendToJson(Result, 'markdown', AObj.Markdown);
-  if (AObj.BlocksJson <> '') then
-  begin
+  if Assigned(AObj.Blocks) then
+    AppendToJson(Result, 'blocks', ParseInputRichBlocks(AObj.Blocks))
+  else if (AObj.BlocksJson <> '') then
     Result := Result + '"blocks":' + AObj.BlocksJson + ',';
-  end;
-  if (AObj.MediaJson <> '') then
-  begin
+  if Assigned(AObj.Media) then
+    AppendToJson(Result, 'media', ParseInputRichMessageMedias(AObj.Media))
+  else if (AObj.MediaJson <> '') then
     Result := Result + '"media":' + AObj.MediaJson + ',';
-  end;
   if (AObj.IsRtl) then
     AppendToJson(Result, 'is_rtl', AObj.IsRtl);
   if (AObj.SkipEntityDetection) then
@@ -5273,6 +5292,426 @@ begin
   if AData.GetValue('result') <> nil then
     Result := TJSON.JsonToObject<TftStarTransactions>
       ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.JsonEscape(const AValue: String): String;
+begin
+  Result := StringReplace(AValue, '\', '\\', [rfReplaceAll]);
+  Result := StringReplace(Result, '"', '\"', [rfReplaceAll]);
+  Result := StringReplace(Result, #13, '\r', [rfReplaceAll]);
+  Result := StringReplace(Result, #10, '\n', [rfReplaceAll]);
+  Result := StringReplace(Result, #9, '\t', [rfReplaceAll]);
+end;
+
+function TftTypeParser.ParseRichTexts(const ATexts: TList<TftRichText>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  for I := 0 to ATexts.Count - 1 do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + ParseRichText(ATexts[I]);
+  end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseRichText(const AText: TftRichText): String;
+begin
+  if (AText = nil) then
+  begin
+    Result := '""';
+    Exit;
+  end;
+  if (AText.Type_S = '') then
+  begin
+    if Assigned(AText.Children) then
+      Result := ParseRichTexts(AText.Children)
+    else
+      Result := '"' + JsonEscape(AText.Value) + '"';
+    Exit;
+  end;
+
+  Result := '{';
+  AppendToJson(Result, 'type', AText.Type_S);
+  if (AText.Type_S = 'custom_emoji') then
+  begin
+    AppendToJson(Result, 'custom_emoji_id', AText.CustomEmojiId);
+    AppendToJson(Result, 'alternative_text', AText.AlternativeText);
+  end
+  else if (AText.Type_S = 'mathematical_expression') then
+    AppendToJson(Result, 'expression', AText.Value)
+  else if (AText.Type_S = 'date_time') then
+  begin
+    if Assigned(AText.Text) then
+      AppendToJson(Result, 'text', ParseRichText(AText.Text));
+    AppendToJson(Result, 'unix_time', AText.UnixTime);
+    AppendToJson(Result, 'date_time_format', AText.DateTimeFormat);
+  end
+  else if (AText.Type_S = 'text_mention') then
+  begin
+    if Assigned(AText.Text) then
+      AppendToJson(Result, 'text', ParseRichText(AText.Text));
+    if Assigned(AText.User) then
+      AppendToJson(Result, 'user', ParseUser(AText.User));
+  end
+  else if (AText.Type_S = 'url') or (AText.Type_S = 'email_address') or
+    (AText.Type_S = 'phone_number') or (AText.Type_S = 'bank_card_number') or
+    (AText.Type_S = 'mention') or (AText.Type_S = 'hashtag') or
+    (AText.Type_S = 'cashtag') or (AText.Type_S = 'bot_command') then
+  begin
+    if Assigned(AText.Text) then
+      AppendToJson(Result, 'text', ParseRichText(AText.Text));
+    if (AText.Type_S = 'url') then
+      AppendToJson(Result, 'url', AText.Value)
+    else if (AText.Type_S = 'email_address') then
+      AppendToJson(Result, 'email_address', AText.Value)
+    else if (AText.Type_S = 'phone_number') then
+      AppendToJson(Result, 'phone_number', AText.Value)
+    else if (AText.Type_S = 'bank_card_number') then
+      AppendToJson(Result, 'bank_card_number', AText.Value)
+    else if (AText.Type_S = 'mention') then
+      AppendToJson(Result, 'username', AText.Value)
+    else if (AText.Type_S = 'hashtag') then
+      AppendToJson(Result, 'hashtag', AText.Value)
+    else if (AText.Type_S = 'cashtag') then
+      AppendToJson(Result, 'cashtag', AText.Value)
+    else
+      AppendToJson(Result, 'bot_command', AText.Value);
+  end
+  else if (AText.Type_S = 'button') then
+  begin
+    if Assigned(AText.Button) then
+      AppendToJson(Result, 'button', ParseRichMessageButton(AText.Button));
+  end
+  else if (AText.Type_S = 'anchor') then
+    AppendToJson(Result, 'name', AText.AnchorName)
+  else if (AText.Type_S = 'anchor_link') then
+  begin
+    if Assigned(AText.Text) then
+      AppendToJson(Result, 'text', ParseRichText(AText.Text));
+    AppendToJson(Result, 'anchor_name', AText.AnchorName);
+  end
+  else if (AText.Type_S = 'reference') then
+  begin
+    if Assigned(AText.Text) then
+      AppendToJson(Result, 'text', ParseRichText(AText.Text));
+    AppendToJson(Result, 'name', AText.ReferenceName);
+  end
+  else if (AText.Type_S = 'reference_link') then
+  begin
+    if Assigned(AText.Text) then
+      AppendToJson(Result, 'text', ParseRichText(AText.Text));
+    AppendToJson(Result, 'reference_name', AText.ReferenceName);
+  end
+  else if Assigned(AText.Text) then
+    AppendToJson(Result, 'text', ParseRichText(AText.Text));
+
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseRichMessageButton
+  (const AButton: TftRichMessageButton): String;
+begin
+  Result := '{}';
+  if (AButton = nil) then
+    Exit;
+  Result := '{';
+  if Assigned(AButton.Text) then
+    AppendToJson(Result, 'text', ParseRichText(AButton.Text));
+  AppendToJson(Result, 'style', AButton.Style);
+  if (AButton.URL <> '') then
+    AppendToJson(Result, 'url', AButton.URL);
+  if (AButton.CallbackData <> '') then
+    AppendToJson(Result, 'callback_data', AButton.CallbackData);
+  if (AButton.WebAppUrl <> '') then
+    Result := Result + '"web_app":{"url":"' + JsonEscape(AButton.WebAppUrl) + '"},';
+  if (AButton.LoginUrl <> '') then
+    Result := Result + '"login_url":{"url":"' + JsonEscape(AButton.LoginUrl) + '"},';
+  AppendToJson(Result, 'switch_inline_query', AButton.SwitchInlineQuery);
+  AppendToJson(Result, 'switch_inline_query_current_chat',
+    AButton.SwitchInlineQueryCurrentChat);
+  if (AButton.CopyText <> '') then
+    Result := Result + '"copy_text":{"text":"' + JsonEscape(AButton.CopyText) + '"},';
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseRichMessageButtons
+  (const AButtons: TList<TftRichMessageButton>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  for I := 0 to AButtons.Count - 1 do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + ParseRichMessageButton(AButtons[I]);
+  end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseRichBlockCaption
+  (const ACaption: TftRichBlockCaption): String;
+begin
+  Result := '{}';
+  if (ACaption = nil) then
+    Exit;
+  Result := '{';
+  if Assigned(ACaption.Text) then
+    AppendToJson(Result, 'text', ParseRichText(ACaption.Text));
+  if Assigned(ACaption.Credit) then
+    AppendToJson(Result, 'credit', ParseRichText(ACaption.Credit));
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseRichBlockTableCell
+  (const ACell: TftRichBlockTableCell): String;
+begin
+  Result := '{}';
+  if (ACell = nil) then
+    Exit;
+  Result := '{';
+  if Assigned(ACell.Text) then
+    AppendToJson(Result, 'text', ParseRichText(ACell.Text));
+  if (ACell.IsHeader) then
+    AppendToJson(Result, 'is_header', True);
+  if (ACell.Colspan > 1) then
+    AppendToJson(Result, 'colspan', ACell.Colspan);
+  if (ACell.Rowspan > 1) then
+    AppendToJson(Result, 'rowspan', ACell.Rowspan);
+  AppendToJson(Result, 'align', ACell.Align);
+  AppendToJson(Result, 'valign', ACell.Valign);
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseRichBlockTableCells
+  (const ACells: TList<TList<TftRichBlockTableCell>>): String;
+var
+  I, J: Integer;
+begin
+  Result := '[';
+  for I := 0 to ACells.Count - 1 do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + '[';
+    for J := 0 to ACells[I].Count - 1 do
+    begin
+      if J > 0 then
+        Result := Result + ',';
+      Result := Result + ParseRichBlockTableCell(ACells[I][J]);
+    end;
+    Result := Result + ']';
+  end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseRichInputMedia
+  (const AMedia: TftRichInputMedia): String;
+var
+  LMedia: String;
+begin
+  Result := '{}';
+  if (AMedia = nil) then
+    Exit;
+  Result := '{';
+  AppendToJson(Result, 'type', AMedia.Type_S);
+  if Assigned(AMedia.MediaFile) then
+    LMedia := 'attach://' + AMedia.AttachName
+  else
+    LMedia := AMedia.Media;
+  AppendToJson(Result, 'media', LMedia);
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseInputRichBlockItems
+  (const AItems: TList<TftInputRichBlockListItem>): String;
+var
+  I: Integer;
+  LItem: TftInputRichBlockListItem;
+begin
+  Result := '[';
+  for I := 0 to AItems.Count - 1 do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    LItem := AItems[I];
+    Result := Result + '{';
+    if Assigned(LItem.Blocks) then
+      AppendToJson(Result, 'blocks', ParseInputRichBlocks(LItem.Blocks));
+    if (LItem.HasCheckbox) then
+      AppendToJson(Result, 'has_checkbox', True);
+    if (LItem.IsChecked) then
+      AppendToJson(Result, 'is_checked', True);
+    if (LItem.Value <> 0) then
+      AppendToJson(Result, 'value', LItem.Value);
+    AppendToJson(Result, 'type', LItem.Type_S);
+    RemoveLastComma(Result);
+    Result := Result + '}';
+  end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseInputRichBlocks
+  (const ABlocks: TList<TftInputRichBlock>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  for I := 0 to ABlocks.Count - 1 do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + ParseInputRichBlock(ABlocks[I]);
+  end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseInputRichBlock(const ABlock: TftInputRichBlock): String;
+begin
+  Result := '{}';
+  if (ABlock = nil) then
+    Exit;
+  Result := '{';
+  AppendToJson(Result, 'type', ABlock.Type_S);
+  if (ABlock.Type_S = 'paragraph') or (ABlock.Type_S = 'footer') or
+    (ABlock.Type_S = 'thinking') or (ABlock.Type_S = 'pullquote') or
+    (ABlock.Type_S = 'expandable_blockquote') then
+  begin
+    if Assigned(ABlock.Text) then
+      AppendToJson(Result, 'text', ParseRichText(ABlock.Text));
+    if (ABlock.Type_S = 'pullquote') or
+      (ABlock.Type_S = 'expandable_blockquote') then
+    begin
+      if Assigned(ABlock.Credit) then
+        AppendToJson(Result, 'credit', ParseRichText(ABlock.Credit));
+    end;
+  end
+  else if (ABlock.Type_S = 'heading') then
+  begin
+    if Assigned(ABlock.Text) then
+      AppendToJson(Result, 'text', ParseRichText(ABlock.Text));
+    if (ABlock.Size <> 0) then
+      AppendToJson(Result, 'size', ABlock.Size);
+  end
+  else if (ABlock.Type_S = 'pre') then
+  begin
+    if Assigned(ABlock.Text) then
+      AppendToJson(Result, 'text', ParseRichText(ABlock.Text));
+    AppendToJson(Result, 'language', ABlock.Language);
+  end
+  else if (ABlock.Type_S = 'divider') then
+  else if (ABlock.Type_S = 'mathematical_expression') then
+    AppendToJson(Result, 'expression', ABlock.Expression)
+  else if (ABlock.Type_S = 'anchor') then
+    AppendToJson(Result, 'name', ABlock.Name)
+  else if (ABlock.Type_S = 'list') then
+  begin
+    if Assigned(ABlock.Items) then
+      AppendToJson(Result, 'items', ParseInputRichBlockItems(ABlock.Items));
+  end
+  else if (ABlock.Type_S = 'blockquote') then
+  begin
+    if Assigned(ABlock.Blocks) then
+      AppendToJson(Result, 'blocks', ParseInputRichBlocks(ABlock.Blocks));
+    if Assigned(ABlock.Credit) then
+      AppendToJson(Result, 'credit', ParseRichText(ABlock.Credit));
+  end
+  else if (ABlock.Type_S = 'collage') or (ABlock.Type_S = 'slideshow') then
+  begin
+    if Assigned(ABlock.Blocks) then
+      AppendToJson(Result, 'blocks', ParseInputRichBlocks(ABlock.Blocks));
+    if Assigned(ABlock.Caption) then
+      AppendToJson(Result, 'caption', ParseRichBlockCaption(ABlock.Caption));
+  end
+  else if (ABlock.Type_S = 'table') then
+  begin
+    if Assigned(ABlock.Cells) then
+      AppendToJson(Result, 'cells', ParseRichBlockTableCells(ABlock.Cells));
+    if (ABlock.IsBordered) then
+      AppendToJson(Result, 'is_bordered', True);
+    if (ABlock.IsStriped) then
+      AppendToJson(Result, 'is_striped', True);
+    if (ABlock.IsCompact) then
+      AppendToJson(Result, 'is_compact', True);
+    if Assigned(ABlock.Text) then
+      AppendToJson(Result, 'caption', ParseRichText(ABlock.Text));
+  end
+  else if (ABlock.Type_S = 'details') then
+  begin
+    if Assigned(ABlock.Summary) then
+      AppendToJson(Result, 'summary', ParseRichText(ABlock.Summary));
+    if Assigned(ABlock.Blocks) then
+      AppendToJson(Result, 'blocks', ParseInputRichBlocks(ABlock.Blocks));
+    if (ABlock.IsOpen) then
+      AppendToJson(Result, 'is_open', True);
+  end
+  else if (ABlock.Type_S = 'map') then
+  begin
+    if Assigned(ABlock.Location) then
+      AppendToJson(Result, 'location', ParseLocation(ABlock.Location));
+    if (ABlock.Zoom <> 0) then
+      AppendToJson(Result, 'zoom', ABlock.Zoom);
+    if (ABlock.Width <> 0) then
+      AppendToJson(Result, 'width', ABlock.Width);
+    if (ABlock.Height <> 0) then
+      AppendToJson(Result, 'height', ABlock.Height);
+    if Assigned(ABlock.Caption) then
+      AppendToJson(Result, 'caption', ParseRichBlockCaption(ABlock.Caption));
+  end
+  else if (ABlock.Type_S = 'buttons') then
+  begin
+    if Assigned(ABlock.Buttons) then
+      AppendToJson(Result, 'buttons', ParseRichMessageButtons(ABlock.Buttons));
+    AppendToJson(Result, 'align', ABlock.Align);
+  end
+  else if (ABlock.Type_S = 'animation') or (ABlock.Type_S = 'audio') or
+    (ABlock.Type_S = 'document') or (ABlock.Type_S = 'photo') or
+    (ABlock.Type_S = 'video') or (ABlock.Type_S = 'voice_note') then
+  begin
+    if Assigned(ABlock.Media) then
+      AppendToJson(Result, ABlock.Type_S, ParseRichInputMedia(ABlock.Media));
+    if Assigned(ABlock.Caption) then
+      AppendToJson(Result, 'caption', ParseRichBlockCaption(ABlock.Caption));
+  end;
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseInputRichMessageMedia
+  (const AMedia: TftInputRichMessageMedia): String;
+begin
+  Result := '{}';
+  if (AMedia = nil) then
+    Exit;
+  Result := '{';
+  AppendToJson(Result, 'id', AMedia.Id);
+  if Assigned(AMedia.Media) then
+    AppendToJson(Result, 'media', ParseRichInputMedia(AMedia.Media));
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseInputRichMessageMedias
+  (const AMedia: TList<TftInputRichMessageMedia>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  for I := 0 to AMedia.Count - 1 do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + ParseInputRichMessageMedia(AMedia[I]);
+  end;
+  Result := Result + ']';
 end;
 
 procedure TftTypeParser.RemoveLastComma(var AInput: String);

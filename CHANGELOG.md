@@ -34,6 +34,17 @@
 - Added a generic `OnUpdate` listener and routed edited, channel, business and
   guest messages through the existing message handler.
 
+### Rich messages
+
+- Added a typed rich-message model: `TftRichText`, `TftInputRichBlock`,
+  `TftInputRichBlockListItem`, `TftRichMessageButton`, `TftRichBlockCaption`,
+  `TftRichBlockTableCell`, `TftRichInputMedia` and
+  `TftInputRichMessageMedia`.
+- `TftInputRichMessage` now accepts typed `Blocks` and `Media`; the raw
+  `BlocksJson`/`MediaJson` fields remain as a fallback.
+- Added recursive serializers for rich text, blocks, tables, lists, buttons,
+  captions and embedded media.
+
 ### Models and parser
 
 - Added Bot API 10.3 object models: paid media, checklists, rich messages,

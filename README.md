@@ -185,8 +185,9 @@ Some older examples still use the pre-1.5 unit names; see
 All Bot API 10.3 methods are declared and implemented. Some advanced scenarios
 are still limited:
 
-- Typed rich-message blocks are not modeled; `TftInputRichMessage` accepts raw
-  JSON for `blocks` and `media`.
+- Rich messages have a typed model (`TftInputRichBlock`, `TftRichText`,
+  `TftRichMessageButton`, `TftRichBlockCaption`, media blocks); raw
+  `BlocksJson`/`MediaJson` remain available as a fallback.
 - Some optional method parameters (for example `business_connection_id`,
   `direct_messages_topic_id` and suggested-post parameters) are not exposed.
 - Typed events exist for messages, inline queries, chosen inline results and

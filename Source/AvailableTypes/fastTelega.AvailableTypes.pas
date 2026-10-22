@@ -2795,10 +2795,194 @@ type
   /// produced by the caller is used, because the rich message block model is
   /// open-ended and evolves with new Bot API versions.
   /// </summary>
+  TftRichMessageButton = class;
+  TftInputRichBlock = class;
+
+  /// <summary>
+  /// Media embedded in a rich message.
+  /// </summary>
+  TftRichInputMedia = class
+  private
+    FType: String;
+    FMedia: String;
+    FMediaFile: TftInputFile;
+    FAttachName: String;
+  public
+    property Type_S: String read FType write FType;
+    property Media: String read FMedia write FMedia;
+    property MediaFile: TftInputFile read FMediaFile write FMediaFile;
+    property AttachName: String read FAttachName write FAttachName;
+  end;
+
+  /// <summary>
+  /// Rich formatted text. A plain string is represented by an empty Type_S and
+  /// Value; a list of child texts by Children; typed entities use Type_S.
+  /// </summary>
+  TftRichText = class
+  private
+    FType: String;
+    FValue: String;
+    FText: TftRichText;
+    FChildren: TList<TftRichText>;
+    FUser: TftUser;
+    FButton: TftRichMessageButton;
+    FUnixTime: Integer;
+    FDateTimeFormat: String;
+    FCustomEmojiId: String;
+    FAlternativeText: String;
+    FAnchorName: String;
+    FReferenceName: String;
+  public
+    property Type_S: String read FType write FType;
+    property Value: String read FValue write FValue;
+    property Text: TftRichText read FText write FText;
+    property Children: TList<TftRichText> read FChildren write FChildren;
+    property User: TftUser read FUser write FUser;
+    property Button: TftRichMessageButton read FButton write FButton;
+    property UnixTime: Integer read FUnixTime write FUnixTime;
+    property DateTimeFormat: String read FDateTimeFormat
+      write FDateTimeFormat;
+    property CustomEmojiId: String read FCustomEmojiId write FCustomEmojiId;
+    property AlternativeText: String read FAlternativeText
+      write FAlternativeText;
+    property AnchorName: String read FAnchorName write FAnchorName;
+    property ReferenceName: String read FReferenceName write FReferenceName;
+  end;
+
+  TftRichMessageButton = class
+  private
+    FText: TftRichText;
+    FStyle: String;
+    FUrl: String;
+    FCallbackData: String;
+    FWebAppUrl: String;
+    FLoginUrl: String;
+    FSwitchInlineQuery: String;
+    FSwitchInlineQueryCurrentChat: String;
+    FCopyText: String;
+  public
+    property Text: TftRichText read FText write FText;
+    property Style: String read FStyle write FStyle;
+    property URL: String read FUrl write FUrl;
+    property CallbackData: String read FCallbackData write FCallbackData;
+    property WebAppUrl: String read FWebAppUrl write FWebAppUrl;
+    property LoginUrl: String read FLoginUrl write FLoginUrl;
+    property SwitchInlineQuery: String read FSwitchInlineQuery
+      write FSwitchInlineQuery;
+    property SwitchInlineQueryCurrentChat: String
+      read FSwitchInlineQueryCurrentChat write FSwitchInlineQueryCurrentChat;
+    property CopyText: String read FCopyText write FCopyText;
+  end;
+
+  TftRichBlockCaption = class
+  private
+    FText: TftRichText;
+    FCredit: TftRichText;
+  public
+    property Text: TftRichText read FText write FText;
+    property Credit: TftRichText read FCredit write FCredit;
+  end;
+
+  TftRichBlockTableCell = class
+  private
+    FText: TftRichText;
+    FIsHeader: Boolean;
+    FColspan: Integer;
+    FRowspan: Integer;
+    FAlign: String;
+    FValign: String;
+  public
+    property Text: TftRichText read FText write FText;
+    property IsHeader: Boolean read FIsHeader write FIsHeader;
+    property Colspan: Integer read FColspan write FColspan;
+    property Rowspan: Integer read FRowspan write FRowspan;
+    property Align: String read FAlign write FAlign;
+    property Valign: String read FValign write FValign;
+  end;
+
+  TftInputRichBlockListItem = class
+  private
+    FBlocks: TList<TftInputRichBlock>;
+    FHasCheckbox: Boolean;
+    FIsChecked: Boolean;
+    FValue: Integer;
+    FType: String;
+  public
+    property Blocks: TList<TftInputRichBlock> read FBlocks write FBlocks;
+    property HasCheckbox: Boolean read FHasCheckbox write FHasCheckbox;
+    property IsChecked: Boolean read FIsChecked write FIsChecked;
+    property Value: Integer read FValue write FValue;
+    property Type_S: String read FType write FType;
+  end;
+
+  TftInputRichBlock = class
+  private
+    FType: String;
+    FText: TftRichText;
+    FBlocks: TList<TftInputRichBlock>;
+    FItems: TList<TftInputRichBlockListItem>;
+    FCells: TList<TList<TftRichBlockTableCell>>;
+    FButtons: TList<TftRichMessageButton>;
+    FCaption: TftRichBlockCaption;
+    FCredit: TftRichText;
+    FMedia: TftRichInputMedia;
+    FLocation: TftLocation;
+    FExpression: String;
+    FName: String;
+    FSummary: TftRichText;
+    FLanguage: String;
+    FAlign: String;
+    FSize: Integer;
+    FZoom: Integer;
+    FWidth: Integer;
+    FHeight: Integer;
+    FIsBordered: Boolean;
+    FIsStriped: Boolean;
+    FIsCompact: Boolean;
+    FIsOpen: Boolean;
+  public
+    property Type_S: String read FType write FType;
+    property Text: TftRichText read FText write FText;
+    property Blocks: TList<TftInputRichBlock> read FBlocks write FBlocks;
+    property Items: TList<TftInputRichBlockListItem> read FItems write FItems;
+    property Cells: TList<TList<TftRichBlockTableCell>> read FCells
+      write FCells;
+    property Buttons: TList<TftRichMessageButton> read FButtons
+      write FButtons;
+    property Caption: TftRichBlockCaption read FCaption write FCaption;
+    property Credit: TftRichText read FCredit write FCredit;
+    property Media: TftRichInputMedia read FMedia write FMedia;
+    property Location: TftLocation read FLocation write FLocation;
+    property Expression: String read FExpression write FExpression;
+    property Name: String read FName write FName;
+    property Summary: TftRichText read FSummary write FSummary;
+    property Language: String read FLanguage write FLanguage;
+    property Align: String read FAlign write FAlign;
+    property Size: Integer read FSize write FSize;
+    property Zoom: Integer read FZoom write FZoom;
+    property Width: Integer read FWidth write FWidth;
+    property Height: Integer read FHeight write FHeight;
+    property IsBordered: Boolean read FIsBordered write FIsBordered;
+    property IsStriped: Boolean read FIsStriped write FIsStriped;
+    property IsCompact: Boolean read FIsCompact write FIsCompact;
+    property IsOpen: Boolean read FIsOpen write FIsOpen;
+  end;
+
+  TftInputRichMessageMedia = class
+  private
+    FId: String;
+    FMedia: TftRichInputMedia;
+  public
+    property Id: String read FId write FId;
+    property Media: TftRichInputMedia read FMedia write FMedia;
+  end;
+
   TftInputRichMessage = class
   private
     FHtml: String;
     FMarkdown: String;
+    FBlocks: TList<TftInputRichBlock>;
+    FMedia: TList<TftInputRichMessageMedia>;
     FBlocksJson: String;
     FMediaJson: String;
     FIsRtl: Boolean;
@@ -2806,9 +2990,11 @@ type
   public
     property Html: String read FHtml write FHtml;
     property Markdown: String read FMarkdown write FMarkdown;
-    /// <summary>JSON array for the blocks field.</summary>
+    property Blocks: TList<TftInputRichBlock> read FBlocks write FBlocks;
+    property Media: TList<TftInputRichMessageMedia> read FMedia write FMedia;
+    /// <summary>Raw JSON array used when Blocks is not assigned.</summary>
     property BlocksJson: String read FBlocksJson write FBlocksJson;
-    /// <summary>JSON array for the media field.</summary>
+    /// <summary>Raw JSON array used when Media is not assigned.</summary>
     property MediaJson: String read FMediaJson write FMediaJson;
     property IsRtl: Boolean read FIsRtl write FIsRtl;
     property SkipEntityDetection: Boolean read FSkipEntityDetection

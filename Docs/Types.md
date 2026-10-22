@@ -50,7 +50,9 @@ The following model groups were added for the current Bot API:
 - Paid media: `TftInputPaidMedia`, `TftInputPaidMediaPhoto`,
   `TftInputPaidMediaVideo`, `TftInputPaidMediaLivePhoto`
 - Checklists: `TftInputChecklist`, `TftInputChecklistTask`
-- Rich messages: `TftInputRichMessage`
+- Rich messages: `TftInputRichMessage`, `TftInputRichBlock`, `TftRichText`,
+  `TftRichMessageButton`, `TftRichBlockCaption`, `TftRichBlockTableCell`,
+  `TftInputRichBlockListItem`, `TftInputRichMessageMedia`, `TftRichInputMedia`
 - Ephemeral messages: `TftLinkPreviewOptions` (text edits), existing
   `TftInputMedia` for media edits
 - Profile photos and stories: `TftInputProfilePhoto`,
