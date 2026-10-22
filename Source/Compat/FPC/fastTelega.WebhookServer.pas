@@ -5,7 +5,7 @@ unit fastTelega.WebhookServer;
 interface
 
 uses
-  SysUtils, Classes, fphttpserver, httpdefs, sslbase, ssockets,
+  SysUtils, Classes, ssockets,
   System.JSON, fpjson,
   fastTelega.Bot, fastTelega.AvailableTypes,
   fastTelega.Events.EventHandler, fastTelega.JsonMapper;
@@ -13,31 +13,23 @@ uses
 type
   TftWebhookUpdateEvent = procedure(const AUpdate: TftUpdate);
 
-  TftFpcHttpServer = class(TFPHttpServer)
-  public
-    procedure SetBindAddress(const AValue: String);
-    procedure StopListening;
-  end;
-
   TftWebhookServer = class
   private
-    FServer: TftFpcHttpServer;
+    FServer: TInetServer;
     FThread: TThread;
     FHost: String;
     FPort: Integer;
     FPath: String;
     FSecretToken: String;
     FMaxBodySize: Integer;
-    FUseSSL: Boolean;
     FEventHandler: TftEventHandler;
     FOnUpdate: TftWebhookUpdateEvent;
     function GetActive: Boolean;
-    function GetCertificateData: TCertificateData;
-    procedure HandleRequest(Sender: TObject;
-      var ARequest: TFPHTTPConnectionRequest;
-      var AResponse: TFPHTTPConnectionResponse);
-    procedure RespondJSON(var AResponse: TFPHTTPConnectionResponse;
-      ACode: Integer; const AJSON: String);
+    procedure HandleConnect(Sender: TObject; Data: TSocketStream);
+    function ReadRequest(Data: TSocketStream; out AMethod, AURI,
+      ASecretToken, ABody: String): Boolean;
+    procedure WriteResponse(Data: TSocketStream; ACode: Integer;
+      const AJSON: String);
     procedure DispatchUpdate(const AUpdate: TftUpdate);
   public
     constructor Create; overload;
@@ -51,8 +43,6 @@ type
     property Path: String read FPath write FPath;
     property SecretToken: String read FSecretToken write FSecretToken;
     property MaxBodySize: Integer read FMaxBodySize write FMaxBodySize;
-    property UseSSL: Boolean read FUseSSL write FUseSSL;
-    property CertificateData: TCertificateData read GetCertificateData;
     property EventHandler: TftEventHandler read FEventHandler write FEventHandler;
     property OnUpdate: TftWebhookUpdateEvent read FOnUpdate write FOnUpdate;
     property Active: Boolean read GetActive;
@@ -61,38 +51,28 @@ type
 implementation
 
 type
-  TftWebhookServerThread = class(TThread)
+  TftListenThread = class(TThread)
   private
-    FServer: TftFpcHttpServer;
+    FServer: TInetServer;
   protected
     procedure Execute; override;
   public
-    constructor Create(AServer: TftFpcHttpServer);
+    constructor Create(AServer: TInetServer);
   end;
 
-procedure TftFpcHttpServer.SetBindAddress(const AValue: String);
-begin
-  Address := AValue;
-end;
-
-procedure TftFpcHttpServer.StopListening;
-begin
-  StopServerSocket;
-end;
-
-constructor TftWebhookServerThread.Create(AServer: TftFpcHttpServer);
+constructor TftListenThread.Create(AServer: TInetServer);
 begin
   inherited Create(True);
   FreeOnTerminate := False;
   FServer := AServer;
 end;
 
-procedure TftWebhookServerThread.Execute;
+procedure TftListenThread.Execute;
 begin
   try
-    FServer.Active := True;
+    FServer.StartAccepting;
   except
-    // The server stops when the socket cannot be bound or is closed.
+    // Socket closed or bind failure.
   end;
 end;
 
@@ -103,8 +83,6 @@ begin
   FPort := 8080;
   FPath := '/telegram';
   FMaxBodySize := 1024 * 1024;
-  FServer := TftFpcHttpServer.Create(nil);
-  FServer.OnRequest := HandleRequest;
 end;
 
 constructor TftWebhookServer.Create(AEventHandler: TftEventHandler);
@@ -123,54 +101,45 @@ end;
 destructor TftWebhookServer.Destroy;
 begin
   Stop;
-  FreeAndNil(FServer);
   inherited;
 end;
 
 function TftWebhookServer.GetActive: Boolean;
 begin
-  Result := FServer.Active;
-end;
-
-function TftWebhookServer.GetCertificateData: TCertificateData;
-begin
-  Result := FServer.CertificateData;
+  Result := Assigned(FThread);
 end;
 
 procedure TftWebhookServer.Start;
 begin
   if Assigned(FThread) then
     Exit;
-  FServer.SetBindAddress(FHost);
-  FServer.Port := FPort;
-  FServer.UseSSL := FUseSSL;
-  FThread := TftWebhookServerThread.Create(FServer);
-  FThread.Resume;
-  Sleep(50);
+  FServer := TInetServer.Create(FHost, FPort);
+  try
+    FServer.OnConnect := HandleConnect;
+    FServer.ReuseAddress := True;
+    FServer.Bind;
+    FServer.Listen;
+    FThread := TftListenThread.Create(FServer);
+    FThread.Resume;
+    Sleep(50);
+  except
+    FreeAndNil(FServer);
+    raise;
+  end;
 end;
 
 procedure TftWebhookServer.Stop;
 begin
   if Assigned(FServer) then
-    FServer.StopListening;
-  if Assigned(FThread) then
   begin
-    try
-      TInetSocket.Create('127.0.0.1', FPort).Free;
-    except
-      // The server may already be closed.
+    FServer.StopAccepting(True);
+    if Assigned(FThread) then
+    begin
+      FThread.WaitFor;
+      FreeAndNil(FThread);
     end;
-    FThread.WaitFor;
-    FreeAndNil(FThread);
+    FreeAndNil(FServer);
   end;
-end;
-
-procedure TftWebhookServer.RespondJSON(var AResponse: TFPHTTPConnectionResponse;
-  ACode: Integer; const AJSON: String);
-begin
-  AResponse.Code := ACode;
-  AResponse.ContentType := 'application/json';
-  AResponse.Content := AJSON;
 end;
 
 procedure TftWebhookServer.DispatchUpdate(const AUpdate: TftUpdate);
@@ -181,70 +150,152 @@ begin
     FEventHandler.HandleUpdate(AUpdate);
 end;
 
-procedure TftWebhookServer.HandleRequest(Sender: TObject;
-  var ARequest: TFPHTTPConnectionRequest;
-  var AResponse: TFPHTTPConnectionResponse);
+function TftWebhookServer.ReadRequest(Data: TSocketStream;
+  out AMethod, AURI, ASecretToken, ABody: String): Boolean;
 var
-  LBody: String;
-  LUpdate: TftUpdate;
-  LPath: String;
-  LValue: TJSONData;
+  LByte: Byte;
+  LHeader: String;
+  LLines: TStringList;
+  I, LPos, LContentLength: Integer;
+  LName, LValue: String;
+  LRead: Integer;
 begin
-  if not SameText(ARequest.Method, 'POST') then
-  begin
-    RespondJSON(AResponse, 200, '{"ok":true}');
-    Exit;
-  end;
+  Result := False;
+  AMethod := '';
+  AURI := '';
+  ASecretToken := '';
+  ABody := '';
+  LHeader := '';
+  repeat
+    LRead := Data.Read(LByte, 1);
+    if LRead <> 1 then
+      Exit;
+    LHeader := LHeader + Char(LByte);
+    if Length(LHeader) > 65536 then
+      Exit;
+  until (Length(LHeader) >= 4) and
+    (Copy(LHeader, Length(LHeader) - 3, 4) = #13#10#13#10);
 
-  LPath := ARequest.URI;
-  if Pos('?', LPath) > 0 then
-    LPath := Copy(LPath, 1, Pos('?', LPath) - 1);
-  if (FPath <> '') and not SameText(LPath, FPath) then
-  begin
-    RespondJSON(AResponse, 404, '{"ok":false,"description":"unknown path"}');
-    Exit;
-  end;
-
-  if (FSecretToken <> '') and
-    (ARequest.CustomHeaders.Values['X-Telegram-Bot-Api-Secret-Token'] <> FSecretToken) then
-  begin
-    RespondJSON(AResponse, 403,
-      '{"ok":false,"description":"invalid secret token"}');
-    Exit;
-  end;
-
-  LBody := ARequest.Content;
-  if Length(LBody) > FMaxBodySize then
-  begin
-    RespondJSON(AResponse, 413,
-      '{"ok":false,"description":"request body too large"}');
-    Exit;
-  end;
-  if LBody = '' then
-  begin
-    RespondJSON(AResponse, 400,
-      '{"ok":false,"description":"empty request body"}');
-    Exit;
-  end;
-
-  LValue := TJSON.ParseJSONValue(LBody);
-  if LValue = nil then
-  begin
-    RespondJSON(AResponse, 400,
-      '{"ok":false,"description":"invalid update"}');
-    Exit;
-  end;
+  LLines := TStringList.Create;
   try
-    LUpdate := TftUpdateFromJson(LValue);
-    try
-      DispatchUpdate(LUpdate);
-    finally
-      LUpdate.Free;
+    LLines.Text := StringReplace(LHeader, #13#10, #10, [rfReplaceAll]);
+    if LLines.Count = 0 then
+      Exit;
+    LPos := Pos(' ', LLines[0]);
+    if LPos = 0 then
+      Exit;
+    AMethod := Copy(LLines[0], 1, LPos - 1);
+    AURI := Copy(LLines[0], LPos + 1, Length(LLines[0]));
+    LPos := Pos(' ', AURI);
+    if LPos > 0 then
+      AURI := Copy(AURI, 1, LPos - 1);
+    LContentLength := 0;
+    for I := 1 to LLines.Count - 1 do
+    begin
+      LPos := Pos(':', LLines[I]);
+      if LPos = 0 then
+        Continue;
+      LName := LowerCase(Trim(Copy(LLines[I], 1, LPos - 1)));
+      LValue := Trim(Copy(LLines[I], LPos + 1, Length(LLines[I])));
+      if LName = 'content-length' then
+        LContentLength := StrToIntDef(LValue, 0)
+      else if LName = 'x-telegram-bot-api-secret-token' then
+        ASecretToken := LValue;
     end;
-    RespondJSON(AResponse, 200, '{"ok":true}');
   finally
-    LValue.Free;
+    LLines.Free;
   end;
+
+  if LContentLength < 0 then
+    Exit;
+  SetLength(ABody, LContentLength);
+  if LContentLength > 0 then
+  begin
+    LRead := Data.Read(ABody[1], LContentLength);
+    if LRead <> LContentLength then
+      Exit;
+  end;
+  Result := True;
+end;
+
+procedure TftWebhookServer.WriteResponse(Data: TSocketStream; ACode: Integer;
+  const AJSON: String);
+var
+  LResponse: String;
+begin
+  LResponse := 'HTTP/1.1 ' + IntToStr(ACode) + ' ' +
+    BoolToStr(ACode = 200, 'OK', 'ERROR') + #13#10 +
+    'Content-Type: application/json' + #13#10 +
+    'Content-Length: ' + IntToStr(Length(AJSON)) + #13#10 +
+    'Connection: close' + #13#10#13#10 + AJSON;
+  Data.Write(LResponse[1], Length(LResponse));
+end;
+
+procedure TftWebhookServer.HandleConnect(Sender: TObject; Data: TSocketStream);
+var
+  LMethod, LURI, LSecret, LBody: String;
+  LValue: TJSONData;
+  LUpdate: TftUpdate;
+begin
+  try
+    if not ReadRequest(Data, LMethod, LURI, LSecret, LBody) then
+    begin
+      WriteResponse(Data, 400, '{"ok":false,"description":"bad request"}');
+      Exit;
+    end;
+    if not SameText(LMethod, 'POST') then
+    begin
+      WriteResponse(Data, 200, '{"ok":true}');
+      Exit;
+    end;
+    if (FPath <> '') and not SameText(LURI, FPath) then
+    begin
+      WriteResponse(Data, 404, '{"ok":false,"description":"unknown path"}');
+      Exit;
+    end;
+    if (FSecretToken <> '') and (LSecret <> FSecretToken) then
+    begin
+      WriteResponse(Data, 403,
+        '{"ok":false,"description":"invalid secret token"}');
+      Exit;
+    end;
+    if Length(LBody) > FMaxBodySize then
+    begin
+      WriteResponse(Data, 413,
+        '{"ok":false,"description":"request body too large"}');
+      Exit;
+    end;
+    if LBody = '' then
+    begin
+      WriteResponse(Data, 400,
+        '{"ok":false,"description":"empty request body"}');
+      Exit;
+    end;
+    LValue := TJSON.ParseJSONValue(LBody);
+    if LValue = nil then
+    begin
+      WriteResponse(Data, 400,
+        '{"ok":false,"description":"invalid update"}');
+      Exit;
+    end;
+    try
+      LUpdate := TftUpdateFromJson(LValue);
+      try
+        DispatchUpdate(LUpdate);
+      finally
+        LUpdate.Free;
+      end;
+      WriteResponse(Data, 200, '{"ok":true}');
+    finally
+      LValue.Free;
+    end;
+  except
+    try
+      WriteResponse(Data, 500, '{"ok":false,"description":"internal error"}');
+    except
+    end;
+  end;
+  Data.Free;
 end;
 
 end.

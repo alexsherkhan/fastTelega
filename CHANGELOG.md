@@ -99,8 +99,9 @@
   `TJSON.JsonToObject` mapper.
 - Added FPC conditionals for base units and generic collections.
 - Added `Lazarus/fasttelega.lpk`, `Lazarus/EchoBot.lpr` and `build.sh`.
+- Added an FPC webhook server on `TInetServer` with clean `Stop` handling.
 - Verified types, parser, API, bot and long polling compile with FPC 3.2.2.
-- Added FPCUnit tests for JSON mapping, parser, bot creation and long polling.
+- Added FPCUnit tests for JSON mapping, parser, bot creation, long polling and webhook POST handling.
 
 ### FMX support
 

@@ -35,7 +35,7 @@ and uses the Delphi RTL, REST components and Indy for webhooks.
 | Installer | Inno Setup project in `Tools/Setup` |
 | Components | VCL `TftTelegramBot` and FMX `TftTelegramBotFMX` |
 | Free Pascal / Lazarus | Core port, Lazarus package, console example and FPCUnit tests |
-| Tests | FPCUnit suite (12 tests), all passing on FPC 3.2.2 |
+| Tests | FPCUnit suite (13 tests), all passing on FPC 3.2.2 |
 
 ## Requirements
 
@@ -210,7 +210,7 @@ cd Tests
 ./TestRunner --all --format=plain
 ```
 
-Current result: 12 tests, 0 errors, 0 failures. See `Tests/README.md`.
+Current result: 13 tests, 0 errors, 0 failures. See `Tests/README.md`.
 
 ## Status and limitations
 

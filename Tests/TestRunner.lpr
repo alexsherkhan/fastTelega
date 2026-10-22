@@ -3,10 +3,12 @@ program TestRunner;
 {$mode delphi}{$H+}
 
 uses
+  cthreads,
   consoletestrunner,
   Tests.Json,
   Tests.Parser,
-  Tests.Bot;
+  Tests.Bot,
+  Tests.Webhook;
 
 var
   Runner: TTestRunner;

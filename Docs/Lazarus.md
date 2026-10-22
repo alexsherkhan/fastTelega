@@ -11,7 +11,7 @@ original implementation; FPC uses compatibility shims under `Source/Compat/FPC`.
 | Parser | Compiles; JSON mapper verified with `TftUser` |
 | API | Compiles (`TftAPI`) |
 | Bot and long polling | Compiles |
-| Webhook server | `TFPHTTPServer` (fphttpserver, plain HTTP or OpenSSL) |
+| Webhook server | `TInetServer` (plain HTTP, TLS via reverse proxy) |
 | VCL/FMX components | Not included |
 | Lazarus package | `Lazarus/fasttelega.lpk` |
 | Example | `Lazarus/EchoBot.lpr` |
@@ -48,7 +48,7 @@ unit path.
 
 Open `Lazarus/fasttelega.lpk` in Lazarus and build it. The package requires the
 `FCL` package (`fpjson`, `fphttpclient`). It contains the core units and FPC
-compatibility units. The FMX/VCL components are excluded. Webhook units use `fphttpserver` and are included.
+compatibility units. The FMX/VCL components are excluded. Webhook units use `TInetServer` and are included.
 
 ## Limitations
 
