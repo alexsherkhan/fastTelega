@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.embarcadero.com/products/delphi"><img src="https://img.shields.io/badge/Delphi-11%20Alexandria-red.svg" alt="Delphi 11 Alexandria"></a>
+  <a href="https://www.embarcadero.com/products/delphi"><img src="https://img.shields.io/badge/Delphi-10.2--13-red.svg" alt="Delphi 10.2 - 13"></a>
   <a href="https://core.telegram.org/bots/api"><img src="https://img.shields.io/badge/Telegram%20Bot%20API-10.3-2CA5E0.svg" alt="Telegram Bot API 10.3"></a>
   <a href="Docs/API.md"><img src="https://img.shields.io/badge/methods-185%2F185-brightgreen.svg" alt="185 of 185 methods"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
@@ -43,7 +43,8 @@ and uses the Delphi RTL, REST components and Indy for webhooks.
 
 ## Installation
 
-Open `Packages/RAD Studio 11 Alexandria/fastTelega.groupproj`, build
+Open the package group for your compiler version under `Packages/` (for
+example `Packages/RAD Studio 12 Athens/fastTelega.groupproj`), build
 `fastTelega.Package.RTL`, and add the package to the IDE library path.
 
 To use the sources directly, add these directories to the project search path:

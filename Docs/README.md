@@ -7,7 +7,7 @@ runtime dependencies beyond the Delphi RTL/REST components.
 
 **Version:** 1.5 (unreleased Bot API 10.3 additions)
 **Telegram Bot API coverage:** 185 of 185 methods
-**Compiler:** RAD Studio 11 Alexandria (Windows)
+**Compiler:** RAD Studio 10.2 Tokyo - 13 Florence (Windows)
 **License:** MIT (see [Licensing](Licensing.md))
 
 ## Documentation map

@@ -1,5 +1,21 @@
 # Building
 
+## Supported compilers
+
+Package groups are provided for:
+
+| RAD Studio | BDS version | Folder |
+|---|---|---|
+| 10.2 Tokyo | 19.0 | `Packages/RAD Studio 10.2 Tokyo` |
+| 10.3 Rio | 20.0 | `Packages/RAD Studio 10.3 Rio` |
+| 10.4 Sydney | 21.0 | `Packages/RAD Studio 10.4 Sydney` |
+| 11 Alexandria | 22.0 | `Packages/RAD Studio 11 Alexandria` |
+| 12 Athens | 23.0 | `Packages/RAD Studio 12 Athens` |
+| 13 Florence | 24.0 | `Packages/RAD Studio 13 Florence` |
+
+Delphi 10.3 or newer is recommended. The source uses `TNetHTTPClient`,
+REST.JSON and Indy, which are included with these versions.
+
 ## Packages
 
 | Project | Purpose |
@@ -10,25 +26,24 @@
 The RTL package requires `rtl`, `RESTComponents`, `IndyCore` and
 `IndyProtocols`. The VCL package requires `rtl`, `vcl` and the RTL package.
 
-Open `fastTelega.groupproj` to build both visible projects.
+Open the `fastTelega.groupproj` from the folder matching your compiler to
+build both visible projects.
 
 ## Build script
 
 `Packages/RAD Studio 11 Alexandria/Build.bat`:
 
-1. Calls `..\Common\fastTelega.Build.Delphi.bat 22.0`.
-2. Locates `rsvars.bat` for BDS 22.0 (RAD Studio 11 Alexandria).
+1. Calls `..\Common\fastTelega.Build.Delphi.bat <BDS version>`.
+2. Locates `rsvars.bat` for the requested BDS version.
 3. Builds RTL and VCL with `MSBuild` for Win32/Release.
 
-The shared script also attempts to build VCL design-time and FMX packages that
-are not present in this repository. Either add those projects or build the RTL
-and VCL `.dproj` files directly. Build logs are written next to the projects as
-`Build.RTL.log` and `Build.VCL.log`.
+Build logs are written next to the projects as `Build.RTL.log` and
+`Build.VCL.log`.
 
 To build from a custom RAD Studio location:
 
 ```bat
-Build.bat "C:\Program Files (x86)\Embarcadero\Studio\22.0"
+Build.bat "C:\Program Files (x86)\Embarcadero\Studio\23.0"
 ```
 
 ## Manual build
@@ -46,10 +61,9 @@ available on both Win32 and Win64.
 
 ## Compiler compatibility
 
-The package projects target Delphi 11 Alexandria. The source uses language
-features such as anonymous methods, generics, inline variables in examples and
-`TNetHTTPClient`, so Delphi 10.3 or newer is recommended. Older compilers may
-need edits.
+The source uses anonymous methods, generics and `TNetHTTPClient`. Delphi 10.2
+is the oldest provided package group; Delphi 10.3 or newer is recommended.
+Older compilers may need edits.
 
 ## Component resources
 

@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Windows with RAD Studio 11 Alexandria (the packages target BDS 22.0).
+- Windows with RAD Studio 10.2 Tokyo or newer. Package groups are provided for BDS 19.0, 20.0, 21.0, 22.0, 23.0 and 24.0.
 - Delphi RTL and REST components (`RESTComponents` is required by the RTL package).
 - VCL only if you use the `TftTelegramBot` component.
 - A Telegram bot token from [@BotFather](https://t.me/BotFather).
@@ -12,7 +12,8 @@ The library uses `System.Net.HttpClientComponent`, `System.Net.Mime`,
 
 ## Option 1: install the RTL package
 
-1. Open `Packages/RAD Studio 11 Alexandria/fastTelega.groupproj`.
+1. Open the package group for your compiler version, for example
+   `Packages/RAD Studio 12 Athens/fastTelega.groupproj`.
 2. Build `fastTelega.Package.RTL.dproj` (Win32 is the configured target).
 3. Add the package's output directory to the IDE library path, or install the
    package from **Component > Install Packages**.

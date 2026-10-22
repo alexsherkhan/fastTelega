@@ -1,4 +1,4 @@
-@echo off
+﻿@echo off
 
 rem #
 rem # Copyright (c) 2011-2022 Google LLC.

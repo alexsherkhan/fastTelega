@@ -85,6 +85,12 @@
 - Documented installation, architecture, events, API index, types, uploads,
   webhooks, VCL status, examples, building, licensing and known limitations.
 
+### Compiler support
+
+- Added package groups for RAD Studio 10.2 Tokyo, 10.3 Rio, 10.4 Sydney,
+  12 Athens and 13 Florence alongside 11 Alexandria.
+- Updated the shared build script to build only the RTL and VCL packages.
+
 ## 1.5
 
 - Split the monolithic source units into `AvailableTypes`, `Events`, `Net`,

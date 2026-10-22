@@ -1,8 +1,11 @@
-@echo off
+﻿@echo off
 
 rem #
 rem # Copyright (c) 2011-2022 Google LLC.
 rem # Copyright (c) 2021-2022 fastTelega Project.
+rem #
+rem # Supported BDS versions: 19.0 (10.2 Tokyo), 20.0 (10.3 Rio), 21.0 (10.4 Sydney),
+rem # 22.0 (11 Alexandria), 23.0 (12 Athens), 24.0 (13 Florence).
 rem #
 rem # Use of this source code is governed by a BSD-style license that can be
 rem # found in the LICENSE file.
@@ -36,15 +39,6 @@ MSBuild fastTelega.Package.RTL.dproj /p:Config=Release /p:Platform=Win32 >Build.
 
 echo Building VCL package for BDS %1...
 MSBuild fastTelega.Package.VCL.dproj /p:Config=Release /p:Platform=Win32 >Build.VCL.log 2>&1 || goto :BUILD_ERROR
-
-echo Building VCL Designtime package for BDS %1...
-MSBuild fastTelega.Package.VCL.Designtime.dproj /p:Config=Release /p:Platform=Win32 >Build.VCL.Designtime.log 2>&1 || goto :BUILD_ERROR
-
-echo Building FMX package for BDS %1...
-MSBuild fastTelega.Package.FMX.dproj /p:Config=Release /p:Platform=Win32 >Build.FMX.log 2>&1 || goto :BUILD_ERROR
-
-echo Building FMX Designtime package for BDS %1...
-MSBuild fastTelega.Package.FMX.Designtime.dproj /p:Config=Release /p:Platform=Win32 >Build.FMX.Designtime.log 2>&1 || goto :BUILD_ERROR
 
 echo Finished.
 goto :EOF

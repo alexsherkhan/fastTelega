@@ -1,0 +1,62 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{2E385EB3-302B-4BF7-8217-213506A072F9}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="fastTelega.Package.RTL.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="fastTelega.Package.VCL.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="fastTelega_Package_RTL">
+        <MSBuild Projects="fastTelega.Package.RTL.dproj"/>
+    </Target>
+    <Target Name="fastTelega_Package_RTL:Clean">
+        <MSBuild Projects="fastTelega.Package.RTL.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="fastTelega_Package_RTL:Make">
+        <MSBuild Projects="fastTelega.Package.RTL.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="fastTelega_Package_VCL">
+        <MSBuild Projects="fastTelega.Package.VCL.dproj"/>
+    </Target>
+    <Target Name="fastTelega_Package_VCL:Clean">
+        <MSBuild Projects="fastTelega.Package.VCL.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="fastTelega_Package_VCL:Make">
+        <MSBuild Projects="fastTelega.Package.VCL.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="fastTelega_Package_RTL;fastTelega_Package_VCL"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="fastTelega_Package_RTL:Clean;fastTelega_Package_VCL:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="fastTelega_Package_RTL:Make;fastTelega_Package_VCL:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+    <ItemGroup Condition="'$(BuildGroup)'=='ALL'">
+        <BuildGroupProject Include="fastTelega.Package.VCL.dproj">
+            <ProjectGuid>{8F2EC521-8D6E-4232-AA5A-7B233E1FC771}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="fastTelega.Package.RTL.dproj">
+            <ProjectGuid>{736A722D-767F-450D-B5CF-A390B572953F}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+    </ItemGroup>
+</Project>
