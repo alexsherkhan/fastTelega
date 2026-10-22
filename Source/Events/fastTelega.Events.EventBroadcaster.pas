@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega EventBroadcaster
 /// Alexander Syrykh
 /// </summary>
@@ -34,6 +34,7 @@ type
       : TList< { TftChosenInlineResultListener } TftListenerType>;
     FOnCallbackQueryListeners
       : TList< { TftCallbackQueryListener } TftListenerType>;
+    FOnUpdateListeners: TList<TftListenerType>;
   protected
     procedure Broadcast(const AListeners: TList<TftListenerType>;
       const AObj: TObject);
@@ -45,6 +46,7 @@ type
     procedure BroadcastInlineQuery(const AQuery: TftInlineQuery);
     procedure BroadcastChosenInlineResult(const AResult: TftChosenInlineResult);
     procedure BroadcastCallbackQuery(const AResult: TftCallbackQuery);
+    procedure BroadcastUpdate(const AUpdate: TftUpdate);
   public
     constructor Create;
     destructor Destroy; override;
@@ -100,6 +102,10 @@ type
 
     procedure OnCallbackQuery(const AListener
       : TftListenerType { TftCallbackQueryListener } );
+    /// <summary>
+    /// Registers a listener that receives every update before it is routed.
+    /// </summary>
+    procedure OnUpdate(const AListener: TftListenerType);
   end;
 
 implementation
@@ -128,6 +134,11 @@ procedure TftEventBroadcaster.BroadcastCallbackQuery(const AResult
   : TftCallbackQuery);
 begin
   Broadcast(FOnCallbackQueryListeners, AResult);
+end;
+
+procedure TftEventBroadcaster.BroadcastUpdate(const AUpdate: TftUpdate);
+begin
+  Broadcast(FOnUpdateListeners, AUpdate);
 end;
 
 procedure TftEventBroadcaster.BroadcastChosenInlineResult
@@ -180,6 +191,7 @@ begin
   FOnInlineQueryListeners := TList<TftListenerType>.Create;
   FOnChosenInlineResultListeners := TList<TftListenerType>.Create;
   FOnCallbackQueryListeners := TList<TftListenerType>.Create;
+  FOnUpdateListeners := TList<TftListenerType>.Create;
 end;
 
 destructor TftEventBroadcaster.Destroy;
@@ -191,6 +203,7 @@ begin
   FreeAndNil(FOnInlineQueryListeners);
   FreeAndNil(FOnChosenInlineResultListeners);
   FreeAndNil(FOnCallbackQueryListeners);
+  FreeAndNil(FOnUpdateListeners);
   inherited;
 end;
 
@@ -204,6 +217,11 @@ procedure TftEventBroadcaster.OnCallbackQuery(const AListener
   : TftListenerType { TftCallbackQueryListener } );
 begin
   FOnCallbackQueryListeners.Add(AListener);
+end;
+
+procedure TftEventBroadcaster.OnUpdate(const AListener: TftListenerType);
+begin
+  FOnUpdateListeners.Add(AListener);
 end;
 
 procedure TftEventBroadcaster.OnChosenInlineResult(const AListener

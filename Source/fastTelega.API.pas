@@ -5471,47 +5471,82 @@ function TftAPI.SendMediaGroup(AChatId: Variant; AMedia: TList<TftInputMedia>;
   AAllowSendingWithoutReply: Boolean; AProtectContent: Boolean;
   AMessageThreadId: Integer): TftMessageList;
 var
-  LArgs: TStringList;
+  I: Integer;
+  LHasFiles: Boolean;
+  LJsonArgs: TStringList;
+  LMultipartArgs: TMultipartFormData;
 begin
-  FHttpClient.ContentType := 'application/json';
-  LArgs := TStringList.Create;
-
-  LArgs.AddPair('chat_id', IntToStr(AChatId));
-
-  if (AMessageThreadId <> 0) then
-  begin
-    LArgs.AddPair('message_thread_id', IntToStr(AMessageThreadId));
-  end;
-
+  LHasFiles := False;
   if Assigned(AMedia) then
   begin
-    LArgs.AddPair('media', FTypeParser.ParseList(TList(AMedia)));
+    for I := 0 to AMedia.Count - 1 do
+    begin
+      if Assigned(AMedia[I].MediaFile) then
+      begin
+        LHasFiles := True;
+        if AMedia[I].AttachName = '' then
+          AMedia[I].AttachName := 'file' + IntToStr(I);
+      end;
+    end;
   end;
 
+  if LHasFiles then
+  begin
+    FHttpClient.ContentType := 'multipart/form-data';
+    LMultipartArgs := TMultipartFormData.Create;
+    LMultipartArgs.AddField('chat_id', VarToStr(AChatId));
+    if (AMessageThreadId <> 0) then
+      LMultipartArgs.AddField('message_thread_id', IntToStr(AMessageThreadId));
+    if Assigned(AMedia) then
+    begin
+      LMultipartArgs.AddField('media',
+        FTypeParser.ParseInputMediaList(AMedia));
+      for I := 0 to AMedia.Count - 1 do
+      begin
+        if Assigned(AMedia[I].MediaFile) then
+          LMultipartArgs.AddFile(AMedia[I].AttachName,
+            AMedia[I].MediaFile.filePath);
+      end;
+    end;
+    if (ADisableNotification) then
+      LMultipartArgs.AddField('disable_notification',
+        BoolToStr(ADisableNotification, true));
+    if (AProtectContent) then
+      LMultipartArgs.AddField('protect_content',
+        BoolToStr(AProtectContent, true));
+    if (AReplyToMessageId <> 0) then
+      LMultipartArgs.AddField('reply_to_message_id',
+        IntToStr(AReplyToMessageId));
+    if (AAllowSendingWithoutReply) then
+      LMultipartArgs.AddField('allow_sending_without_reply',
+        BoolToStr(AAllowSendingWithoutReply, true));
+
+    Result := TftMessageList(FTypeParser.ParseJsonAndGetList
+      (ParseFunJSONArrayTftMessage, SendRequest('sendMediaGroup',
+      LMultipartArgs, 'POST')));
+    Exit;
+  end;
+
+  FHttpClient.ContentType := 'application/json';
+  LJsonArgs := TStringList.Create;
+  LJsonArgs.AddPair('chat_id', VarToStr(AChatId));
+  if (AMessageThreadId <> 0) then
+    LJsonArgs.AddPair('message_thread_id', IntToStr(AMessageThreadId));
+  if Assigned(AMedia) then
+    LJsonArgs.AddPair('media', FTypeParser.ParseInputMediaList(AMedia));
   if (ADisableNotification) then
-  begin
-    LArgs.AddPair('disable_notification',
+    LJsonArgs.AddPair('disable_notification',
       BoolToStr(ADisableNotification, true));
-  end;
-
   if (AProtectContent) then
-  begin
-    LArgs.AddPair('protect_content', BoolToStr(AProtectContent, true));
-  end;
-
+    LJsonArgs.AddPair('protect_content', BoolToStr(AProtectContent, true));
   if (AReplyToMessageId <> 0) then
-  begin
-    LArgs.AddPair('reply_to_message_id', IntToStr(AReplyToMessageId));
-  end;
-
+    LJsonArgs.AddPair('reply_to_message_id', IntToStr(AReplyToMessageId));
   if (AAllowSendingWithoutReply) then
-  begin
-    LArgs.AddPair('allow_sending_without_reply',
+    LJsonArgs.AddPair('allow_sending_without_reply',
       BoolToStr(AAllowSendingWithoutReply, true));
-  end;
 
   Result := TftMessageList(FTypeParser.ParseJsonAndGetList
-    (ParseFunJSONArrayTftMessage, SendRequest('sendMediaGroup', LArgs,
+    (ParseFunJSONArrayTftMessage, SendRequest('sendMediaGroup', LJsonArgs,
     'POST')));
 end;
 

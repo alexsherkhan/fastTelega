@@ -13,12 +13,25 @@
   (`sendGame`) and `GetMyDefaultAdministratorRights` (`for_channels`).
 - Fixed the `SendVoice` declaration that was missing a parameter type.
 
+### Updates and dispatch
+
+- Extended `TftUpdate` with business connection/message, deleted business
+  messages, guest messages, reaction updates, chat boosts, purchased paid
+  media, managed bot, subscription and stopped generation fields.
+- Added `TftBusinessMessagesDeleted`, `TftMessageReactionUpdated`,
+  `TftMessageReactionCountUpdated`, `TftReactionCount`, `TftChatBoostUpdated`,
+  `TftChatBoostRemoved`, `TftPaidMediaPurchased`, `TftManagedBotUpdated`,
+  `TftBotSubscriptionUpdated` and `TftMessageGenerationStopped`.
+- Added a generic `OnUpdate` listener and routed edited, channel, business and
+  guest messages through the existing message handler.
+
 ### Models and parser
 
 - Added Bot API 10.3 object models: paid media, checklists, rich messages,
   profile photos, stories, gifts, boosts, Star transactions, managed-bot
   settings, guest messages and reactions.
 - Added multipart uploads for profile photos and stories.
+- Added multipart media groups via `TftInputMedia.MediaFile` / `AttachName`.
 - Fixed JSON array serialization: strings starting with `[` are emitted as raw
   JSON.
 - Added `ParseMessageEntities` and replaced invalid `TList` casts for

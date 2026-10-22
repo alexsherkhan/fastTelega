@@ -33,7 +33,8 @@ the bot exists.
 
 | Method | Fires for |
 |---|---|
-| `OnAnyMessage` | Every `Message` update, before command routing |
+| `OnUpdate` | Every update, before any typed routing |
+| `OnAnyMessage` | Every primary `Message` update, before command routing |
 | `OnCommand(Name, Listener)` | Messages whose command equals `Name` |
 | `OnCommand(List, Listener)` | The same listener for several command names |
 | `OnUnknownCommand` | Command messages that did not match a registered command |
@@ -100,17 +101,22 @@ Bot.Events.OnCallbackQuery(
 
 ## Routing rules
 
-1. `BroadcastAnyMessage` is called first for every message.
-2. If the message text is empty, routing stops.
-3. If the text starts with `/`, the command name is extracted. A bare
+1. `OnUpdate` listeners receive every `TftUpdate` first.
+2. `BroadcastAnyMessage` is called for every primary message.
+3. If the message text is empty, routing stops.
+4. If the text starts with `/`, the command name is extracted. A bare
    `/start` is routed as `start`. Commands with arguments or an `@username`
    suffix are affected by the parsing bug described in
    [Troubleshooting](Troubleshooting.md#command-parsing-includes-delimiter).
-4. A registered command listener is called. If none exists,
+5. A registered command listener is called. If none exists,
    `OnUnknownCommand` is called.
-5. Non-command text is sent to `OnNonCommandMessage`.
-6. `InlineQuery`, `ChosenInlineResult` and `CallbackQuery` are dispatched
+6. Non-command text is sent to `OnNonCommandMessage`.
+7. `InlineQuery`, `ChosenInlineResult` and `CallbackQuery` are dispatched
    independently before the message branch.
+8. Edited messages, channel posts, edited channel posts, business messages,
+   edited business messages and guest messages also go through message routing
+   (commands and `OnAnyMessage`). Other update types are available through
+   `OnUpdate` only.
 
 ## Threading
 
@@ -124,11 +130,14 @@ own worker threads or queue if a handler performs blocking I/O.
 - The command registry stores one listener per command name. Registering the
   same command twice raises an exception; use one listener that dispatches
   internally if you need multiple handlers.
-- `TftEventHandler` handles only `Message`, `InlineQuery`,
-  `ChosenInlineResult` and `CallbackQuery` updates. Edited messages, channel
-  posts, business messages, chat member updates and other update types are not
-  dispatched.
-- `OnAnyMessage` does not fire for edited messages.
+- Typed events exist only for `Message`, `InlineQuery`,
+  `ChosenInlineResult` and `CallbackQuery`. Reactions, boosts, business
+  connection changes, paid media purchases, managed bots, subscriptions and
+  other update types are accessible through `OnUpdate`, but have no dedicated
+  event methods yet.
+- `OnAnyMessage` fires for primary messages; edited/channel/business messages
+  are routed through command and non-command listeners but do not call
+  `OnAnyMessage`.
 - The dispatcher does not catch exceptions raised by listeners. An exception
   propagates out of `Start` and stops the polling loop unless the caller
   handles it.

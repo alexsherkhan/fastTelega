@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega EventHandler
 /// Alexander Syrykh
 /// </summary>
@@ -79,6 +79,8 @@ end;
 
 procedure TftEventHandler.HandleUpdate(const Update: TftUpdate);
 begin
+  TftHackEventBroadcaster(FBroadCaster).BroadcastUpdate(Update);
+
   if (Update.InlineQuery <> nil) then
     TftHackEventBroadcaster(FBroadCaster).BroadcastInlineQuery
       (Update.InlineQuery);
@@ -93,6 +95,18 @@ begin
 
   if (Update.Message <> nil) then
     HandleMessage(Update.Message);
+  if (Update.EditedMessage <> nil) then
+    HandleMessage(Update.EditedMessage);
+  if (Update.ChannelPost <> nil) then
+    HandleMessage(Update.ChannelPost);
+  if (Update.EditedChannelPost <> nil) then
+    HandleMessage(Update.EditedChannelPost);
+  if (Update.BusinessMessage <> nil) then
+    HandleMessage(Update.BusinessMessage);
+  if (Update.EditedBusinessMessage <> nil) then
+    HandleMessage(Update.EditedBusinessMessage);
+  if (Update.GuestMessage <> nil) then
+    HandleMessage(Update.GuestMessage);
 end;
 
 end.

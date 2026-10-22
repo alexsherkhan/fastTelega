@@ -97,10 +97,13 @@ listener per command. Use one listener that dispatches internally.
 
 ## New Bot API models are not dispatched
 
-`TftEventHandler` handles only `Message`, `InlineQuery`, `ChosenInlineResult`
-and `CallbackQuery`. Updates such as `edited_message`, `channel_post`,
-`business_message`, `message_reaction`, `chat_boost` and `chat_member` are not
-routed to listeners. Call `HandleUpdate` manually or extend the handler.
+`TftEventHandler` broadcasts every update through `OnUpdate`. It routes
+message-like updates (message, edited message, channel post, business message,
+guest message) through the command listeners and also dispatches
+`InlineQuery`, `ChosenInlineResult` and `CallbackQuery`. Other update types
+(`message_reaction`, `chat_boost`, `purchased_paid_media`, `managed_bot`,
+`subscription`, etc.) are available only through `OnUpdate`; dedicated typed
+events are not implemented yet.
 
 ## Webhooks do not work
 

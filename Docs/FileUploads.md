@@ -119,11 +119,15 @@ end;
 
 ## Attach references and media groups
 
-Telegram also accepts `attach://<name>` references. The current implementation
-uses them for paid media, stickers and rich-message media, but `SendMediaGroup`
-serializes the media array as JSON and does not attach files, so media groups
-are limited to `file_id` and HTTP URLs. Uploading multiple new files in one
-media group is not supported yet.
+`SendMediaGroup` supports multipart uploads through `TftInputMedia.MediaFile`.
+When at least one media item has `MediaFile` assigned, the method switches to
+multipart, assigns `AttachName` (`file0`, `file1`, ...) when empty, and uploads
+all files with the group. Without files, the media array is sent as JSON and can
+use `file_id`, HTTP URLs or `attach://` references.
+
+Telegram also accepts `attach://<name>` references for paid media and stickers;
+those methods still require the caller to provide the attach name and a
+separate upload mechanism.
 
 For single-file methods, prefer `TftInputFile` over manually constructing
 `attach://` strings.

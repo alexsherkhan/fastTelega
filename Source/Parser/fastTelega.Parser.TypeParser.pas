@@ -217,6 +217,7 @@ type
     function ParseInputLocationMessageContent
       (const AObj: TftInputLocationMessageContent): String;
     function ParseInputMedia(const AObj: TftInputMedia): String;
+    function ParseInputMediaList(const AMedia: TList<TftInputMedia>): String;
     function ParseInputMediaAnimation(const AObj
       : TftInputMediaAnimation): String;
     function ParseInputMediaAudio(const AObj: TftInputMediaAudio): String;
@@ -1936,29 +1937,51 @@ begin
   // The last comma will be erased by ParseInputMessageContent().
 end;
 
+function TftTypeParser.ParseInputMediaList
+  (const AMedia: TList<TftInputMedia>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  for I := 0 to AMedia.Count - 1 do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + ParseInputMedia(AMedia[I]);
+  end;
+  Result := Result + ']';
+end;
+
 function TftTypeParser.ParseInputMedia(const AObj: TftInputMedia): String;
+var
+  LMedia: String;
 begin
   Result := '';
-  if (AObj <> nil) then
-    Result := '';
+  if (AObj = nil) then
+    Exit;
   Result := Result + '{';
   AppendToJson(Result, 'type', AObj.TypeS);
-  AppendToJson(Result, 'media', AObj.Media);
+  if Assigned(AObj.MediaFile) then
+    LMedia := 'attach://' + AObj.AttachName
+  else
+    LMedia := AObj.Media;
+  AppendToJson(Result, 'media', LMedia);
   AppendToJson(Result, 'caption', AObj.Caption);
   AppendToJson(Result, 'parse_mode', AObj.ParseMode);
-  AppendToJson(Result, 'caption_entities',
-    ParseMessageEntities(AObj.CaptionEntities));
+  if Assigned(AObj.CaptionEntities) and (Length(AObj.CaptionEntities) > 0) then
+    AppendToJson(Result, 'caption_entities',
+      ParseMessageEntities(AObj.CaptionEntities));
 
   if CompareStr(AObj.TypeS, 'photo') = 0 then
-    ParseInputMediaPhoto(AObj as TftInputMediaPhoto)
+    Result := Result + ParseInputMediaPhoto(AObj as TftInputMediaPhoto)
   else if CompareStr(AObj.TypeS, 'video') = 0 then
-    ParseInputMediaVideo(AObj as TftInputMediaVideo)
+    Result := Result + ParseInputMediaVideo(AObj as TftInputMediaVideo)
   else if CompareStr(AObj.TypeS, 'animation') = 0 then
-    ParseInputMediaAnimation(AObj as TftInputMediaAnimation)
+    Result := Result + ParseInputMediaAnimation(AObj as TftInputMediaAnimation)
   else if CompareStr(AObj.TypeS, 'document') = 0 then
-    ParseInputMediaDocument(AObj as TftInputMediaDocument)
+    Result := Result + ParseInputMediaDocument(AObj as TftInputMediaDocument)
   else if CompareStr(AObj.TypeS, 'audio') = 0 then
-    ParseInputMediaAudio(AObj as TftInputMediaAudio);
+    Result := Result + ParseInputMediaAudio(AObj as TftInputMediaAudio);
 
   RemoveLastComma(Result);
   Result := Result + '}';

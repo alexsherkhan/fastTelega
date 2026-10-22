@@ -190,6 +190,16 @@ type
   // TftSticker = class;
   // TftStickerSet = class;
   TftSuccessfulPayment = class;
+  TftBusinessConnection = class;
+  TftBusinessMessagesDeleted = class;
+  TftMessageReactionUpdated = class;
+  TftMessageReactionCountUpdated = class;
+  TftPaidMediaPurchased = class;
+  TftChatBoostUpdated = class;
+  TftChatBoostRemoved = class;
+  TftManagedBotUpdated = class;
+  TftBotSubscriptionUpdated = class;
+  TftMessageGenerationStopped = class;
   TftUpdate = class;
   TftUser = class;
   TftUserProfilePhotos = class;
@@ -398,6 +408,19 @@ type
     FMyChatMember: TftChatMemberUpdated;
     FChatMember: TftChatMemberUpdated;
     FChatJoinRequest: TftChatJoinRequest;
+    FBusinessConnection: TftBusinessConnection;
+    FBusinessMessage: TftMessage;
+    FEditedBusinessMessage: TftMessage;
+    FGuestMessage: TftMessage;
+    FDeletedBusinessMessages: TftBusinessMessagesDeleted;
+    FMessageReaction: TftMessageReactionUpdated;
+    FMessageReactionCount: TftMessageReactionCountUpdated;
+    FPurchasedPaidMedia: TftPaidMediaPurchased;
+    FChatBoost: TftChatBoostUpdated;
+    FRemovedChatBoost: TftChatBoostRemoved;
+    FManagedBot: TftManagedBotUpdated;
+    FSubscription: TftBotSubscriptionUpdated;
+    FStoppedMessageGeneration: TftMessageGenerationStopped;
   public
     constructor Create;
     destructor Destroy; override;
@@ -485,6 +508,30 @@ type
     /// <summary>
     property ChatJoinRequest: TftChatJoinRequest read FChatJoinRequest
       write FChatJoinRequest;
+    property BusinessConnection: TftBusinessConnection read FBusinessConnection
+      write FBusinessConnection;
+    property BusinessMessage: TftMessage read FBusinessMessage
+      write FBusinessMessage;
+    property EditedBusinessMessage: TftMessage read FEditedBusinessMessage
+      write FEditedBusinessMessage;
+    property GuestMessage: TftMessage read FGuestMessage write FGuestMessage;
+    property DeletedBusinessMessages: TftBusinessMessagesDeleted
+      read FDeletedBusinessMessages write FDeletedBusinessMessages;
+    property MessageReaction: TftMessageReactionUpdated read FMessageReaction
+      write FMessageReaction;
+    property MessageReactionCount: TftMessageReactionCountUpdated
+      read FMessageReactionCount write FMessageReactionCount;
+    property PurchasedPaidMedia: TftPaidMediaPurchased read FPurchasedPaidMedia
+      write FPurchasedPaidMedia;
+    property ChatBoost: TftChatBoostUpdated read FChatBoost write FChatBoost;
+    property RemovedChatBoost: TftChatBoostRemoved read FRemovedChatBoost
+      write FRemovedChatBoost;
+    property ManagedBot: TftManagedBotUpdated read FManagedBot
+      write FManagedBot;
+    property Subscription: TftBotSubscriptionUpdated read FSubscription
+      write FSubscription;
+    property StoppedMessageGeneration: TftMessageGenerationStopped
+      read FStoppedMessageGeneration write FStoppedMessageGeneration;
   end;
 
   TftMessageEntityType = (Mention, Hashtag, Cashtag, BotCommand, Url, Email,
@@ -2766,6 +2813,151 @@ type
     property IsRtl: Boolean read FIsRtl write FIsRtl;
     property SkipEntityDetection: Boolean read FSkipEntityDetection
       write FSkipEntityDetection;
+  end;
+
+  /// <summary>
+  /// Describes a service message about the deletion of messages in a connected
+  /// business account.
+  /// </summary>
+  TftBusinessMessagesDeleted = class
+  private
+    FBusinessConnectionId: String;
+    FChat: TftChat;
+    FMessageIds: TArray<Integer>;
+  public
+    property BusinessConnectionId: String read FBusinessConnectionId
+      write FBusinessConnectionId;
+    property Chat: TftChat read FChat write FChat;
+    property MessageIds: TArray<Integer> read FMessageIds write FMessageIds;
+  end;
+
+  /// <summary>
+  /// Represents a reaction added to a message along with the number of times
+  /// it was added.
+  /// </summary>
+  TftReactionCount = class
+  private
+    FType: TftReactionType;
+    FTotalCount: Integer;
+  public
+    property Type_S: TftReactionType read FType write FType;
+    property TotalCount: Integer read FTotalCount write FTotalCount;
+  end;
+
+  /// <summary>
+  /// This object represents a change of a reaction on a message performed by
+  /// a user.
+  /// </summary>
+  TftMessageReactionUpdated = class
+  private
+    FChat: TftChat;
+    FMessageId: Integer;
+    FUser: TftUser;
+    FActorChat: TftChat;
+    FDate: Integer;
+    FOldReaction: TArray<TftReactionType>;
+    FNewReaction: TArray<TftReactionType>;
+  public
+    property Chat: TftChat read FChat write FChat;
+    property MessageId: Integer read FMessageId write FMessageId;
+    property User: TftUser read FUser write FUser;
+    property ActorChat: TftChat read FActorChat write FActorChat;
+    property Date: Integer read FDate write FDate;
+    property OldReaction: TArray<TftReactionType> read FOldReaction
+      write FOldReaction;
+    property NewReaction: TArray<TftReactionType> read FNewReaction
+      write FNewReaction;
+  end;
+
+  /// <summary>
+  /// This object represents reaction changes on a message with anonymous
+  /// reactions.
+  /// </summary>
+  TftMessageReactionCountUpdated = class
+  private
+    FChat: TftChat;
+    FMessageId: Integer;
+    FDate: Integer;
+    FReactions: TArray<TftReactionCount>;
+  public
+    property Chat: TftChat read FChat write FChat;
+    property MessageId: Integer read FMessageId write FMessageId;
+    property Date: Integer read FDate write FDate;
+    property Reactions: TArray<TftReactionCount> read FReactions
+      write FReactions;
+  end;
+
+  /// <summary>
+  /// This object represents a chat boost update.
+  /// </summary>
+  TftChatBoostUpdated = class
+  private
+    FChat: TftChat;
+    FBoost: TftChatBoost;
+  public
+    property Chat: TftChat read FChat write FChat;
+    property Boost: TftChatBoost read FBoost write FBoost;
+  end;
+
+  /// <summary>
+  /// This object represents a boost removed from a chat.
+  /// </summary>
+  TftChatBoostRemoved = class
+  private
+    FChat: TftChat;
+    FBoostId: String;
+    FRemoveDate: Integer;
+    FSource: TftChatBoostSource;
+  public
+    property Chat: TftChat read FChat write FChat;
+    property BoostId: String read FBoostId write FBoostId;
+    property RemoveDate: Integer read FRemoveDate write FRemoveDate;
+    property Source: TftChatBoostSource read FSource write FSource;
+  end;
+
+  /// <summary>
+  /// This object contains information about a paid media purchase.
+  /// </summary>
+  TftPaidMediaPurchased = class
+  private
+    FFrom: TftUser;
+    FPaidMediaPayload: String;
+  public
+    property From: TftUser read FFrom write FFrom;
+    property PaidMediaPayload: String read FPaidMediaPayload
+      write FPaidMediaPayload;
+  end;
+
+  TftManagedBotUpdated = class
+  private
+    FUser: TftUser;
+    FBot: TftUser;
+  public
+    property User: TftUser read FUser write FUser;
+    property Bot: TftUser read FBot write FBot;
+  end;
+
+  TftBotSubscriptionUpdated = class
+  private
+    FUser: TftUser;
+    FInvoicePayload: String;
+    FState: String;
+  public
+    property User: TftUser read FUser write FUser;
+    property InvoicePayload: String read FInvoicePayload write FInvoicePayload;
+    property State: String read FState write FState;
+  end;
+
+  TftMessageGenerationStopped = class
+  private
+    FChat: TftChat;
+    FMessageThreadId: Integer;
+    FDraftId: Integer;
+  public
+    property Chat: TftChat read FChat write FChat;
+    property MessageThreadId: Integer read FMessageThreadId
+      write FMessageThreadId;
+    property DraftId: Integer read FDraftId write FDraftId;
   end;
 
 implementation

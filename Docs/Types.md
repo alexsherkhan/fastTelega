@@ -61,6 +61,10 @@ The following model groups were added for the current Bot API:
 - Boosts: `TftChatBoost`, `TftChatBoostSource`, `TftUserChatBoosts`
 - Stars: `TftStarAmount`, `TftStarTransaction`, `TftStarTransactions`,
   `TftTransactionPartner`
+- Updates: `TftBusinessMessagesDeleted`, `TftMessageReactionUpdated`,
+  `TftMessageReactionCountUpdated`, `TftChatBoostUpdated`,
+  `TftChatBoostRemoved`, `TftPaidMediaPurchased`, `TftManagedBotUpdated`,
+  `TftBotSubscriptionUpdated`, `TftMessageGenerationStopped`
 - Bots and business: `TftBotName`, `TftBotDescription`,
   `TftBotShortDescription`, `TftBotAccessSettings`, `TftBusinessConnection`,
   `TftPreparedInlineMessage`, `TftPreparedKeyboardButton`,

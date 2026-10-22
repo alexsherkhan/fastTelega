@@ -59,10 +59,11 @@ flowchart LR
 1. `TftLongPoll.Start` calls `Bot.API.GetUpdates(LastUpdateId, Limit, Timeout, AllowedUpdates)`.
 2. For every update, the offset is advanced and `TftEventHandler.HandleUpdate`
    is called.
-3. `TftEventHandler` checks `InlineQuery`, `ChosenInlineResult`,
-   `CallbackQuery` and `Message`, in that order, and broadcasts the matching
-   event.
-4. `TftEventBroadcaster` invokes every registered listener synchronously on the
+3. `TftEventHandler` first broadcasts the whole update through `OnUpdate`.
+4. It then checks `InlineQuery`, `ChosenInlineResult`, `CallbackQuery` and the
+   message variants (message, edited, channel, business, guest), and
+   broadcasts the matching typed event.
+5. `TftEventBroadcaster` invokes every registered listener synchronously on the
    polling thread.
 
 The dispatcher does not create threads. A slow listener blocks further updates

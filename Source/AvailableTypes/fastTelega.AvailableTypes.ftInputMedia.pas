@@ -26,6 +26,8 @@ type
     FCaption: String;
     FParseMode: String;
     FCaptionEntities: TftMessageEntityList;
+    FMediaFile: TftInputFile;
+    FAttachName: String;
   public
     /// <summary>
     /// Type of the result
@@ -51,6 +53,16 @@ type
     /// </summary>
     property CaptionEntities: TftMessageEntityList read FCaptionEntities
       write FCaptionEntities;
+    /// <summary>
+    /// Optional file to upload. When assigned, the media field is sent as
+    /// attach://&lt;AttachName&gt; and the file is added to the multipart body.
+    /// </summary>
+    property MediaFile: TftInputFile read FMediaFile write FMediaFile;
+    /// <summary>
+    /// Attachment name used for MediaFile. Assigned automatically by
+    /// SendMediaGroup when empty.
+    /// </summary>
+    property AttachName: String read FAttachName write FAttachName;
   end;
 
 implementation
