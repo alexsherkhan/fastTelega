@@ -5,11 +5,12 @@
 <h1 align="center">fastTelega</h1>
 
 <p align="center">
-  A Delphi library for the <a href="https://core.telegram.org/bots/api">Telegram Bot API</a>.
+  A Delphi and Free Pascal library for the <a href="https://core.telegram.org/bots/api">Telegram Bot API</a>.
 </p>
 
 <p align="center">
   <a href="https://www.embarcadero.com/products/delphi"><img src="https://img.shields.io/badge/Delphi-10.2--13-red.svg" alt="Delphi 10.2 - 13"></a>
+  <a href="Docs/Lazarus.md"><img src="https://img.shields.io/badge/Free%20Pascal-3.2.2-blue.svg" alt="Free Pascal 3.2.2"></a>
   <a href="https://core.telegram.org/bots/api"><img src="https://img.shields.io/badge/Telegram%20Bot%20API-10.3-2CA5E0.svg" alt="Telegram Bot API 10.3"></a>
   <a href="Docs/API.md"><img src="https://img.shields.io/badge/methods-185%2F185-brightgreen.svg" alt="185 of 185 methods"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
@@ -34,12 +35,14 @@ and uses the Delphi RTL, REST components and Indy for webhooks.
 | Installer | Inno Setup project in `Tools/Setup` |
 | Components | VCL `TftTelegramBot` and FMX `TftTelegramBotFMX` |
 | Free Pascal / Lazarus | Core port, Lazarus package, console example and FPCUnit tests |
+| Tests | FPCUnit suite (12 tests), all passing on FPC 3.2.2 |
 
 ## Requirements
 
-- Windows with RAD Studio 10.2 Tokyo through 13 Florence (Delphi 10.2-13).
-- RTL and REST components (`RESTComponents`).
-- Indy (`IndyCore`, `IndyProtocols`) for the webhook server.
+- Delphi: Windows with RAD Studio 10.2 Tokyo through 13 Florence.
+- Free Pascal: FPC 3.2.2+ and Lazarus (core library, no VCL/FMX/webhooks).
+- RTL, REST components and Indy (`IndyCore`, `IndyProtocols`) for the Delphi
+  webhook server.
 - VCL or FMX only if you use the corresponding component.
 - A bot token from [@BotFather](https://t.me/BotFather).
 
@@ -59,11 +62,19 @@ Source/Helpers
 Source/Net
 Source/Net/Server
 Source/Parser
-Source/Delphi
-Source/Components/VCL
+Source/Delphi          (Delphi JSON mapper)
+Source/Components/VCL  (VCL component)
+Source/Components/FMX  (FMX component)
 ```
 
-See [Installation](Docs/Installation.md) for package and search-path details.
+For Free Pascal/Lazarus also add:
+
+```
+Source/Compat/FPC      (fpjson/fphttpclient shims and JSON mapper)
+```
+
+See [Installation](Docs/Installation.md) and [Lazarus](Docs/Lazarus.md) for
+details.
 
 ## Long polling example
 
@@ -165,6 +176,7 @@ Full English documentation is in [Docs](Docs):
 | [Webhooks](Docs/Webhooks.md) | Indy server and reverse proxy setup |
 | [VCL component](Docs/VCLComponent.md) | `TftTelegramBot` component |
 | [FMX component](Docs/FMXComponent.md) | `TftTelegramBotFMX` component |
+| [Lazarus / FPC](Docs/Lazarus.md) | Free Pascal port, package and tests |
 | [Examples](Docs/Examples.md) | Included projects and snippets |
 | [Building](Docs/Building.md) | Packages, MSBuild and installer |
 | [Licensing](Docs/Licensing.md) | MIT and third-party licenses |
@@ -181,9 +193,24 @@ The legacy CHM documentation is in [Doc](Doc). Version history is in
 - `Examples/VCL/Echobot_Delphi_VCL` — VCL echo bot
 - `Project/fastTelegaDesignerBotMVC` — DesignerBot MVC application
 - `Project/MenuBot` — menu editor
+- `Lazarus/EchoBot.lpr` — Free Pascal/Lazarus console bot
+- `Tests/TestRunner.lpr` — FPCUnit test runner
 
 Some older examples still use the pre-1.5 unit names; see
 [Examples](Docs/Examples.md) for corrected `uses` clauses.
+
+## Tests
+
+FPCUnit tests cover the JSON mapper, parser, bot creation, event registration
+and long-poll lifetime:
+
+```bash
+cd Tests
+./build.sh
+./TestRunner --all --format=plain
+```
+
+Current result: 12 tests, 0 errors, 0 failures. See `Tests/README.md`.
 
 ## Status and limitations
 
@@ -204,6 +231,9 @@ are still limited:
 - Webhook TLS must be terminated by a reverse proxy.
 - The VCL and FMX components are new and have not been compiler-verified in
   this repository.
+- Under FPC, listeners are plain procedure pointers because FPC does not
+  support Delphi anonymous methods; use ordinary procedures in Lazarus code.
+- The FPC port excludes the VCL/FMX components and the Indy webhook server.
 
 See [Troubleshooting](Docs/Troubleshooting.md) for a complete list.
 
