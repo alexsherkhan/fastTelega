@@ -3277,6 +3277,218 @@ type
     function GetBusinessAccountStarBalance(const ABusinessConnectionId: String)
       : TftStarAmount;
 
+    /// <summary>
+    /// Use this method to send paid media.
+    /// </summary>
+    /// <returns>
+    /// On success, the sent Message is returned.
+    /// </returns>
+    function SendPaidMedia(AChatId: Variant; AStarCount: Integer;
+      AMedia: TList<TftInputPaidMedia>; const ACaption: String = '';
+      const AParseMode: String = '';
+      ACaptionEntities: TftMessageEntityList = nil;
+      ADisableNotification: Boolean = false; AProtectContent: Boolean = false;
+      AReplyToMessageId: Integer = 0; AReplyMarkup: TftReplyBase = nil;
+      AMessageThreadId: Integer = 0; const APayload: String = ''): TftMessage;
+
+    /// <summary>
+    /// Use this method to send a checklist on behalf of a connected business account.
+    /// </summary>
+    function SendChecklist(const ABusinessConnectionId: String;
+      AChatId: Variant; AChecklist: TftInputChecklist;
+      ADisableNotification: Boolean = false; AProtectContent: Boolean = false;
+      AReplyMarkup: TftInlineKeyboardMarkup = nil): TftMessage;
+
+    /// <summary>
+    /// Use this method to edit a checklist on behalf of a connected business account.
+    /// </summary>
+    function EditMessageChecklist(const ABusinessConnectionId: String;
+      AChatId: Variant; AMessageId: Integer; AChecklist: TftInputChecklist;
+      AReplyMarkup: TftInlineKeyboardMarkup = nil): TftMessage;
+
+    /// <summary>
+    /// Use this method to send rich messages.
+    /// </summary>
+    function SendRichMessage(AChatId: Variant;
+      ARichMessage: TftInputRichMessage;
+      const ABusinessConnectionId: String = '';
+      ADisableNotification: Boolean = false; AProtectContent: Boolean = false;
+      AMessageThreadId: Integer = 0; AReplyToMessageId: Integer = 0;
+      AReplyMarkup: TftReplyBase = nil): TftMessage;
+
+    /// <summary>
+    /// Use this method to stream a partial rich message.
+    /// </summary>
+    function SendRichMessageDraft(AChatId: Int64; ADraftId: Integer;
+      ARichMessage: TftInputRichMessage; AMessageThreadId: Integer = 0;
+      ACanStop: Boolean = false; AKeepOnStop: Boolean = false): Boolean;
+
+    /// <summary>
+    /// Use this method to edit an ephemeral text or rich message.
+    /// </summary>
+    function EditEphemeralMessageText(AChatId: Variant;
+      AReceiverUserId: Int64; AEphemeralMessageId: Integer;
+      const AText: String = ''; const AParseMode: String = '';
+      AEntities: TftMessageEntityList = nil;
+      ALinkPreviewOptions: TftLinkPreviewOptions = nil;
+      AReplyMarkup: TftInlineKeyboardMarkup = nil): Boolean;
+
+    /// <summary>
+    /// Use this method to edit the media of an ephemeral message.
+    /// </summary>
+    function EditEphemeralMessageMedia(AChatId: Variant;
+      AReceiverUserId: Int64; AEphemeralMessageId: Integer;
+      AMedia: TftInputMedia;
+      AReplyMarkup: TftInlineKeyboardMarkup = nil): Boolean;
+
+    /// <summary>
+    /// Use this method to edit the caption of an ephemeral message.
+    /// </summary>
+    function EditEphemeralMessageCaption(AChatId: Variant;
+      AReceiverUserId: Int64; AEphemeralMessageId: Integer;
+      const ACaption: String = ''; const AParseMode: String = '';
+      ACaptionEntities: TftMessageEntityList = nil;
+      AShowCaptionAboveMedia: Boolean = false;
+      AReplyMarkup: TftInlineKeyboardMarkup = nil): Boolean;
+
+    /// <summary>
+    /// Use this method to edit only the reply markup of an ephemeral message.
+    /// </summary>
+    function EditEphemeralMessageReplyMarkup(AChatId: Variant;
+      AReceiverUserId: Int64; AEphemeralMessageId: Integer;
+      AReplyMarkup: TftInlineKeyboardMarkup = nil): Boolean;
+
+    /// <summary>
+    /// Use this method to delete an ephemeral message.
+    /// </summary>
+    function DeleteEphemeralMessage(AChatId: Variant; AReceiverUserId: Int64;
+      AEphemeralMessageId: Integer): Boolean;
+
+    /// <summary>
+    /// Use this method to reply to a received guest message.
+    /// </summary>
+    function AnswerGuestQuery(const AGuestQueryId: String;
+      AResult: TftInlineQueryResult): TftSentGuestMessage;
+
+    /// <summary>
+    /// Use this method to get the list of boosts added to a chat by a user.
+    /// </summary>
+    function GetUserChatBoosts(AChatId: Variant; AUserId: Int64)
+      : TftUserChatBoosts;
+
+    /// <summary>
+    /// Use this method to get the access settings of a managed bot.
+    /// </summary>
+    function GetManagedBotAccessSettings(AUserId: Int64): TftBotAccessSettings;
+
+    /// <summary>
+    /// Use this method to change the access settings of a managed bot.
+    /// </summary>
+    function SetManagedBotAccessSettings(AUserId: Int64;
+      AIsAccessRestricted: Boolean;
+      AAddedUserIds: TArray<Integer> = nil): Boolean;
+
+    /// <summary>
+    /// Changes the profile photo of the bot.
+    /// </summary>
+    function SetMyProfilePhoto(APhoto: TftInputProfilePhoto): Boolean;
+
+    /// <summary>
+    /// Returns the list of gifts that can be sent by the bot.
+    /// </summary>
+    function GetAvailableGifts(): TftGifts;
+
+    /// <summary>
+    /// Changes the profile photo of a managed business account.
+    /// </summary>
+    function SetBusinessAccountProfilePhoto(const ABusinessConnectionId: String;
+      APhoto: TftInputProfilePhoto; AIsPublic: Boolean = false): Boolean;
+
+    /// <summary>
+    /// Changes the privacy settings pertaining to incoming gifts.
+    /// </summary>
+    function SetBusinessAccountGiftSettings(const ABusinessConnectionId: String;
+      AShowGiftButton: Boolean;
+      AAcceptedGiftTypes: TftAcceptedGiftTypes): Boolean;
+
+    /// <summary>
+    /// Returns the gifts received and owned by a managed business account.
+    /// </summary>
+    function GetBusinessAccountGifts(const ABusinessConnectionId: String;
+      AExcludeUnsaved: Boolean = false; AExcludeSaved: Boolean = false;
+      AExcludeUnlimited: Boolean = false;
+      AExcludeLimitedUpgradable: Boolean = false;
+      AExcludeLimitedNonUpgradable: Boolean = false;
+      AExcludeUnique: Boolean = false; AExcludeFromBlockchain: Boolean = false;
+      ASortByPrice: Boolean = false; const AOffset: String = '';
+      ALimit: Integer = 0): TftOwnedGifts;
+
+    /// <summary>
+    /// Returns the gifts owned and hosted by a user.
+    /// </summary>
+    function GetUserGifts(AUserId: Int64; AExcludeUnlimited: Boolean = false;
+      AExcludeLimitedUpgradable: Boolean = false;
+      AExcludeLimitedNonUpgradable: Boolean = false;
+      AExcludeFromBlockchain: Boolean = false; AExcludeUnique: Boolean = false;
+      ASortByPrice: Boolean = false; const AOffset: String = '';
+      ALimit: Integer = 0): TftOwnedGifts;
+
+    /// <summary>
+    /// Returns the gifts owned by a chat.
+    /// </summary>
+    function GetChatGifts(AChatId: Variant;
+      AExcludeUnsaved: Boolean = false; AExcludeSaved: Boolean = false;
+      AExcludeUnlimited: Boolean = false;
+      AExcludeLimitedUpgradable: Boolean = false;
+      AExcludeLimitedNonUpgradable: Boolean = false;
+      AExcludeFromBlockchain: Boolean = false; AExcludeUnique: Boolean = false;
+      ASortByPrice: Boolean = false; const AOffset: String = '';
+      ALimit: Integer = 0): TftOwnedGifts;
+
+    /// <summary>
+    /// Posts a story on behalf of a managed business account.
+    /// </summary>
+    function PostStory(const ABusinessConnectionId: String;
+      AContent: TftInputStoryContent; AActivePeriod: Integer;
+      const ACaption: String = ''; const AParseMode: String = '';
+      ACaptionEntities: TftMessageEntityList = nil;
+      APostToChatPage: Boolean = false;
+      AProtectContent: Boolean = false): TftStory;
+
+    /// <summary>
+    /// Reposts a story on behalf of a business account.
+    /// </summary>
+    function RepostStory(const ABusinessConnectionId: String;
+      AFromChatId, AFromStoryId, AActivePeriod: Integer;
+      APostToChatPage: Boolean = false;
+      AProtectContent: Boolean = false): TftStory;
+
+    /// <summary>
+    /// Edits a story previously posted by the bot.
+    /// </summary>
+    function EditStory(const ABusinessConnectionId: String; AStoryId: Integer;
+      AContent: TftInputStoryContent; const ACaption: String = '';
+      const AParseMode: String = '';
+      ACaptionEntities: TftMessageEntityList = nil): TftStory;
+
+    /// <summary>
+    /// Deletes a story previously posted by the bot.
+    /// </summary>
+    function DeleteStory(const ABusinessConnectionId: String;
+      AStoryId: Integer): Boolean;
+
+    /// <summary>
+    /// Replaces an existing sticker in a sticker set with a new one.
+    /// </summary>
+    function ReplaceStickerInSet(AUserId: Int64; const AName, AOldSticker: String;
+      ASticker: TftInputSticker): Boolean;
+
+    /// <summary>
+    /// Returns the bot's Telegram Star transactions.
+    /// </summary>
+    function GetStarTransactions(AOffset: Integer = 0; ALimit: Integer = 100)
+      : TftStarTransactions;
+
   end;
 
 const
@@ -3577,7 +3789,7 @@ begin
   if (Assigned(ACaptionEntities)) then
   begin
     LArgs.AddPair('caption_entities',
-      FTypeParser.ParseList(TList(ACaptionEntities)));
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
   end;
   if (ADisableNotification) then
   begin
@@ -4018,7 +4230,7 @@ begin
   if (Assigned(ACaptionEntities)) then
   begin
     LArgs.AddPair('caption_entities',
-      FTypeParser.ParseList(TList(ACaptionEntities)));
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
   end;
   if (Assigned(AReplyMarkup)) then
   begin
@@ -4695,7 +4907,7 @@ begin
   if Assigned(AReplyMarkup) then
   begin
     LArgs.AddField('caption_entities',
-      FTypeParser.ParseList(TList(ACaptionEntities)));
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
   end;
   if (AHasSpoiler) then
   begin
@@ -4766,7 +4978,7 @@ begin
   if Assigned(ACaptionEntities) then
   begin
     LArgs.AddField('caption_entities',
-      FTypeParser.ParseList(TList(ACaptionEntities)));
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
   end;
 
   if (ADuration <> 0) then
@@ -5000,7 +5212,7 @@ begin
   if (Assigned(ACaptionEntities)) then
   begin
     LArgs.AddField('caption_entities',
-      FTypeParser.ParseList(TList(ACaptionEntities)));
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
   end;
 
   if (ADisableContentTypeDetection) then
@@ -5329,7 +5541,7 @@ begin
 
   if (Assigned(AEntities)) then
   begin
-    LArgs.AddPair('caption_entities', FTypeParser.ParseList(TList(AEntities)));
+    LArgs.AddPair('caption_entities', FTypeParser.ParseMessageEntities(AEntities));
   end;
   if (ADisableWebPagePreview) then
   begin
@@ -5590,7 +5802,7 @@ begin
   if Assigned(ACaptionEntities) then
   begin
     LArgs.AddField('caption_entities',
-      FTypeParser.ParseList(TList(ACaptionEntities)));
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
   end;
   if (ASupportsStreaming) then
   begin
@@ -5717,7 +5929,7 @@ begin
   if Assigned(ACaptionEntities) then
   begin
     LArgs.AddField('caption_entities',
-      FTypeParser.ParseList(TList(ACaptionEntities)));
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
   end;
   if (ADuration <> 0) then
   begin
@@ -6943,7 +7155,7 @@ begin
   end;
   if Assigned(AEntities) then
   begin
-    LArgs.AddPair('entities', FTypeParser.ParseList(TList(AEntities)));
+    LArgs.AddPair('entities', FTypeParser.ParseMessageEntities(AEntities));
   end;
   if (ACanStop) then
   begin
@@ -7016,7 +7228,7 @@ begin
   if Assigned(ATextEntities) then
   begin
     LArgs.AddPair('text_entities',
-      FTypeParser.ParseList(TList(ATextEntities)));
+      FTypeParser.ParseMessageEntities(ATextEntities));
   end;
 
   Result := Boolean(SendRequest('giftPremiumSubscription', LArgs, 'POST')
@@ -7055,7 +7267,7 @@ begin
   if Assigned(ATextEntities) then
   begin
     LArgs.AddPair('text_entities',
-      FTypeParser.ParseList(TList(ATextEntities)));
+      FTypeParser.ParseMessageEntities(ATextEntities));
   end;
 
   Result := Boolean(SendRequest('sendGift', LArgs, 'POST')
@@ -7239,7 +7451,7 @@ begin
   if Assigned(ACaptionEntities) then
   begin
     LArgs.AddField('caption_entities',
-      FTypeParser.ParseList(TList(ACaptionEntities)));
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
   end;
   if (AMessageThreadId <> 0) then
   begin
@@ -7284,6 +7496,620 @@ begin
 
   Result := FTypeParser.ParseJsonAndGetStarAmount
     (SendRequest('getBusinessAccountStarBalance', LArgs));
+end;
+
+function TftAPI.SendPaidMedia(AChatId: Variant; AStarCount: Integer;
+  AMedia: TList<TftInputPaidMedia>; const ACaption, AParseMode: String;
+  ACaptionEntities: TftMessageEntityList; ADisableNotification,
+  AProtectContent: Boolean; AReplyToMessageId: Integer;
+  AReplyMarkup: TftReplyBase; AMessageThreadId: Integer;
+  const APayload: String): TftMessage;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('star_count', IntToStr(AStarCount));
+  LArgs.AddPair('media', FTypeParser.ParseInputPaidMediaList(AMedia));
+  if (ACaption <> '') then
+    LArgs.AddPair('caption', ACaption);
+  if (AParseMode <> '') then
+    LArgs.AddPair('parse_mode', AParseMode);
+  if Assigned(ACaptionEntities) then
+    LArgs.AddPair('caption_entities',
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
+  if (AMessageThreadId <> 0) then
+    LArgs.AddPair('message_thread_id', IntToStr(AMessageThreadId));
+  if (ADisableNotification) then
+    LArgs.AddPair('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  if (AProtectContent) then
+    LArgs.AddPair('protect_content', BoolToStr(AProtectContent, true));
+  if (AReplyToMessageId <> 0) then
+    LArgs.AddPair('reply_to_message_id', IntToStr(AReplyToMessageId));
+  if Assigned(AReplyMarkup) then
+    LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+  if (APayload <> '') then
+    LArgs.AddPair('payload', APayload);
+
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendPaidMedia',
+    LArgs, 'POST'));
+end;
+
+function TftAPI.SendChecklist(const ABusinessConnectionId: String;
+  AChatId: Variant; AChecklist: TftInputChecklist; ADisableNotification,
+  AProtectContent: Boolean; AReplyMarkup: TftInlineKeyboardMarkup): TftMessage;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('checklist', FTypeParser.ParseInputChecklist(AChecklist));
+  if (ADisableNotification) then
+    LArgs.AddPair('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  if (AProtectContent) then
+    LArgs.AddPair('protect_content', BoolToStr(AProtectContent, true));
+  if Assigned(AReplyMarkup) then
+    LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendChecklist',
+    LArgs, 'POST'));
+end;
+
+function TftAPI.EditMessageChecklist(const ABusinessConnectionId: String;
+  AChatId: Variant; AMessageId: Integer; AChecklist: TftInputChecklist;
+  AReplyMarkup: TftInlineKeyboardMarkup): TftMessage;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('message_id', IntToStr(AMessageId));
+  LArgs.AddPair('checklist', FTypeParser.ParseInputChecklist(AChecklist));
+  if Assigned(AReplyMarkup) then
+    LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+
+  Result := FTypeParser.parseJsonAndGetMessage
+    (SendRequest('editMessageChecklist', LArgs, 'POST'));
+end;
+
+function TftAPI.SendRichMessage(AChatId: Variant;
+  ARichMessage: TftInputRichMessage; const ABusinessConnectionId: String;
+  ADisableNotification, AProtectContent: Boolean; AMessageThreadId,
+  AReplyToMessageId: Integer; AReplyMarkup: TftReplyBase): TftMessage;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  if (ABusinessConnectionId <> '') then
+    LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('rich_message',
+    FTypeParser.ParseInputRichMessage(ARichMessage));
+  if (AMessageThreadId <> 0) then
+    LArgs.AddPair('message_thread_id', IntToStr(AMessageThreadId));
+  if (ADisableNotification) then
+    LArgs.AddPair('disable_notification',
+      BoolToStr(ADisableNotification, true));
+  if (AProtectContent) then
+    LArgs.AddPair('protect_content', BoolToStr(AProtectContent, true));
+  if (AReplyToMessageId <> 0) then
+    LArgs.AddPair('reply_to_message_id', IntToStr(AReplyToMessageId));
+  if Assigned(AReplyMarkup) then
+    LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+
+  Result := FTypeParser.parseJsonAndGetMessage(SendRequest('sendRichMessage',
+    LArgs, 'POST'));
+end;
+
+function TftAPI.SendRichMessageDraft(AChatId: Int64; ADraftId: Integer;
+  ARichMessage: TftInputRichMessage; AMessageThreadId: Integer;
+  ACanStop, AKeepOnStop: Boolean): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', IntToStr(AChatId));
+  LArgs.AddPair('draft_id', IntToStr(ADraftId));
+  LArgs.AddPair('rich_message',
+    FTypeParser.ParseInputRichMessage(ARichMessage));
+  if (AMessageThreadId <> 0) then
+    LArgs.AddPair('message_thread_id', IntToStr(AMessageThreadId));
+  if (ACanStop) then
+    LArgs.AddPair('can_stop', BoolToStr(ACanStop, true));
+  if (AKeepOnStop) then
+    LArgs.AddPair('keep_on_stop', BoolToStr(AKeepOnStop, true));
+
+  Result := Boolean(SendRequest('sendRichMessageDraft', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.EditEphemeralMessageText(AChatId: Variant;
+  AReceiverUserId: Int64; AEphemeralMessageId: Integer; const AText,
+  AParseMode: String; AEntities: TftMessageEntityList;
+  ALinkPreviewOptions: TftLinkPreviewOptions;
+  AReplyMarkup: TftInlineKeyboardMarkup): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('receiver_user_id', IntToStr(AReceiverUserId));
+  LArgs.AddPair('ephemeral_message_id', IntToStr(AEphemeralMessageId));
+  if (AText <> '') then
+    LArgs.AddPair('text', AText);
+  if (AParseMode <> '') then
+    LArgs.AddPair('parse_mode', AParseMode);
+  if Assigned(AEntities) then
+    LArgs.AddPair('entities', FTypeParser.ParseMessageEntities(AEntities));
+  if Assigned(ALinkPreviewOptions) then
+    LArgs.AddPair('link_preview_options',
+      FTypeParser.ParseLinkPreviewOptions(ALinkPreviewOptions));
+  if Assigned(AReplyMarkup) then
+    LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+
+  Result := Boolean(SendRequest('editEphemeralMessageText', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.EditEphemeralMessageMedia(AChatId: Variant;
+  AReceiverUserId: Int64; AEphemeralMessageId: Integer; AMedia: TftInputMedia;
+  AReplyMarkup: TftInlineKeyboardMarkup): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('receiver_user_id', IntToStr(AReceiverUserId));
+  LArgs.AddPair('ephemeral_message_id', IntToStr(AEphemeralMessageId));
+  LArgs.AddPair('media', FTypeParser.ParseInputMedia(AMedia));
+  if Assigned(AReplyMarkup) then
+    LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+
+  Result := Boolean(SendRequest('editEphemeralMessageMedia', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.EditEphemeralMessageCaption(AChatId: Variant;
+  AReceiverUserId: Int64; AEphemeralMessageId: Integer; const ACaption,
+  AParseMode: String; ACaptionEntities: TftMessageEntityList;
+  AShowCaptionAboveMedia: Boolean;
+  AReplyMarkup: TftInlineKeyboardMarkup): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('receiver_user_id', IntToStr(AReceiverUserId));
+  LArgs.AddPair('ephemeral_message_id', IntToStr(AEphemeralMessageId));
+  if (ACaption <> '') then
+    LArgs.AddPair('caption', ACaption);
+  if (AParseMode <> '') then
+    LArgs.AddPair('parse_mode', AParseMode);
+  if Assigned(ACaptionEntities) then
+    LArgs.AddPair('caption_entities',
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
+  if (AShowCaptionAboveMedia) then
+    LArgs.AddPair('show_caption_above_media',
+      BoolToStr(AShowCaptionAboveMedia, true));
+  if Assigned(AReplyMarkup) then
+    LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+
+  Result := Boolean(SendRequest('editEphemeralMessageCaption', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.EditEphemeralMessageReplyMarkup(AChatId: Variant;
+  AReceiverUserId: Int64; AEphemeralMessageId: Integer;
+  AReplyMarkup: TftInlineKeyboardMarkup): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('receiver_user_id', IntToStr(AReceiverUserId));
+  LArgs.AddPair('ephemeral_message_id', IntToStr(AEphemeralMessageId));
+  if Assigned(AReplyMarkup) then
+    LArgs.AddPair('reply_markup', FTypeParser.ParseReplyBase(AReplyMarkup));
+
+  Result := Boolean(SendRequest('editEphemeralMessageReplyMarkup', LArgs,
+    'POST').GetValue('result'));
+end;
+
+function TftAPI.DeleteEphemeralMessage(AChatId: Variant;
+  AReceiverUserId: Int64; AEphemeralMessageId: Integer): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('receiver_user_id', IntToStr(AReceiverUserId));
+  LArgs.AddPair('ephemeral_message_id', IntToStr(AEphemeralMessageId));
+
+  Result := Boolean(SendRequest('deleteEphemeralMessage', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.AnswerGuestQuery(const AGuestQueryId: String;
+  AResult: TftInlineQueryResult): TftSentGuestMessage;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('guest_query_id', AGuestQueryId);
+  LArgs.AddPair('result', FTypeParser.ParseInlineQueryResult(AResult));
+
+  Result := FTypeParser.ParseJsonAndGetSentGuestMessage
+    (SendRequest('answerGuestQuery', LArgs, 'POST'));
+end;
+
+function TftAPI.GetUserChatBoosts(AChatId: Variant; AUserId: Int64)
+  : TftUserChatBoosts;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+
+  Result := FTypeParser.ParseJsonAndGetUserChatBoosts
+    (SendRequest('getUserChatBoosts', LArgs));
+end;
+
+function TftAPI.GetManagedBotAccessSettings(AUserId: Int64)
+  : TftBotAccessSettings;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+
+  Result := FTypeParser.ParseJsonAndGetBotAccessSettings
+    (SendRequest('getManagedBotAccessSettings', LArgs));
+end;
+
+function TftAPI.SetManagedBotAccessSettings(AUserId: Int64;
+  AIsAccessRestricted: Boolean; AAddedUserIds: TArray<Integer>): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  LArgs.AddPair('is_access_restricted',
+    BoolToStr(AIsAccessRestricted, true));
+  if Length(AAddedUserIds) > 0 then
+    LArgs.AddPair('added_user_ids',
+      FTypeParser.ParseIntegers(AAddedUserIds));
+
+  Result := Boolean(SendRequest('setManagedBotAccessSettings', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.SetMyProfilePhoto(APhoto: TftInputProfilePhoto): Boolean;
+var
+  LArgs: TMultipartFormData;
+begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  LArgs := TMultipartFormData.Create;
+  LArgs.AddField('photo', FTypeParser.ParseInputProfilePhoto(APhoto));
+  if Assigned(APhoto) then
+  begin
+    if Assigned(APhoto.PhotoFile) then
+      LArgs.AddFile('profile_photo', APhoto.PhotoFile.filePath);
+    if Assigned(APhoto.AnimationFile) then
+      LArgs.AddFile('profile_animation', APhoto.AnimationFile.filePath);
+  end;
+
+  Result := Boolean(SendRequest('setMyProfilePhoto', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.GetAvailableGifts: TftGifts;
+begin
+  Result := FTypeParser.ParseJsonAndGetGifts
+    (SendRequest('getAvailableGifts'));
+end;
+
+function TftAPI.SetBusinessAccountProfilePhoto(
+  const ABusinessConnectionId: String; APhoto: TftInputProfilePhoto;
+  AIsPublic: Boolean): Boolean;
+var
+  LArgs: TMultipartFormData;
+begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  LArgs := TMultipartFormData.Create;
+  LArgs.AddField('business_connection_id', ABusinessConnectionId);
+  LArgs.AddField('photo', FTypeParser.ParseInputProfilePhoto(APhoto));
+  if (AIsPublic) then
+    LArgs.AddField('is_public', BoolToStr(AIsPublic, true));
+  if Assigned(APhoto) then
+  begin
+    if Assigned(APhoto.PhotoFile) then
+      LArgs.AddFile('profile_photo', APhoto.PhotoFile.filePath);
+    if Assigned(APhoto.AnimationFile) then
+      LArgs.AddFile('profile_animation', APhoto.AnimationFile.filePath);
+  end;
+
+  Result := Boolean(SendRequest('setBusinessAccountProfilePhoto', LArgs,
+    'POST').GetValue('result'));
+end;
+
+function TftAPI.SetBusinessAccountGiftSettings(
+  const ABusinessConnectionId: String; AShowGiftButton: Boolean;
+  AAcceptedGiftTypes: TftAcceptedGiftTypes): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('show_gift_button', BoolToStr(AShowGiftButton, true));
+  LArgs.AddPair('accepted_gift_types',
+    FTypeParser.ParseAcceptedGiftTypes(AAcceptedGiftTypes));
+
+  Result := Boolean(SendRequest('setBusinessAccountGiftSettings', LArgs,
+    'POST').GetValue('result'));
+end;
+
+function TftAPI.GetBusinessAccountGifts(const ABusinessConnectionId: String;
+  AExcludeUnsaved, AExcludeSaved, AExcludeUnlimited,
+  AExcludeLimitedUpgradable, AExcludeLimitedNonUpgradable, AExcludeUnique,
+  AExcludeFromBlockchain, ASortByPrice: Boolean; const AOffset: String;
+  ALimit: Integer): TftOwnedGifts;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  if (AExcludeUnsaved) then
+    LArgs.AddPair('exclude_unsaved', BoolToStr(AExcludeUnsaved, true));
+  if (AExcludeSaved) then
+    LArgs.AddPair('exclude_saved', BoolToStr(AExcludeSaved, true));
+  if (AExcludeUnlimited) then
+    LArgs.AddPair('exclude_unlimited', BoolToStr(AExcludeUnlimited, true));
+  if (AExcludeLimitedUpgradable) then
+    LArgs.AddPair('exclude_limited_upgradable',
+      BoolToStr(AExcludeLimitedUpgradable, true));
+  if (AExcludeLimitedNonUpgradable) then
+    LArgs.AddPair('exclude_limited_non_upgradable',
+      BoolToStr(AExcludeLimitedNonUpgradable, true));
+  if (AExcludeUnique) then
+    LArgs.AddPair('exclude_unique', BoolToStr(AExcludeUnique, true));
+  if (AExcludeFromBlockchain) then
+    LArgs.AddPair('exclude_from_blockchain',
+      BoolToStr(AExcludeFromBlockchain, true));
+  if (ASortByPrice) then
+    LArgs.AddPair('sort_by_price', BoolToStr(ASortByPrice, true));
+  if (AOffset <> '') then
+    LArgs.AddPair('offset', AOffset);
+  if (ALimit <> 0) then
+    LArgs.AddPair('limit', IntToStr(ALimit));
+
+  Result := FTypeParser.ParseJsonAndGetOwnedGifts
+    (SendRequest('getBusinessAccountGifts', LArgs));
+end;
+
+function TftAPI.GetUserGifts(AUserId: Int64; AExcludeUnlimited,
+  AExcludeLimitedUpgradable, AExcludeLimitedNonUpgradable,
+  AExcludeFromBlockchain, AExcludeUnique, ASortByPrice: Boolean;
+  const AOffset: String; ALimit: Integer): TftOwnedGifts;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  if (AExcludeUnlimited) then
+    LArgs.AddPair('exclude_unlimited', BoolToStr(AExcludeUnlimited, true));
+  if (AExcludeLimitedUpgradable) then
+    LArgs.AddPair('exclude_limited_upgradable',
+      BoolToStr(AExcludeLimitedUpgradable, true));
+  if (AExcludeLimitedNonUpgradable) then
+    LArgs.AddPair('exclude_limited_non_upgradable',
+      BoolToStr(AExcludeLimitedNonUpgradable, true));
+  if (AExcludeFromBlockchain) then
+    LArgs.AddPair('exclude_from_blockchain',
+      BoolToStr(AExcludeFromBlockchain, true));
+  if (AExcludeUnique) then
+    LArgs.AddPair('exclude_unique', BoolToStr(AExcludeUnique, true));
+  if (ASortByPrice) then
+    LArgs.AddPair('sort_by_price', BoolToStr(ASortByPrice, true));
+  if (AOffset <> '') then
+    LArgs.AddPair('offset', AOffset);
+  if (ALimit <> 0) then
+    LArgs.AddPair('limit', IntToStr(ALimit));
+
+  Result := FTypeParser.ParseJsonAndGetOwnedGifts
+    (SendRequest('getUserGifts', LArgs));
+end;
+
+function TftAPI.GetChatGifts(AChatId: Variant; AExcludeUnsaved,
+  AExcludeSaved, AExcludeUnlimited, AExcludeLimitedUpgradable,
+  AExcludeLimitedNonUpgradable, AExcludeFromBlockchain, AExcludeUnique,
+  ASortByPrice: Boolean; const AOffset: String;
+  ALimit: Integer): TftOwnedGifts;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('chat_id', VarToStr(AChatId));
+  if (AExcludeUnsaved) then
+    LArgs.AddPair('exclude_unsaved', BoolToStr(AExcludeUnsaved, true));
+  if (AExcludeSaved) then
+    LArgs.AddPair('exclude_saved', BoolToStr(AExcludeSaved, true));
+  if (AExcludeUnlimited) then
+    LArgs.AddPair('exclude_unlimited', BoolToStr(AExcludeUnlimited, true));
+  if (AExcludeLimitedUpgradable) then
+    LArgs.AddPair('exclude_limited_upgradable',
+      BoolToStr(AExcludeLimitedUpgradable, true));
+  if (AExcludeLimitedNonUpgradable) then
+    LArgs.AddPair('exclude_limited_non_upgradable',
+      BoolToStr(AExcludeLimitedNonUpgradable, true));
+  if (AExcludeFromBlockchain) then
+    LArgs.AddPair('exclude_from_blockchain',
+      BoolToStr(AExcludeFromBlockchain, true));
+  if (AExcludeUnique) then
+    LArgs.AddPair('exclude_unique', BoolToStr(AExcludeUnique, true));
+  if (ASortByPrice) then
+    LArgs.AddPair('sort_by_price', BoolToStr(ASortByPrice, true));
+  if (AOffset <> '') then
+    LArgs.AddPair('offset', AOffset);
+  if (ALimit <> 0) then
+    LArgs.AddPair('limit', IntToStr(ALimit));
+
+  Result := FTypeParser.ParseJsonAndGetOwnedGifts
+    (SendRequest('getChatGifts', LArgs));
+end;
+
+function TftAPI.PostStory(const ABusinessConnectionId: String;
+  AContent: TftInputStoryContent; AActivePeriod: Integer; const ACaption,
+  AParseMode: String; ACaptionEntities: TftMessageEntityList;
+  APostToChatPage, AProtectContent: Boolean): TftStory;
+var
+  LArgs: TMultipartFormData;
+begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  LArgs := TMultipartFormData.Create;
+  LArgs.AddField('business_connection_id', ABusinessConnectionId);
+  LArgs.AddField('content', FTypeParser.ParseInputStoryContent(AContent));
+  LArgs.AddField('active_period', IntToStr(AActivePeriod));
+  if Assigned(AContent) then
+  begin
+    if Assigned(AContent.PhotoFile) then
+      LArgs.AddFile('story_photo', AContent.PhotoFile.filePath);
+    if Assigned(AContent.VideoFile) then
+      LArgs.AddFile('story_video', AContent.VideoFile.filePath);
+  end;
+  if (ACaption <> '') then
+    LArgs.AddField('caption', ACaption);
+  if (AParseMode <> '') then
+    LArgs.AddField('parse_mode', AParseMode);
+  if Assigned(ACaptionEntities) then
+    LArgs.AddField('caption_entities',
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
+  if (APostToChatPage) then
+    LArgs.AddField('post_to_chat_page', BoolToStr(APostToChatPage, true));
+  if (AProtectContent) then
+    LArgs.AddField('protect_content', BoolToStr(AProtectContent, true));
+
+  Result := FTypeParser.ParseJsonAndGetStory
+    (SendRequest('postStory', LArgs, 'POST'));
+end;
+
+function TftAPI.RepostStory(const ABusinessConnectionId: String;
+  AFromChatId, AFromStoryId, AActivePeriod: Integer;
+  APostToChatPage, AProtectContent: Boolean): TftStory;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('from_chat_id', IntToStr(AFromChatId));
+  LArgs.AddPair('from_story_id', IntToStr(AFromStoryId));
+  LArgs.AddPair('active_period', IntToStr(AActivePeriod));
+  if (APostToChatPage) then
+    LArgs.AddPair('post_to_chat_page', BoolToStr(APostToChatPage, true));
+  if (AProtectContent) then
+    LArgs.AddPair('protect_content', BoolToStr(AProtectContent, true));
+
+  Result := FTypeParser.ParseJsonAndGetStory
+    (SendRequest('repostStory', LArgs, 'POST'));
+end;
+
+function TftAPI.EditStory(const ABusinessConnectionId: String;
+  AStoryId: Integer; AContent: TftInputStoryContent; const ACaption,
+  AParseMode: String; ACaptionEntities: TftMessageEntityList): TftStory;
+var
+  LArgs: TMultipartFormData;
+begin
+  FHttpClient.ContentType := 'multipart/form-data';
+  LArgs := TMultipartFormData.Create;
+  LArgs.AddField('business_connection_id', ABusinessConnectionId);
+  LArgs.AddField('story_id', IntToStr(AStoryId));
+  LArgs.AddField('content', FTypeParser.ParseInputStoryContent(AContent));
+  if Assigned(AContent) then
+  begin
+    if Assigned(AContent.PhotoFile) then
+      LArgs.AddFile('story_photo', AContent.PhotoFile.filePath);
+    if Assigned(AContent.VideoFile) then
+      LArgs.AddFile('story_video', AContent.VideoFile.filePath);
+  end;
+  if (ACaption <> '') then
+    LArgs.AddField('caption', ACaption);
+  if (AParseMode <> '') then
+    LArgs.AddField('parse_mode', AParseMode);
+  if Assigned(ACaptionEntities) then
+    LArgs.AddField('caption_entities',
+      FTypeParser.ParseMessageEntities(ACaptionEntities));
+
+  Result := FTypeParser.ParseJsonAndGetStory
+    (SendRequest('editStory', LArgs, 'POST'));
+end;
+
+function TftAPI.DeleteStory(const ABusinessConnectionId: String;
+  AStoryId: Integer): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('business_connection_id', ABusinessConnectionId);
+  LArgs.AddPair('story_id', IntToStr(AStoryId));
+
+  Result := Boolean(SendRequest('deleteStory', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.ReplaceStickerInSet(AUserId: Int64;
+  const AName, AOldSticker: String; ASticker: TftInputSticker): Boolean;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  LArgs.AddPair('user_id', IntToStr(AUserId));
+  LArgs.AddPair('name', AName);
+  LArgs.AddPair('old_sticker', AOldSticker);
+  LArgs.AddPair('sticker', FTypeParser.ParseInputSticker(ASticker));
+
+  Result := Boolean(SendRequest('replaceStickerInSet', LArgs, 'POST')
+    .GetValue('result'));
+end;
+
+function TftAPI.GetStarTransactions(AOffset, ALimit: Integer)
+  : TftStarTransactions;
+var
+  LArgs: TStringList;
+begin
+  FHttpClient.ContentType := 'application/json';
+  LArgs := TStringList.Create;
+  if (AOffset <> 0) then
+    LArgs.AddPair('offset', IntToStr(AOffset));
+  if (ALimit <> 100) then
+    LArgs.AddPair('limit', IntToStr(ALimit));
+
+  Result := FTypeParser.ParseJsonAndGetStarTransactions
+    (SendRequest('getStarTransactions', LArgs));
 end;
 
 end.

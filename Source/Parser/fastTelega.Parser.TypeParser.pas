@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// fastTelega TypeParser
 /// Alexander Syrykh
 /// </summary>
@@ -570,6 +570,32 @@ type
     function ParseStringArray(const AValues: TArray<String>): String;
     function ParseReactionType(const AObj: TftReactionType): String;
     function ParseReactionTypes(const AReaction: TList<TftReactionType>): String;
+    function ParseMessageEntities
+      (const AEntities: TftMessageEntityList): String;
+    function ParseInputPaidMedia(const AObj: TftInputPaidMedia): String;
+    function ParseInputPaidMediaList
+      (const AMedia: TList<TftInputPaidMedia>): String;
+    function ParseInputChecklistTask(const AObj: TftInputChecklistTask): String;
+    function ParseChecklistTasks
+      (const ATasks: TList<TftInputChecklistTask>): String;
+    function ParseInputChecklist(const AObj: TftInputChecklist): String;
+    function ParseInputSticker(const AObj: TftInputSticker): String;
+    function ParseInputProfilePhoto(const AObj: TftInputProfilePhoto): String;
+    function ParseInputStoryContent(const AObj: TftInputStoryContent): String;
+    function ParseLinkPreviewOptions(const AObj: TftLinkPreviewOptions): String;
+    function ParseInputRichMessage(const AObj: TftInputRichMessage): String;
+    function ParseAcceptedGiftTypes(const AObj: TftAcceptedGiftTypes): String;
+    function ParseJsonAndGetSentGuestMessage(const AData: TJSONObject)
+      : TftSentGuestMessage;
+    function ParseJsonAndGetUserChatBoosts(const AData: TJSONObject)
+      : TftUserChatBoosts;
+    function ParseJsonAndGetBotAccessSettings(const AData: TJSONObject)
+      : TftBotAccessSettings;
+    function ParseJsonAndGetGifts(const AData: TJSONObject): TftGifts;
+    function ParseJsonAndGetOwnedGifts(const AData: TJSONObject): TftOwnedGifts;
+    function ParseJsonAndGetStory(const AData: TJSONObject): TftStory;
+    function ParseJsonAndGetStarTransactions(const AData: TJSONObject)
+      : TftStarTransactions;
   end;
 
 implementation
@@ -580,8 +606,10 @@ procedure TftTypeParser.AppendToJson(var AJSON: String; const AVarName: String;
   const AValue: Variant);
 var
   LBasicType: Integer;
+  LValue: String;
 begin
-  if (VarToStr(AValue) = '') then
+  LValue := VarToStr(AValue);
+  if (LValue = '') then
     Exit;
   LBasicType := VarType(AValue) and VarTypeMask;
   AJSON := AJSON + '"';
@@ -589,31 +617,19 @@ begin
   AJSON := AJSON + '":';
   case LBasicType of
     varBoolean:
-      AJSON := AJSON + LowerCase(VarToStr(AValue));
+      AJSON := AJSON + LowerCase(LValue);
     varInteger:
-      AJSON := AJSON + VarToStr(AValue);
+      AJSON := AJSON + LValue;
     varDouble:
-      AJSON := AJSON + VarToStr(AValue);
-    varString:
+      AJSON := AJSON + LValue;
+    varString, varUString:
       begin
-        if (VarToStr(AValue)[1] <> '{') then
+        if not(LValue[1] in ['{', '[']) then
         begin
           AJSON := AJSON + '"';
         end;
-        AJSON := AJSON + VarToStr(AValue);
-        if (VarToStr(AValue)[Length(AValue)] <> '}') then
-        begin
-          AJSON := AJSON + '"';
-        end;
-      end;
-    varUString:
-      begin
-        if (VarToStr(AValue)[1] <> '{') then
-        begin
-          AJSON := AJSON + '"';
-        end;
-        AJSON := AJSON + VarToStr(AValue);
-        if (VarToStr(AValue)[Length(AValue)] <> '}') then
+        AJSON := AJSON + LValue;
+        if not(LValue[Length(LValue)] in ['}', ']']) then
         begin
           AJSON := AJSON + '"';
         end;
@@ -1413,7 +1429,7 @@ begin
   AppendToJson(Result, 'description', AObj.Description);
   AppendToJson(Result, 'photo', ParseList(TList(AObj.photo)));
   AppendToJson(Result, 'text', AObj.Text);
-  AppendToJson(Result, 'text_entities', ParseList(TList(AObj.TextEntities)));
+  AppendToJson(Result, 'text_entities', ParseMessageEntities(AObj.TextEntities));
   AppendToJson(Result, 'animation', ParseAnimation(AObj.Animation));
   RemoveLastComma(Result);
   Result := Result + '}';
@@ -1931,7 +1947,7 @@ begin
   AppendToJson(Result, 'caption', AObj.Caption);
   AppendToJson(Result, 'parse_mode', AObj.ParseMode);
   AppendToJson(Result, 'caption_entities',
-    ParseList(TList(AObj.CaptionEntities)));
+    ParseMessageEntities(AObj.CaptionEntities));
 
   if CompareStr(AObj.TypeS, 'photo') = 0 then
     ParseInputMediaPhoto(AObj as TftInputMediaPhoto)
@@ -3666,7 +3682,7 @@ begin
   AppendToJson(Result, 'voice', ParseVoice(AObj.Voice));
   AppendToJson(Result, 'caption', AObj.Caption);
   AppendToJson(Result, 'caption_entities',
-    ParseList(TList(AObj.CaptionEntities)));
+    ParseMessageEntities(AObj.CaptionEntities));
   AppendToJson(Result, 'has_media_spoiler', AObj.HasMediaSpoiler);
   AppendToJson(Result, 'contact', ParseContact(AObj.Contact));
   AppendToJson(Result, 'dice', ParseDice(AObj.Dice));
@@ -4125,7 +4141,7 @@ begin
   AppendToJson(Result, 'correct_option_id', AObj.CorrectOptionId);
   AppendToJson(Result, 'explanation', AObj.Explanation);
   AppendToJson(Result, 'explanation_entities',
-    ParseList(TList(AObj.ExplanationEntities)));
+    ParseMessageEntities(AObj.ExplanationEntities));
   AppendToJson(Result, 'open_period', AObj.OpenPeriod);
   AppendToJson(Result, 'close_date', AObj.CloseDate);
   RemoveLastComma(Result);
@@ -4848,6 +4864,392 @@ begin
     Result := Result + ParseReactionType(AReaction[I]);
   end;
   Result := Result + ']';
+end;
+
+function TftTypeParser.ParseMessageEntities
+  (const AEntities: TftMessageEntityList): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  for I := 0 to High(AEntities) do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + ParseMessageEntity(AEntities[I]);
+  end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseInputPaidMedia(const AObj: TftInputPaidMedia): String;
+var
+  LType: String;
+begin
+  Result := '';
+  if (AObj = nil) then
+  begin
+    Result := '';
+    Exit;
+  end;
+  LType := AObj.Type_S;
+  if (LType = '') then
+  begin
+    if AObj is TftInputPaidMediaPhoto then
+      LType := 'photo'
+    else if AObj is TftInputPaidMediaVideo then
+      LType := 'video'
+    else if AObj is TftInputPaidMediaLivePhoto then
+      LType := 'live_photo';
+  end;
+  Result := Result + '{';
+  AppendToJson(Result, 'type', LType);
+  AppendToJson(Result, 'media', AObj.Media);
+  if (AObj is TftInputPaidMediaVideo) then
+  begin
+    AppendToJson(Result, 'thumbnail', TftInputPaidMediaVideo(AObj).Thumbnail);
+    AppendToJson(Result, 'cover', TftInputPaidMediaVideo(AObj).Cover);
+    AppendToJson(Result, 'start_timestamp',
+      TftInputPaidMediaVideo(AObj).StartTimestamp);
+    AppendToJson(Result, 'width', TftInputPaidMediaVideo(AObj).Width);
+    AppendToJson(Result, 'height', TftInputPaidMediaVideo(AObj).Height);
+    AppendToJson(Result, 'duration', TftInputPaidMediaVideo(AObj).Duration);
+    AppendToJson(Result, 'supports_streaming',
+      TftInputPaidMediaVideo(AObj).SupportsStreaming);
+  end
+  else if (AObj is TftInputPaidMediaLivePhoto) then
+  begin
+    AppendToJson(Result, 'photo', TftInputPaidMediaLivePhoto(AObj).Photo);
+  end;
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseInputPaidMediaList
+  (const AMedia: TList<TftInputPaidMedia>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  if (AMedia = nil) then
+  begin
+    Result := Result + ']';
+    Exit;
+  end;
+  for I := 0 to AMedia.Count - 1 do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + ParseInputPaidMedia(AMedia[I]);
+  end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseInputChecklistTask
+  (const AObj: TftInputChecklistTask): String;
+begin
+  Result := '';
+  if (AObj = nil) then
+  begin
+    Result := '';
+    Exit;
+  end;
+  Result := Result + '{';
+  AppendToJson(Result, 'id', AObj.Id);
+  AppendToJson(Result, 'text', AObj.Text);
+  AppendToJson(Result, 'parse_mode', AObj.ParseMode);
+  if Assigned(AObj.TextEntities) then
+  begin
+    AppendToJson(Result, 'text_entities',
+      ParseMessageEntities(AObj.TextEntities));
+  end;
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseChecklistTasks
+  (const ATasks: TList<TftInputChecklistTask>): String;
+var
+  I: Integer;
+begin
+  Result := '[';
+  if (ATasks = nil) then
+  begin
+    Result := Result + ']';
+    Exit;
+  end;
+  for I := 0 to ATasks.Count - 1 do
+  begin
+    if I > 0 then
+      Result := Result + ',';
+    Result := Result + ParseInputChecklistTask(ATasks[I]);
+  end;
+  Result := Result + ']';
+end;
+
+function TftTypeParser.ParseInputChecklist
+  (const AObj: TftInputChecklist): String;
+begin
+  Result := '';
+  if (AObj = nil) then
+  begin
+    Result := '';
+    Exit;
+  end;
+  Result := Result + '{';
+  AppendToJson(Result, 'title', AObj.Title);
+  AppendToJson(Result, 'parse_mode', AObj.ParseMode);
+  if Assigned(AObj.TitleEntities) then
+  begin
+    AppendToJson(Result, 'title_entities',
+      ParseMessageEntities(AObj.TitleEntities));
+  end;
+  AppendToJson(Result, 'tasks', ParseChecklistTasks(AObj.Tasks));
+  AppendToJson(Result, 'others_can_add_tasks', AObj.OthersCanAddTasks);
+  AppendToJson(Result, 'others_can_mark_tasks_as_done',
+    AObj.OthersCanMarkTasksAsDone);
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseInputSticker(const AObj: TftInputSticker): String;
+begin
+  Result := '';
+  if (AObj = nil) then
+  begin
+    Result := '';
+    Exit;
+  end;
+  Result := Result + '{';
+  AppendToJson(Result, 'sticker', AObj.Sticker);
+  AppendToJson(Result, 'format', AObj.Format);
+  AppendToJson(Result, 'emoji_list', ParseStringArray(AObj.EmojiList));
+  if Assigned(AObj.MaskPosition) then
+  begin
+    AppendToJson(Result, 'mask_position',
+      ParseMaskPosition(AObj.MaskPosition));
+  end;
+  if Length(AObj.Keywords) > 0 then
+  begin
+    AppendToJson(Result, 'keywords', ParseStringArray(AObj.Keywords));
+  end;
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseInputProfilePhoto
+  (const AObj: TftInputProfilePhoto): String;
+var
+  LType: String;
+begin
+  Result := '';
+  if (AObj = nil) then
+  begin
+    Result := '';
+    Exit;
+  end;
+  LType := AObj.Type_S;
+  if (LType = '') then
+  begin
+    if (AObj.Animation <> '') or Assigned(AObj.AnimationFile) then
+      LType := 'animated'
+    else
+      LType := 'static';
+  end;
+  Result := Result + '{';
+  AppendToJson(Result, 'type', LType);
+  if (LType = 'animated') then
+  begin
+    if Assigned(AObj.AnimationFile) then
+      AppendToJson(Result, 'animation', 'attach://profile_animation')
+    else
+      AppendToJson(Result, 'animation', AObj.Animation);
+    if (AObj.MainFrameTimestamp <> 0) then
+      AppendToJson(Result, 'main_frame_timestamp',
+        AObj.MainFrameTimestamp);
+  end
+  else
+  begin
+    if Assigned(AObj.PhotoFile) then
+      AppendToJson(Result, 'photo', 'attach://profile_photo')
+    else
+      AppendToJson(Result, 'photo', AObj.Photo);
+  end;
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseInputStoryContent
+  (const AObj: TftInputStoryContent): String;
+var
+  LType: String;
+begin
+  Result := '';
+  if (AObj = nil) then
+  begin
+    Result := '';
+    Exit;
+  end;
+  LType := AObj.Type_S;
+  if (LType = '') then
+  begin
+    if (AObj.Video <> '') or Assigned(AObj.VideoFile) then
+      LType := 'video'
+    else
+      LType := 'photo';
+  end;
+  Result := Result + '{';
+  AppendToJson(Result, 'type', LType);
+  if (LType = 'video') then
+  begin
+    if Assigned(AObj.VideoFile) then
+      AppendToJson(Result, 'video', 'attach://story_video')
+    else
+      AppendToJson(Result, 'video', AObj.Video);
+    if (AObj.Duration <> 0) then
+      AppendToJson(Result, 'duration', AObj.Duration);
+    if (AObj.CoverFrameTimestamp <> 0) then
+      AppendToJson(Result, 'cover_frame_timestamp',
+        AObj.CoverFrameTimestamp);
+    if (AObj.IsAnimation) then
+      AppendToJson(Result, 'is_animation', AObj.IsAnimation);
+  end
+  else
+  begin
+    if Assigned(AObj.PhotoFile) then
+      AppendToJson(Result, 'photo', 'attach://story_photo')
+    else
+      AppendToJson(Result, 'photo', AObj.Photo);
+  end;
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseLinkPreviewOptions
+  (const AObj: TftLinkPreviewOptions): String;
+begin
+  Result := '';
+  if (AObj = nil) then
+  begin
+    Result := '';
+    Exit;
+  end;
+  Result := Result + '{';
+  AppendToJson(Result, 'is_disabled', AObj.IsDisabled);
+  AppendToJson(Result, 'url', AObj.URL);
+  AppendToJson(Result, 'prefer_small_media', AObj.PreferSmallMedia);
+  AppendToJson(Result, 'prefer_large_media', AObj.PreferLargeMedia);
+  AppendToJson(Result, 'show_above_text', AObj.ShowAboveText);
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseInputRichMessage
+  (const AObj: TftInputRichMessage): String;
+begin
+  Result := '';
+  if (AObj = nil) then
+  begin
+    Result := '';
+    Exit;
+  end;
+  Result := Result + '{';
+  AppendToJson(Result, 'html', AObj.Html);
+  AppendToJson(Result, 'markdown', AObj.Markdown);
+  if (AObj.BlocksJson <> '') then
+  begin
+    Result := Result + '"blocks":' + AObj.BlocksJson + ',';
+  end;
+  if (AObj.MediaJson <> '') then
+  begin
+    Result := Result + '"media":' + AObj.MediaJson + ',';
+  end;
+  if (AObj.IsRtl) then
+    AppendToJson(Result, 'is_rtl', AObj.IsRtl);
+  if (AObj.SkipEntityDetection) then
+    AppendToJson(Result, 'skip_entity_detection',
+      AObj.SkipEntityDetection);
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseAcceptedGiftTypes
+  (const AObj: TftAcceptedGiftTypes): String;
+begin
+  Result := '';
+  if (AObj = nil) then
+  begin
+    Result := '';
+    Exit;
+  end;
+  Result := Result + '{';
+  AppendToJson(Result, 'unlimited_gifts', AObj.UnlimitedGifts);
+  AppendToJson(Result, 'limited_gifts', AObj.LimitedGifts);
+  AppendToJson(Result, 'unique_gifts', AObj.UniqueGifts);
+  AppendToJson(Result, 'premium_subscription', AObj.PremiumSubscription);
+  AppendToJson(Result, 'gifts_from_channels', AObj.GiftsFromChannels);
+  RemoveLastComma(Result);
+  Result := Result + '}';
+end;
+
+function TftTypeParser.ParseJsonAndGetSentGuestMessage
+  (const AData: TJSONObject): TftSentGuestMessage;
+begin
+  Result := TftSentGuestMessage.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftSentGuestMessage>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetUserChatBoosts
+  (const AData: TJSONObject): TftUserChatBoosts;
+begin
+  Result := TftUserChatBoosts.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftUserChatBoosts>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetBotAccessSettings
+  (const AData: TJSONObject): TftBotAccessSettings;
+begin
+  Result := TftBotAccessSettings.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftBotAccessSettings>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetGifts(const AData: TJSONObject): TftGifts;
+begin
+  Result := TftGifts.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftGifts>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetOwnedGifts
+  (const AData: TJSONObject): TftOwnedGifts;
+begin
+  Result := TftOwnedGifts.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftOwnedGifts>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetStory(const AData: TJSONObject): TftStory;
+begin
+  Result := TftStory.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftStory>
+      ((AData.GetValue('result')).ToJSON);
+end;
+
+function TftTypeParser.ParseJsonAndGetStarTransactions
+  (const AData: TJSONObject): TftStarTransactions;
+begin
+  Result := TftStarTransactions.Create;
+  if AData.GetValue('result') <> nil then
+    Result := TJSON.JsonToObject<TftStarTransactions>
+      ((AData.GetValue('result')).ToJSON);
 end;
 
 procedure TftTypeParser.RemoveLastComma(var AInput: String);

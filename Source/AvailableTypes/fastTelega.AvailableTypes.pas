@@ -2231,7 +2231,565 @@ type
       write FCustomEmojiId;
   end;
 
+  /// <summary>
+  /// This object describes paid media to be sent.
+  /// </summary>
+  TftInputPaidMedia = class
+  private
+    FType: String;
+    FMedia: String;
+  public
+    property Type_S: String read FType write FType;
+    property Media: String read FMedia write FMedia;
+  end;
+
+  TftInputPaidMediaPhoto = class(TftInputPaidMedia)
+  public
+    constructor Create;
+  end;
+
+  TftInputPaidMediaVideo = class(TftInputPaidMedia)
+  private
+    FThumbnail: String;
+    FCover: String;
+    FStartTimestamp: Integer;
+    FWidth: Integer;
+    FHeight: Integer;
+    FDuration: Integer;
+    FSupportsStreaming: Boolean;
+  public
+    constructor Create;
+    property Thumbnail: String read FThumbnail write FThumbnail;
+    property Cover: String read FCover write FCover;
+    property StartTimestamp: Integer read FStartTimestamp
+      write FStartTimestamp;
+    property Width: Integer read FWidth write FWidth;
+    property Height: Integer read FHeight write FHeight;
+    property Duration: Integer read FDuration write FDuration;
+    property SupportsStreaming: Boolean read FSupportsStreaming
+      write FSupportsStreaming;
+  end;
+
+  TftInputPaidMediaLivePhoto = class(TftInputPaidMedia)
+  private
+    FPhoto: String;
+  public
+    constructor Create;
+    property Photo: String read FPhoto write FPhoto;
+  end;
+
+  TftInputChecklistTask = class
+  private
+    FId: Integer;
+    FText: String;
+    FParseMode: String;
+    FTextEntities: TftMessageEntityList;
+  public
+    property Id: Integer read FId write FId;
+    property Text: String read FText write FText;
+    property ParseMode: String read FParseMode write FParseMode;
+    property TextEntities: TftMessageEntityList read FTextEntities
+      write FTextEntities;
+  end;
+
+  TftInputChecklist = class
+  private
+    FTitle: String;
+    FParseMode: String;
+    FTitleEntities: TftMessageEntityList;
+    FTasks: TList<TftInputChecklistTask>;
+    FOthersCanAddTasks: Boolean;
+    FOthersCanMarkTasksAsDone: Boolean;
+  public
+    property Title: String read FTitle write FTitle;
+    property ParseMode: String read FParseMode write FParseMode;
+    property TitleEntities: TftMessageEntityList read FTitleEntities
+      write FTitleEntities;
+    property Tasks: TList<TftInputChecklistTask> read FTasks write FTasks;
+    property OthersCanAddTasks: Boolean read FOthersCanAddTasks
+      write FOthersCanAddTasks;
+    property OthersCanMarkTasksAsDone: Boolean read FOthersCanMarkTasksAsDone
+      write FOthersCanMarkTasksAsDone;
+  end;
+
+  TftInputSticker = class
+  private
+    FSticker: String;
+    FFormat: String;
+    FEmojiList: TArray<String>;
+    FMaskPosition: TftMaskPosition;
+    FKeywords: TArray<String>;
+  public
+    property Sticker: String read FSticker write FSticker;
+    property Format: String read FFormat write FFormat;
+    property EmojiList: TArray<String> read FEmojiList write FEmojiList;
+    property MaskPosition: TftMaskPosition read FMaskPosition
+      write FMaskPosition;
+    property Keywords: TArray<String> read FKeywords write FKeywords;
+  end;
+
+  TftInputProfilePhoto = class
+  private
+    FType: String;
+    FPhoto: String;
+    FAnimation: String;
+    FMainFrameTimestamp: Double;
+    FPhotoFile: TftInputFile;
+    FAnimationFile: TftInputFile;
+  public
+    property Type_S: String read FType write FType;
+    property Photo: String read FPhoto write FPhoto;
+    property Animation: String read FAnimation write FAnimation;
+    property MainFrameTimestamp: Double read FMainFrameTimestamp
+      write FMainFrameTimestamp;
+    property PhotoFile: TftInputFile read FPhotoFile write FPhotoFile;
+    property AnimationFile: TftInputFile read FAnimationFile
+      write FAnimationFile;
+  end;
+
+  TftInputStoryContent = class
+  private
+    FType: String;
+    FPhoto: String;
+    FVideo: String;
+    FDuration: Double;
+    FCoverFrameTimestamp: Double;
+    FIsAnimation: Boolean;
+    FPhotoFile: TftInputFile;
+    FVideoFile: TftInputFile;
+  public
+    property Type_S: String read FType write FType;
+    property Photo: String read FPhoto write FPhoto;
+    property Video: String read FVideo write FVideo;
+    property Duration: Double read FDuration write FDuration;
+    property CoverFrameTimestamp: Double read FCoverFrameTimestamp
+      write FCoverFrameTimestamp;
+    property IsAnimation: Boolean read FIsAnimation write FIsAnimation;
+    property PhotoFile: TftInputFile read FPhotoFile write FPhotoFile;
+    property VideoFile: TftInputFile read FVideoFile write FVideoFile;
+  end;
+
+  TftStory = class
+  private
+    FChat: TftChat;
+    FId: Integer;
+  public
+    property Chat: TftChat read FChat write FChat;
+    property Id: Integer read FId write FId;
+  end;
+
+  TftLinkPreviewOptions = class
+  private
+    FIsDisabled: Boolean;
+    FURL: String;
+    FPreferSmallMedia: Boolean;
+    FPreferLargeMedia: Boolean;
+    FShowAboveText: Boolean;
+  public
+    property IsDisabled: Boolean read FIsDisabled write FIsDisabled;
+    property URL: String read FURL write FURL;
+    property PreferSmallMedia: Boolean read FPreferSmallMedia
+      write FPreferSmallMedia;
+    property PreferLargeMedia: Boolean read FPreferLargeMedia
+      write FPreferLargeMedia;
+    property ShowAboveText: Boolean read FShowAboveText write FShowAboveText;
+  end;
+
+  TftSentGuestMessage = class
+  private
+    FInlineMessageId: String;
+  public
+    property InlineMessageId: String read FInlineMessageId
+      write FInlineMessageId;
+  end;
+
+  TftChatBoostSource = class
+  private
+    FSource: String;
+    FUser: TftUser;
+    FGiveawayMessageId: Integer;
+    FPrizeStarCount: Integer;
+    FIsUnclaimed: Boolean;
+  public
+    property Source: String read FSource write FSource;
+    property User: TftUser read FUser write FUser;
+    property GiveawayMessageId: Integer read FGiveawayMessageId
+      write FGiveawayMessageId;
+    property PrizeStarCount: Integer read FPrizeStarCount
+      write FPrizeStarCount;
+    property IsUnclaimed: Boolean read FIsUnclaimed write FIsUnclaimed;
+  end;
+
+  TftChatBoost = class
+  private
+    FBoostId: String;
+    FAddDate: Integer;
+    FExpirationDate: Integer;
+    FSource: TftChatBoostSource;
+  public
+    property BoostId: String read FBoostId write FBoostId;
+    property AddDate: Integer read FAddDate write FAddDate;
+    property ExpirationDate: Integer read FExpirationDate
+      write FExpirationDate;
+    property Source: TftChatBoostSource read FSource write FSource;
+  end;
+
+  TftUserChatBoosts = class
+  private
+    FBoosts: TArray<TftChatBoost>;
+  public
+    property Boosts: TArray<TftChatBoost> read FBoosts write FBoosts;
+  end;
+
+  TftBotAccessSettings = class
+  private
+    FIsAccessRestricted: Boolean;
+    FAddedUsers: TArray<TftUser>;
+  public
+    property IsAccessRestricted: Boolean read FIsAccessRestricted
+      write FIsAccessRestricted;
+    property AddedUsers: TArray<TftUser> read FAddedUsers write FAddedUsers;
+  end;
+
+  TftGiftBackground = class
+  private
+    FCenterColor: Integer;
+    FEdgeColor: Integer;
+    FTextColor: Integer;
+  public
+    property CenterColor: Integer read FCenterColor write FCenterColor;
+    property EdgeColor: Integer read FEdgeColor write FEdgeColor;
+    property TextColor: Integer read FTextColor write FTextColor;
+  end;
+
+  TftGift = class
+  private
+    FId: String;
+    FSticker: TftSticker;
+    FStarCount: Integer;
+    FUpgradeStarCount: Integer;
+    FIsPremium: Boolean;
+    FHasColors: Boolean;
+    FTotalCount: Integer;
+    FRemainingCount: Integer;
+    FPersonalTotalCount: Integer;
+    FPersonalRemainingCount: Integer;
+    FBackground: TftGiftBackground;
+    FUniqueGiftVariantCount: Integer;
+    FPublisherChat: TftChat;
+  public
+    property Id: String read FId write FId;
+    property Sticker: TftSticker read FSticker write FSticker;
+    property StarCount: Integer read FStarCount write FStarCount;
+    property UpgradeStarCount: Integer read FUpgradeStarCount
+      write FUpgradeStarCount;
+    property IsPremium: Boolean read FIsPremium write FIsPremium;
+    property HasColors: Boolean read FHasColors write FHasColors;
+    property TotalCount: Integer read FTotalCount write FTotalCount;
+    property RemainingCount: Integer read FRemainingCount write FRemainingCount;
+    property PersonalTotalCount: Integer read FPersonalTotalCount
+      write FPersonalTotalCount;
+    property PersonalRemainingCount: Integer read FPersonalRemainingCount
+      write FPersonalRemainingCount;
+    property Background: TftGiftBackground read FBackground
+      write FBackground;
+    property UniqueGiftVariantCount: Integer read FUniqueGiftVariantCount
+      write FUniqueGiftVariantCount;
+    property PublisherChat: TftChat read FPublisherChat write FPublisherChat;
+  end;
+
+  TftGifts = class
+  private
+    FGifts: TArray<TftGift>;
+  public
+    property Gifts: TArray<TftGift> read FGifts write FGifts;
+  end;
+
+  TftUniqueGiftModel = class
+  private
+    FName: String;
+    FSticker: TftSticker;
+    FRarityPerMille: Integer;
+    FRarity: String;
+  public
+    property Name: String read FName write FName;
+    property Sticker: TftSticker read FSticker write FSticker;
+    property RarityPerMille: Integer read FRarityPerMille
+      write FRarityPerMille;
+    property Rarity: String read FRarity write FRarity;
+  end;
+
+  TftUniqueGiftSymbol = class
+  private
+    FName: String;
+    FSticker: TftSticker;
+    FRarityPerMille: Integer;
+  public
+    property Name: String read FName write FName;
+    property Sticker: TftSticker read FSticker write FSticker;
+    property RarityPerMille: Integer read FRarityPerMille
+      write FRarityPerMille;
+  end;
+
+  TftUniqueGiftBackdropColors = class
+  private
+    FCenterColor: Integer;
+    FEdgeColor: Integer;
+    FSymbolColor: Integer;
+    FTextColor: Integer;
+  public
+    property CenterColor: Integer read FCenterColor write FCenterColor;
+    property EdgeColor: Integer read FEdgeColor write FEdgeColor;
+    property SymbolColor: Integer read FSymbolColor write FSymbolColor;
+    property TextColor: Integer read FTextColor write FTextColor;
+  end;
+
+  TftUniqueGiftBackdrop = class
+  private
+    FName: String;
+    FColors: TftUniqueGiftBackdropColors;
+    FRarityPerMille: Integer;
+  public
+    property Name: String read FName write FName;
+    property Colors: TftUniqueGiftBackdropColors read FColors write FColors;
+    property RarityPerMille: Integer read FRarityPerMille
+      write FRarityPerMille;
+  end;
+
+  TftUniqueGiftColors = class
+  private
+    FModelCustomEmojiId: String;
+    FSymbolCustomEmojiId: String;
+    FLightThemeMainColor: Integer;
+    FLightThemeOtherColors: TArray<Integer>;
+    FDarkThemeMainColor: Integer;
+    FDarkThemeOtherColors: TArray<Integer>;
+  public
+    property ModelCustomEmojiId: String read FModelCustomEmojiId
+      write FModelCustomEmojiId;
+    property SymbolCustomEmojiId: String read FSymbolCustomEmojiId
+      write FSymbolCustomEmojiId;
+    property LightThemeMainColor: Integer read FLightThemeMainColor
+      write FLightThemeMainColor;
+    property LightThemeOtherColors: TArray<Integer> read FLightThemeOtherColors
+      write FLightThemeOtherColors;
+    property DarkThemeMainColor: Integer read FDarkThemeMainColor
+      write FDarkThemeMainColor;
+    property DarkThemeOtherColors: TArray<Integer> read FDarkThemeOtherColors
+      write FDarkThemeOtherColors;
+  end;
+
+  TftUniqueGift = class
+  private
+    FGiftId: String;
+    FBaseName: String;
+    FName: String;
+    FNumber: Integer;
+    FModel: TftUniqueGiftModel;
+    FSymbol: TftUniqueGiftSymbol;
+    FBackdrop: TftUniqueGiftBackdrop;
+    FIsPremium: Boolean;
+    FIsBurned: Boolean;
+    FIsFromBlockchain: Boolean;
+    FColors: TftUniqueGiftColors;
+    FPublisherChat: TftChat;
+  public
+    property GiftId: String read FGiftId write FGiftId;
+    property BaseName: String read FBaseName write FBaseName;
+    property Name: String read FName write FName;
+    property Number: Integer read FNumber write FNumber;
+    property Model: TftUniqueGiftModel read FModel write FModel;
+    property Symbol: TftUniqueGiftSymbol read FSymbol write FSymbol;
+    property Backdrop: TftUniqueGiftBackdrop read FBackdrop write FBackdrop;
+    property IsPremium: Boolean read FIsPremium write FIsPremium;
+    property IsBurned: Boolean read FIsBurned write FIsBurned;
+    property IsFromBlockchain: Boolean read FIsFromBlockchain
+      write FIsFromBlockchain;
+    property Colors: TftUniqueGiftColors read FColors write FColors;
+    property PublisherChat: TftChat read FPublisherChat write FPublisherChat;
+  end;
+
+  TftOwnedGift = class
+  private
+    FType: String;
+    FGift: TftGift;
+    FUniqueGift: TftUniqueGift;
+    FOwnedGiftId: String;
+    FSenderUser: TftUser;
+    FSendDate: Integer;
+    FText: String;
+    FIsPrivate: Boolean;
+    FIsSaved: Boolean;
+    FCanBeUpgraded: Boolean;
+    FWasRefunded: Boolean;
+    FConvertStarCount: Integer;
+    FPrepaidUpgradeStarCount: Integer;
+    FIsUpgradeSeparate: Boolean;
+    FUniqueGiftNumber: Integer;
+    FCanBeTransferred: Boolean;
+    FTransferStarCount: Integer;
+    FNextTransferDate: Integer;
+  public
+    property Type_S: String read FType write FType;
+    property Gift: TftGift read FGift write FGift;
+    property UniqueGift: TftUniqueGift read FUniqueGift write FUniqueGift;
+    property OwnedGiftId: String read FOwnedGiftId write FOwnedGiftId;
+    property SenderUser: TftUser read FSenderUser write FSenderUser;
+    property SendDate: Integer read FSendDate write FSendDate;
+    property Text: String read FText write FText;
+    property IsPrivate: Boolean read FIsPrivate write FIsPrivate;
+    property IsSaved: Boolean read FIsSaved write FIsSaved;
+    property CanBeUpgraded: Boolean read FCanBeUpgraded write FCanBeUpgraded;
+    property WasRefunded: Boolean read FWasRefunded write FWasRefunded;
+    property ConvertStarCount: Integer read FConvertStarCount
+      write FConvertStarCount;
+    property PrepaidUpgradeStarCount: Integer read FPrepaidUpgradeStarCount
+      write FPrepaidUpgradeStarCount;
+    property IsUpgradeSeparate: Boolean read FIsUpgradeSeparate
+      write FIsUpgradeSeparate;
+    property UniqueGiftNumber: Integer read FUniqueGiftNumber
+      write FUniqueGiftNumber;
+    property CanBeTransferred: Boolean read FCanBeTransferred
+      write FCanBeTransferred;
+    property TransferStarCount: Integer read FTransferStarCount
+      write FTransferStarCount;
+    property NextTransferDate: Integer read FNextTransferDate
+      write FNextTransferDate;
+  end;
+
+  TftOwnedGifts = class
+  private
+    FTotalCount: Integer;
+    FGifts: TArray<TftOwnedGift>;
+    FNextOffset: String;
+  public
+    property TotalCount: Integer read FTotalCount write FTotalCount;
+    property Gifts: TArray<TftOwnedGift> read FGifts write FGifts;
+    property NextOffset: String read FNextOffset write FNextOffset;
+  end;
+
+  TftAcceptedGiftTypes = class
+  private
+    FUnlimitedGifts: Boolean;
+    FLimitedGifts: Boolean;
+    FUniqueGifts: Boolean;
+    FPremiumSubscription: Boolean;
+    FGiftsFromChannels: Boolean;
+  public
+    property UnlimitedGifts: Boolean read FUnlimitedGifts
+      write FUnlimitedGifts;
+    property LimitedGifts: Boolean read FLimitedGifts write FLimitedGifts;
+    property UniqueGifts: Boolean read FUniqueGifts write FUniqueGifts;
+    property PremiumSubscription: Boolean read FPremiumSubscription
+      write FPremiumSubscription;
+    property GiftsFromChannels: Boolean read FGiftsFromChannels
+      write FGiftsFromChannels;
+  end;
+
+  TftTransactionPartner = class
+  private
+    FType: String;
+    FUser: TftUser;
+    FChat: TftChat;
+    FGift: TftGift;
+    FInvoicePayload: String;
+    FSubscriptionPeriod: Integer;
+    FPaidMediaPayload: String;
+    FPremiumSubscriptionDuration: Integer;
+    FSponsorUser: TftUser;
+    FCommissionPerMille: Integer;
+    FRequestCount: Integer;
+  public
+    property Type_S: String read FType write FType;
+    property User: TftUser read FUser write FUser;
+    property Chat: TftChat read FChat write FChat;
+    property Gift: TftGift read FGift write FGift;
+    property InvoicePayload: String read FInvoicePayload write FInvoicePayload;
+    property SubscriptionPeriod: Integer read FSubscriptionPeriod
+      write FSubscriptionPeriod;
+    property PaidMediaPayload: String read FPaidMediaPayload
+      write FPaidMediaPayload;
+    property PremiumSubscriptionDuration: Integer
+      read FPremiumSubscriptionDuration write FPremiumSubscriptionDuration;
+    property SponsorUser: TftUser read FSponsorUser write FSponsorUser;
+    property CommissionPerMille: Integer read FCommissionPerMille
+      write FCommissionPerMille;
+    property RequestCount: Integer read FRequestCount write FRequestCount;
+  end;
+
+  TftStarTransaction = class
+  private
+    FId: String;
+    FAmount: Int64;
+    FNanostarAmount: Integer;
+    FDate: Integer;
+    FSource: TftTransactionPartner;
+    FReceiver: TftTransactionPartner;
+  public
+    property Id: String read FId write FId;
+    property Amount: Int64 read FAmount write FAmount;
+    property NanostarAmount: Integer read FNanostarAmount
+      write FNanostarAmount;
+    property Date: Integer read FDate write FDate;
+    property Source: TftTransactionPartner read FSource write FSource;
+    property Receiver: TftTransactionPartner read FReceiver write FReceiver;
+  end;
+
+  TftStarTransactions = class
+  private
+    FTransactions: TArray<TftStarTransaction>;
+  public
+    property Transactions: TArray<TftStarTransaction> read FTransactions
+      write FTransactions;
+  end;
+
+  /// <summary>
+  /// Describes a rich message to be sent. For blocks and media the raw JSON
+  /// produced by the caller is used, because the rich message block model is
+  /// open-ended and evolves with new Bot API versions.
+  /// </summary>
+  TftInputRichMessage = class
+  private
+    FHtml: String;
+    FMarkdown: String;
+    FBlocksJson: String;
+    FMediaJson: String;
+    FIsRtl: Boolean;
+    FSkipEntityDetection: Boolean;
+  public
+    property Html: String read FHtml write FHtml;
+    property Markdown: String read FMarkdown write FMarkdown;
+    /// <summary>JSON array for the blocks field.</summary>
+    property BlocksJson: String read FBlocksJson write FBlocksJson;
+    /// <summary>JSON array for the media field.</summary>
+    property MediaJson: String read FMediaJson write FMediaJson;
+    property IsRtl: Boolean read FIsRtl write FIsRtl;
+    property SkipEntityDetection: Boolean read FSkipEntityDetection
+      write FSkipEntityDetection;
+  end;
+
 implementation
+
+{ TftInputPaidMediaPhoto }
+
+constructor TftInputPaidMediaPhoto.Create;
+begin
+  Type_S := 'photo';
+end;
+
+{ TftInputPaidMediaVideo }
+
+constructor TftInputPaidMediaVideo.Create;
+begin
+  Type_S := 'video';
+end;
+
+{ TftInputPaidMediaLivePhoto }
+
+constructor TftInputPaidMediaLivePhoto.Create;
+begin
+  Type_S := 'live_photo';
+end;
 
 { TftMessageEntity }
 
